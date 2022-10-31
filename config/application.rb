@@ -33,5 +33,8 @@ module Blog
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Generate a SQL representation of the database schema.
+    config.active_record.schema_format = :sql
   end
 end
