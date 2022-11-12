@@ -17,6 +17,9 @@ gem "puma", "~> 5.0"
 # Use CommonMark to render posts as HTML [https://github.com/gjtorikian/commonmarker]
 gem "commonmarker", "~> 0.23"
 
+# Use Pagy to paginate through collections
+gem "pagy", "~> 5.10"
+
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 
