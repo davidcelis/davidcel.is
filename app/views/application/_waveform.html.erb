@@ -1,0 +1,20 @@
+<svg aria-hidden="true" class="absolute left-0 top-0 h-20 w-full">
+  <defs>
+    <linearGradient id=":r0:-fade" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="40%" stop-color="white"></stop>
+      <stop offset="100%" stop-color="black"></stop>
+    </linearGradient>
+    <linearGradient id=":r0:-gradient">
+      <stop offset="0%" stop-color="#4989E8"></stop>
+      <stop offset="50%" stop-color="#6159DA"></stop>
+      <stop offset="100%" stop-color="#FF54AD"></stop>
+    </linearGradient>
+    <mask id=":r0:-mask"><rect width="100%" height="100%" fill="url(#:r0:-pattern)"></rect></mask>
+    <pattern id=":r0:-pattern" width="400" height="100%" patternUnits="userSpaceOnUse">
+      <% Array.new(100) { rand(40..100) }.each_with_index do |height, index| %>
+        <rect key="<%= index %>" width="2" height="<%= height %>%" x="<%= 2 * (index + 1) + 2 * index %>" fill="url(#:r0:-fade)"></rect>
+      <% end %>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#:r0:-gradient)" mask="url(#:r0:-mask)" opacity="0.25"></rect>
+</svg>

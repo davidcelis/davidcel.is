@@ -10,7 +10,12 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        sans: ['Satoshi', ...defaultTheme.fontFamily.sans],
+      },
+      spacing: {
+        18: '4.5rem',
+        112: '28rem',
+        120: '30rem',
       },
     },
   },
