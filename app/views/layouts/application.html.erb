@@ -26,87 +26,17 @@
   </head>
 
   <body class="bg-white antialiased">
-    <header class="bg-slate-50 lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-96 lg:items-start lg:overflow-y-auto xl:w-[26rem]">
-      <div class="relative z-10 mx-auto px-4 pb-4 pt-10 sm:px-6 md:max-w-2xl md:px-4 lg:min-h-full lg:flex-auto lg:border-x lg:border-slate-200 lg:py-12 lg:px-8 xl:px-12">
-        <%= link_to root_path, class: "relative mx-auto block w-24 overflow-hidden rounded-lg bg-slate-200 shadow-xl shadow-slate-300 sm:rounded-xl lg:w-auto lg:rounded-2xl", aria: {label: "homepage"} do %>
-          <%= image_tag "me.jpg", width: 960, height: 960, alt: "A photo of me on a horse looking quite dapper", class: "w-full" %>
-          <div class="absolute inset-0 rounded-lg ring-1 ring-inset ring-black/10 sm:rounded-xl lg:rounded-2xl"></div>
-        <% end %>
-
-        <div class="mt-10 text-center lg:mt-12 lg:text-left">
-          <p class="text-xl font-bold text-slate-900">
-            <%= link_to "David Celis", root_path %>
-          </p>
-
-          <p class="mt-3 text-lg font-medium leading-8 text-slate-500">
-            A cowboy coder.
-          </p>
-        </div>
-
-        <section class="mt-12 hidden lg:block">
-          <h2 class="flex items-center font-mono text-sm font-medium leading-7 text-slate-900">
-            <svg aria-hidden="true" viewBox="0 0 10 10" class="h-2.5 w-2.5">
-              <path d="M0 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5Z" class="fill-violet-300"></path>
-              <path d="M6 1a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V1Z" class="fill-pink-300"></path>
-            </svg>
-            <span class="ml-2.5">About me</span>
-          </h2>
-
-          <p class="mt-2 text-base leading-7 text-slate-700">
-            Hey there, I’m David! I’m a staff software engineer at
-            <a href="https://firehydrant.com/" class="link-primary" target="_blank">FireHydrant</a>
-            (where I write APIs) out in Portland, Ore. (where I drink IPAs). I write about tech
-            (rarely), food (often), and really anything that’s on my mind.
-          </p>
-        </section>
-
-        <section class="mt-10 lg:mt-12">
-          <h2 class="sr-only flex items-center font-mono text-sm font-medium leading-7 text-slate-900 lg:not-sr-only">
-            <svg aria-hidden="true" viewBox="0 0 10 10" class="h-2.5 w-2.5">
-              <path d="M0 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5Z" class="fill-indigo-300"></path>
-              <path d="M6 1a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V1Z" class="fill-blue-300"></path>
-            </svg>
-            <span class="ml-2.5">Follow</span>
-          </h2>
-
-          <div class="h-px bg-gradient-to-r from-slate-200/0 via-slate-200 to-slate-200/0 lg:hidden"></div>
-
-          <ul role="list" class="mt-4 flex justify-center gap-10 text-base font-medium leading-7 text-slate-700 sm:gap-8 lg:flex-col lg:gap-4">
-            <li class="flex">
-              <a class="group flex items-center" aria-label="Twitter" href="https://twitter.com/davidcelis" target="_blank">
-                <svg aria-hidden="true" viewBox="0 0 512 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
-                <span class="hidden sm:ml-3 sm:block">Twitter</span>
-              </a>
-            </li>
-            <li class="flex">
-              <a class="group flex items-center" aria-label="Mastodon>" href="https://xoxo.zone/@davidcelis" target="_blank">
-                <svg aria-hidden="true" viewBox="0 0 448 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.54 102.54 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5zm-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"/></svg>
-                <span class="hidden sm:ml-3 sm:block">Mastodon</span>
-              </a>
-            </li>
-            <li class="flex">
-              <a class="group flex items-center" aria-label="Instagram" href="https://instagram.com/davidcelis" target="_blank">
-                <svg aria-hidden="true" viewBox="0 0 448 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
-                <span class="hidden sm:ml-3 sm:block">Instagram</span>
-              </a>
-            </li>
-            <li class="flex">
-              <a class="group flex items-center" aria-label="RSS Feed" href="/feed.xml">
-                <svg aria-hidden="true" viewBox="0 0 448 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zM96 136c0-13.3 10.7-24 24-24c137 0 248 111 248 248c0 13.3-10.7 24-24 24s-24-10.7-24-24c0-110.5-89.5-200-200-200c-13.3 0-24-10.7-24-24zm0 96c0-13.3 10.7-24 24-24c83.9 0 152 68.1 152 152c0 13.3-10.7 24-24 24s-24-10.7-24-24c0-57.4-46.6-104-104-104c-13.3 0-24-10.7-24-24zm64 120c0 17.7-14.3 32-32 32s-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32z"/></svg>
-                <span class="hidden sm:ml-3 sm:block">RSS Feed</span>
-              </a>
-            </li>
-          </ul>
-        </section>
-      </div>
-    </header>
+    <%= render "header" %>
 
     <main class="border-t border-slate-200 lg:relative lg:ml-96 lg:border-t-0 xl:ml-[26rem]">
       <%= render "waveform" %>
+      <%= render "navigation" %>
 
       <div class="relative">
         <%= yield %>
       </div>
     </main>
+
+    <%= render "footer" %>
   </body>
 </html>

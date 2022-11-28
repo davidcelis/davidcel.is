@@ -1,0 +1,32 @@
+<footer class="border-t border-slate-200 bg-slate-50 py-10 pb-40 sm:py-16 sm:pb-32 lg:hidden">
+  <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4">
+    <section>
+      <h2 class="flex items-center font-mono text-sm font-medium leading-7 text-slate-900">
+        <svg aria-hidden="true" viewBox="0 0 10 10" class="h-2.5 w-2.5">
+          <path d="M0 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5Z" class="fill-violet-300"></path>
+          <path d="M6 1a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V1Z" class="fill-pink-300"></path>
+        </svg>
+        <span class="ml-2.5">About me</span>
+      </h2>
+
+      <p class="mt-2 text-base leading-7 text-slate-700">
+        Hey there, I’m David! I’m a staff software engineer at
+        <a href="https://firehydrant.com/" class="link-primary" target="_blank">FireHydrant</a>
+        (where I write APIs) out in Portland, Ore. (where I drink IPAs). I write about tech
+        (rarely), food (often), and really anything that’s on my mind.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="mt-8 flex items-center font-mono text-sm font-medium leading-7 text-slate-900">
+        <svg aria-hidden="true" viewBox="0 0 10 10" class="h-2.5 w-2.5">
+          <path d="M0 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5Z" class="fill-indigo-300"></path>
+          <path d="M6 1a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V1Z" class="fill-blue-300"></path>
+        </svg>
+        <span class="ml-2.5">Follow me</span>
+      </h2>
+
+      <%= render "social_links", class: "mt-4 flex justify-center gap-10 text-base font-medium leading-7 text-slate-700 sm:gap-8" %>
+    </section>
+  </div>
+</footer>
