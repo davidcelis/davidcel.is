@@ -1,4 +1,7 @@
 class Post < ApplicationRecord
+  MARKDOWN_MODE = :UNSAFE
+  MARKDOWN_EXTENSIONS = [:strikethrough, :autolink]
+
   validates :content, presence: true
 
   before_create :generate_slug
@@ -15,10 +18,10 @@ class Post < ApplicationRecord
   def render_html
     return unless content_changed?
 
-    self.html = commonmark_doc.to_html
+    self.html = commonmark_doc.to_html(MARKDOWN_MODE, MARKDOWN_EXTENSIONS)
   end
 
   def commonmark_doc
-    CommonMarker.render_doc(content, :UNSAFE, [:strikethrough, :autolink])
+    CommonMarker.render_doc(content, MARKDOWN_MODE, MARKDOWN_EXTENSIONS)
   end
 end
