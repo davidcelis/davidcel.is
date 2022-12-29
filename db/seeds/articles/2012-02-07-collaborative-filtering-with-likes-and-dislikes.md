@@ -1,85 +1,115 @@
 ---
-layout: post
-title: "Collaborative Filtering With Likes and Dislikes"
+title: "Collaborative Filtering with Likes and Dislikes"
 date: 2012-02-07 13:10
-categories: [programming, ruby, rails, recommendable]
-redirect_from:
-  - /blog/2012/02/07/collaborative-filtering-with-likes-and-dislikes/
 ---
 
-Ah, caught your attention, did I? Well, now that I have it, I'd like to sit down and have a chat. We need to talk, friend, and we _need_ to talk about collaborative filtering. It's a technique used in recommendation engines. Please repeat the following:
+We’ve talked about some of the pitfalls of the [five-star rating system](https://davidcel.is/articles/why-i-hate-five-star-ratings/) and how a binary system based on likes and dislikes can be much better, but what does using this kind of rating system look like in practice? How can we take a user’s likes and dislikes and use them to generate helpful recommendations? The answer, as with the five-star system, is through collaborative filtering, but we can rely on a methodology better suited to a binary system!
 
-> This is collaborative filtering. There are many different kinds of collaborative filtering, but mine is memory-based. Memory-based collaborative filtering is my best friend.
->
-> — Gunnery Seargeant Hartman, Full Metal Jacket
+<!--more-->
 
-Okay, so I may be taking some creative liberty with this one. You shouldn't be best friends with any one form of collaborative filtering. They all deserve love and they all have their uses. I'm sure the gunnery seargeant would agree with me! However, I *would* like to focus on memory-based collaborative filtering today as the algorithms that fall into this category are used often in recommender systems. Additionally, I'm going to go ahead and shift us into the context of a binary rating system: likes and dislikes. Okay? Okay!
+## Collaborative filtering
 
-My good (but not best!) friend, memory-based collaborative filtering, uses submitted ratings to calculate a numeric similarity between users. Wait, what!? You mean that two people can be compared and that comparison can yield a number? You bet! We can *all* be reduced to numbers. It's a Brave New World, reader! These similarity values can then be used to predict how a user will feel about items they have not yet rated. The top predictions are given back to the user in the form of recommendations! It's like having your mind read. Except by a computer! And instead of reading your mind, it's doing math!
+If you aren’t familiar with collaborative filtering, its a technique used in recommendation engines to predict (filter) the interest of a user by collecting data about the interests of many users (collaborating). There are many different types of collaborative filtering, but for our system of likes and dislikes, we’ll be focusing on memory-based collaborative filtering, which uses ratings submitted by users to calculate the similarity between those users.
 
-There are a good number of different algorithms used in memory-based collaborative filtering to calculate the similarity between users. A few of the more widely used algorithms or formulae include [Euclidean Distance][euclidean], [Pearson's Correlation][pearson], [Cosine-based vector similarity][cosine], and the [k-Nearest Neighbor algorithm][knn]. These are all well documented on the internets and multiple example implementations are available should you wish to know more. They're all great for the heavily-used five-star system, but that's so common! So boring! So passé I want to talk about something *else*. I want to talk about an algorithm I don't see used often but would work great for my other friends, Like and Dislike. I want to talk about the Jaccard similarity coefficient!
+Even within just the scope of memory-based collaborative filtering, there are a number of algorithms or techniques to calculate similarity. A few of the more widely used algorithms or formulae include [Euclidean Distance][euclidean], [Pearson’s Correlation][pearson], [Cosine-based vector similarity][cosine], and the [k-Nearest Neighbor algorithm][knn]. These are all well documented and multiple example implementations are available should you wish to know more. They’re all great for the heavily-used five-star system and, while they’d work fine for likes and dislikes, we have an interesting alternative that I feel is better suited! So let’s talk about an algorithm I don’t see used often but which works great for our binary system. Let’s talk about the Jaccard similarity coefficient!
 
 ## Jean-Luc Jaccard?
 
-No, no, no. I'm talking about Paul Jaccard, a botanist that performed research near the turn of the 20th century. Jaccard's research led him to develop the *coefficient de communauté*, or what is known in English as the Jaccard similarity coefficient (also called the Jaccard index). The Jaccard index is a simple calculation of similarity between sample sets. Where the aforementioned collaborative filtering algorithms can quickly become mathematically complex, the Jaccard index is rather simple! It can be described as the size of the intersection between two sample sets divided by the size of the union between the same sample sets. Look over there! It's math!
+No, no, no; we’re talking about _Paul_ Jaccard, a botanist that performed research near the turn of the 20th century. Jaccard’s research led him to develop the _coefficient de communauté_, or what is known in English as the [Jaccard index](https://en.wikipedia.org/wiki/Jaccard_index) (or Jaccard similarity coefficient).[^1] The Jaccard index is a simple calculation of similarity between sample sets. Where the aforementioned collaborative filtering algorithms can quickly become mathematically complex, the Jaccard index is rather simple! It can be described as the size of the intersection between two binary sample sets divided by the size of the union between the same sample sets. Whew! That description might be a little difficult to follow, so here’s how to represent it in math:
 
 $$
 J(u_1,u_2)=\frac{\left |u_1 \bigcap u_2\right |}{\left |u_1\bigcup u_2 \right |}
 $$
 
-I bet those mushy brain-gears of yours are already slimily grinding away at how intuitive this formula can be when used with likes and dislikes!
-
-Let's say we're comparing two users u<sub>1</sub> and u<sub>2</sub>. How does one intersect two users? How does one union them? Well, we don't want to intersect or union the people themselves. This isn't Mary Shelly's Frankenstein! If we're using the Jaccard index for collaborative filtering, we want both of these operations to deal with the users' ratings. Let's say that the intersection is the set of only the items that the two users have rated in common. This would make the union the combined set of items that each user has rated independently of the other. But how does this work with the actual ratings? Let's modify the formula a bit to deal with the likes and dislikes themselves:
+This formula can rather intuitively be used with likes and dislikes! Let’s say we’re comparing two users: u<sub>1</sub> and u<sub>2</sub>. How does one intersect two users? How does one union them? Well, we don’t want to intersect or union the people themselves; this isn’t Mary Shelly’s _Frankenstein_! If we’re using the Jaccard index for collaborative filtering, we want both of these operations to deal with the users’ ratings. Let’s say that the intersection is the set of items which both users have rated. The union would then be the combined set of items that _either_ u<sub>1</sub> _or_ u<sub>2</sub> has rated. But how does this work with the actual ratings? Let’s modify the formula a bit to deal with the likes and dislikes themselves:
 
 $$
 J(u_1,u_2)=\frac{\left |L_{u1} \bigcap L_{u2}\right |+\left |D_{u1} \bigcap D_{u2}\right |}{\left |u_1\bigcup u_2 \right |}
 $$
 
-Now we're getting somewhere! What we have now is looking more collaborative and filtery for sure. We find the number of items that both u<sub>1</sub> and u<sub>2</sub> like, add it to the number of items that both u<sub>1</sub> and u<sub>2</sub> dislike, and then divide that by the total number of different items that u<sub>1</sub> and u<sub>2</sub> have rated.
+Now we’re getting somewhere! What we’ve got now is looking more collaborative and filtery for sure. We find the number of items that both u<sub>1</sub> and u<sub>2</sub> like, add it to the number of items that both u<sub>1</sub> and u<sub>2</sub> dislike, and then divide that by the total number of different items that u<sub>1</sub> and u<sub>2</sub> have rated. This is a great start, but we can go even further to match users up.
 
-## Hey, wait! I like \[INSERT THING HERE\] and he doesn't!
+## Birds of a feather flock together, and opposites repel
 
-Well first of all, shame on him. \[INSERT THING HERE\] is gold. Solid gold! But also, you raise an excellent point, sir and/or madam! Disagreements should, at the very least, matter just as much as agreements. Let's tweak the formula a bit more, shall we?
+We may be defining our similarity as our agreed upon interests and disinterests, but what about our _disgreements_? If our shared likes and dislikes are important factors in calculating our similarity, we can use discrepancies in our ratings to incorporate _disimilarity_ into our calculations. To show you what I mean, let’s tweak the formula a bit more, shall we?
 
 $$
 J(u_1,u_2)=\frac{\left |L_{u1} \bigcap L_{u2}\right |+\left |D_{u1} \bigcap D_{u2}\right |-\left |L_{u1} \bigcap D_{u2}\right |-\left |D_{u1} \bigcap L_{u2}\right |}{\left |u_1\bigcup u_2 \right |}
 $$
 
-Whew! This looks a lot more complex than the original formula, but it's still quite simple! I promise! Now, in addition to finding the agreements between u<sub>1</sub> and u<sub>2</sub>, we're finding their disagreements! The agreements between u<sub>1</sub> and u<sub>2</sub> are the same as before. Their disagreements are conversely defined as the number of items that u<sub>1</sub> likes but u<sub>2</sub> dislikes and vice versa. All we do is subtract the number of disagreements from the number of agreements, and divide by the total number of items liked or disliked across the two users. Easy!
+Whew! This looks a lot more complex than the original formula, but we can walk through it together. Now, in addition to finding the agreements between u<sub>1</sub> and u<sub>2</sub>, we’re finding their disagreements! The agreements between u<sub>1</sub> and u<sub>2</sub> are the same as before. Their _disagreements_ are conversely defined as the number of items that u<sub>1</sub> likes but u<sub>2</sub> dislikes and vice versa. All we do is subtract the number of disagreements from the number of agreements, and divide by the total number of items liked or disliked across the two users.
 
-It is worth noting that the similiarity value calculated has a bounds of -1 and 1. You would have a -1.0 similarity value with your polar opposite (your evil twin that has rated the same items as you, but differently) and a 1.0 similarity value with your clone (you have both rated the same items in the same ways).
+Previously, when we were calculating similarity only based on agreements, our coefficient would have been bounded between 0 and 1. However, now that we’re accounting for disagreements, our bounds have expanded to being between -1 and 1. You would have a -1.0 similarity value with your polar opposite (e.g. your evil twin that has rated the same items as you, but each one differently) and a 1.0 similarity value with a very fresh clone of yourself (you have both rated the same items in the same ways).
 
 ## Okay, read my mind!
 
-Now that we can reduce the relationship between two people to a number, lets use that number to predict whether you'll like or dislike something. Neat! Let's say we want to predict how you'll feel about *thing*. We get every user in our system that has rated *thing* and start calculating a hive-mind sum. Feel free to fear the hive-mind sum, as the hive-mind sum demands your respect! If a user liked *thing*, we add your similarity value with them to the hive-mind sum. If they disliked it, we subtract instead! The idea behind this is that if someone with tastes similar to yours likes *thing*, you'll probably like it too. If they dislike it, you're less likely to enjoy *thing*. But if a user with tastes dissimilar to yours likes *thing*, you're LESS likely to hit that "Like" button and vice versa. Moving right along, we finally take this hive-mind sum and divide it by the total number of people that have rated *thing*. Done! Woah, what? That was easy! Look, more math!
+Now that we can reduce the tender, loving relationship between two people to a cold, indifferent number, let’s use that number to predict whether you’ll like or dislike something. Neat! Let’s say we want to predict how you’ll feel about _thing_. We get every user in our system that has rated _thing_ and start calculating a kind of hive-mind sum. Don’t be afraid, though; this isn’t _really_ a hive mind or intelligent AI! Anyway, if a user liked _thing_, we add your similarity value with them to the sum. If they disliked it, we subtract instead! The idea behind this is that if someone with tastes similar to yours likes _thing_, you’ll probably like it too. If they dislike _thing_, you’re less likely to enjoy it. Likewise, if a user who has a low or negative similarity coefficient with you has rated _thing_, you’re likely to rate it in the opposite way. Finallym we take this sum and divide it by the total number of people that have rated _thing_. Done! Like before, let’s let the math speak too:
 
 $$
 P(you, thing)=\frac{\sum_{i=1}^{n_L} J(you, u_i) - \sum_{i=1}^{n_D}J(you, u_i)}{n_L + n_D}
 $$
 
-In this equation: *thing* is the thing we want to know if *you* will like, *n<sub>L</sub>* is the number of users that have liked *thing*, and *n<sub>D</sub>* is the number of users that have disliked *thing*. Good? Good!
+In this equation: _thing_ is the thing we want to know if _you_ will like, _n<sub>L</sub>_ is the number of users that have liked _thing_, and _n<sub>D</sub>_ is the number of users that have disliked _thing_.
 
-## Just show me the code!
+## Math is cool but how about some code?
 
-Well, aren't we impatient? Fine. I suppose you've waited this long. Here's a simple pseudo-implementation of some sweet, sweet Jaccardian collaborative filtering. In Ruby, of course!
+That’s fair. You’ve been very patient and I appreciate you reading all of that! Heck, even if you skipped all the way here, you’re here nonetheless. So here’s a little pseudo-implementation of Jaccardian collaborative filtering (in Ruby, of course)!
 
-{% gist davidcelis/4bdbece8af6fe224de1a jaccardian.rb %}
+```ruby
+require "set"
 
-This is nice and simple and is more or less the way I do things in [recommendable][recommendable] and [goodbre.ws][goodbre.ws]. I did, however, tweak the algorithm in one major way. For example, in that last stage of calculating the similarity values, I actually divide by `self.likes.size + self.dislikes.size`. With this change, the similarity value becomes dependent on the number of items that `self` has rated, but not the number of items that `user` has rated. As such, this makes their similarity values not be reflective:
+class User
+  # The collections of objects this user likes and dislikes. These are both
+  # best represented using a Set.
+  attr_reader :likes, :dislikes
 
-{% gist davidcelis/4bdbece8af6fe224de1a not_reflective.rb %}
+  def similarity_with(user)
+    # Set#& is the set intersection operator.
+    agreements = (self.likes & user.likes).size
+    agreements += (self.dislikes & user.dislikes).size
 
-My reasoning behind this is that newer users who have not had a chance to submit likes and dislikes for many objects should not be punished for simply being new. Recommendations for new users can really suck! Say I've submitted ratings for five items, you've submitted ratings for fifty, and four of these items are the same. If we share the same ratings for three of those items, I want my similarity value for you to be high. I'm new here! It will potentially help me get better recommendations faster. You, on the other hand... You've seen things, man. You don't need handouts from the system. Your similarity value with me should be much lower.
+    disagreements = (self.likes & user.dislikes).size
+    disagreements += (self.dislikes & user.likes).size
+
+    # Set#| is the set union operator
+    all_items = (self.likes + self.dislikes) | (user.likes + user.dislikes)
+
+    return (agreements - disagreements) / all_items.size.to_f
+  end
+
+  def prediction_for(item)
+    sum = 0.0
+    item.liked_by.each { |user| sum += self.similarity_with(user) }
+    item.disliked_by.each { |user| sum -= self.similarity_with(user) }
+
+    rated_by = (item.liked_by + item.disliked_by).size
+
+    return sum / rated_by
+  end
+end
+```
+
+This is more or less the way I do things in [recommendable][recommendable] and, while it was still online, [goodbre.ws][goodbre.ws]. I did, however, tweak the algorithm in one major way. For example, in that last stage of calculating the similarity values, I actually divide by `self.likes.size + self.dislikes.size`. With this change, the similarity value becomes dependent on the number of items that `self` has rated, but not the number of items that `user` has rated. As such, this makes their similarity values not be reflective:
+
+```ruby
+self.similarity_with(user) == user.similarity_with(self)
+# => false unless self.ratings.size == user.ratings.size
+```
+
+My reasoning behind this is that newer users who have not had a chance to submit likes and dislikes for many objects shouldn’t be punished for simply being new; recommendations for new users can be pretty bad! Say I’ve submitted ratings for five items, you’ve submitted ratings for fifty, and four of these items are the same. If we share the same ratings for three of those items, I want our similarity coefficient to be high. I’m new here, and it’ll potentially help me get better recommendations faster. On the other hand, your fifty ratings means you’ve seen things. You don’t really need the same jump start that I do, so your similarity value with me can stand to be lower.
 
 ## The Conclusioning
 
-Clearly, the Jaccardian similarity coefficient is a very intuitive way to compare people when the rating system is binary. The other algorithms I mentioned are pretty cool too, but Likes/Dislikes and set math were just made for each other. They're like peanut butter and jelly. Bananas and Nutella. Bored people and reality television. It's a beautiful marriage that I hope will last forever, even if I wasn't invited to the wedding.
+The Jaccard index can be a very intuitive way to compare people when your rating system is binary. The other algorithms I mentioned are pretty cool too, but likes, dislikes and set math were just made for each other. They’re like peanut butter and jelly. Bananas and Nutella™. Bored people and reality television. It’s a beautiful partnership that I hope can last forever.
 
-[goodbre.ws]: http://goodbre.ws/
-[recommendable]: http://github.com/davidcelis/recommendable
-[pearson]: http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient
-[euclidean]: http://en.wikipedia.org/wiki/Euclidean_distance
-[cosine]: http://en.wikipedia.org/wiki/Cosine_similarity
-[knn]: http://en.wikipedia.org/wiki/K-nearest_neighbor_algorithm
+[goodbre.ws]: https://github.com/davidcelis/goodbre.ws
+[recommendable]: https://github.com/davidcelis/recommendable
+[pearson]: https://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient
+[euclidean]: https://en.wikipedia.org/wiki/Euclidean_distance
+[cosine]: https://en.wikipedia.org/wiki/Cosine_similarity
+[knn]: https://en.wikipedia.org/wiki/K-nearest_neighbor_algorithm
 
-<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+[^1]: Although this statistic is named for Paul Jaccard, it was actually first developed by geologist [Grove Karl Gilbert](https://en.wikipedia.org/wiki/Grove_Karl_Gilbert) in 1884; Jaccard independently developed and popularized the same statistic in 1912. It was then independently developed for a third time by T. Tanimoto in 1958, leading the statistic to be known occasionally as the Tanimoto index or Tanimoto coefficient.
+
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
