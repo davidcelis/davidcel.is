@@ -1,0 +1,151 @@
+/**
+ * Ariake Dark (https://github.com/pathtrk/ariake-dark-syntax/)
+ */
+
+/* Set the main properties of the code, code blocks, and inline code */
+code[class*="language-"],
+pre[class*="language-"] {
+  background: #2a2d37;
+  color: #b9bed5;
+  font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-weight: 400;
+
+  /* The following properties are standard, please leave them as they are */
+  font-size: 1em;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  line-height: 1.5;
+
+  /* The default is 4, but you could change it if you really, really want to */
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  /* The following properties are also standard */
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Optional: What the code looks like when highlighted */
+code[class*="language-"]::selection,
+code[class*="language-"] ::selection,
+pre[class*="language-"]::selection,
+pre[class*="language-"] ::selection,
+code[class*="language-"]::-moz-selection,
+code[class*="language-"] ::-moz-selection,
+pre[class*="language-"]::-moz-selection,
+pre[class*="language-"] ::-moz-selection {
+  background-color: #404554;
+}
+
+/* Properties specific to code blocks */
+pre[class*="language-"] {
+  padding: 1em;
+  /* this is standard */
+  margin: 0.5em 0;
+  /* this is the default */
+  overflow: auto;
+  /* this is standard */
+  border-radius: 5px;
+}
+
+/* Properties specific to inline code */
+:not(pre) > code[class*="language-"] {
+  padding: 0.1em;
+  /* this is the default */
+  border-radius: 5px;
+  white-space: normal;
+  /* this is standard */
+}
+
+/**
+ * These are the minimum tokens you must style, you can rearrange them and/or style more tokens as you want
+ * The concepts behind these standard tokens, as well as some examples, can be found here: https://prismjs.com/tokens.html
+ */
+.token.comment,
+.token.prolog,
+.token.cdata,
+.token.doctype {
+  color: #5f6786;
+  font-style: italic;
+}
+
+.token.punctuation,
+.token.property,
+.token.operator {
+  color: #b9bed5;
+}
+
+.token.entity,
+.token.boolean,
+.token.number,
+.token.attr-name,
+.token.selector {
+  color: #dda2f6;
+}
+
+.token.class-name {
+  color: #a571f4;
+}
+
+.token.constant,
+.token.variable,
+.token.tag,
+.token.deleted {
+  color: #85b1e0;
+}
+
+.token.keyword,
+.token.atrule,
+.token.important {
+  color: #7e7edd;
+}
+
+.token.string,
+.token.char,
+.token.symbol,
+.token.attr-value,
+.token.inserted {
+  color: #9aefea;
+}
+
+.token.builtin,
+.token.regex {
+  color: #93ddfb;
+}
+
+.token.function {
+  color: #f5faff;
+}
+
+.token.url {
+  text-decoration: underline;
+  color: #b9bed5;
+}
+
+/* The following rules are pretty similar across themes, but feel free to adjust them */
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.namespace {
+  opacity: 0.7;
+}
+
+/* Language-specific overrides */
+.token.interpolation>.token.delimiter.punctuation {
+  color: #4d8acb;
+}
