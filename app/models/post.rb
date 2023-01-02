@@ -1,5 +1,5 @@
 class Post < ApplicationRecord
-  MARKDOWN_MODE = :UNSAFE
+  MARKDOWN_MODE = [:UNSAFE, :FOOTNOTES]
   MARKDOWN_EXTENSIONS = [:strikethrough, :autolink]
 
   validates :content, presence: true

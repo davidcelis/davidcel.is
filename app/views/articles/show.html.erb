@@ -1,0 +1,13 @@
+<%= content_for(:page_title, @article.title) %>
+
+<article class="py-10 sm:py-12">
+  <div class="lg:px-8">
+    <div class="lg:max-w-4xl">
+      <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+        <div class="prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
+          <%= @article.html.html_safe %>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
