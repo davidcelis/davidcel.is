@@ -1,7 +1,21 @@
-<%= content_for(:page_title, @article.title) %>
 <% content_for(:head) do %>
   <%= stylesheet_link_tag "prism", "data-turbo-track": "reload" %>
   <%= javascript_include_tag "prism", "data-turbo-track": "reload" %>
+<% end %>
+
+<%= content_for(:page_title, @article.title) %>
+<%= content_for(:post_timestamp) do %>
+  <div class="pt-4 text-sm text-slate-500">
+    <time datetime="<%= @article.created_at.iso8601 %>" title="<%= @article.created_at.strftime("%-I:%M %p %Z • %b %-d, %Y") %>" class="font-mono text-sm leading-7 text-slate-500" pubdate="pubdate">
+      <% if @article.created_at < 1.day.ago %>
+        <% format = @article.created_at.year < Time.now.year ? "%b %-d, %Y" : "%b %-d" %>
+
+        <%= @article.created_at.strftime(format) %>
+      <% else %>
+        <%= time_ago_in_words(@article.created_at) %> ago
+      <% end %>
+    </time>
+  </div>
 <% end %>
 
 <article class="py-10 sm:py-12">
