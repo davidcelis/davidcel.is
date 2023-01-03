@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>davidcel.is</title>
-    <meta name="description" content="Short posts from a cowboy coder.">
+    <meta name="description" content="Thoughts and musings of a Cowboy Coder.">
 
     <%= auto_discovery_link_tag(:atom, feed_url, title: "Atom Feed") %>
 
@@ -23,6 +23,29 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+    <meta property="og:title" content="<%= content_for(:og_title) || "davidcel.is" %>">
+    <meta property="og:description" content="<%= content_for(:og_description) || "Thoughts and musings of a Cowboy Coder." %>">
+    <meta property="og:type" content="<%= content_for(:og_type) || "website" %>">
+    <meta property="og:url" content="<%= content_for(:og_url) || request.original_url %>">
+    <% if content_for?(:og_image) %>
+      <%= content_for(:og_image) %>
+    <% else %>
+      <meta property="og:image" content="<%= image_url("me.jpg") %>">
+      <meta property="og:image:alt" content="A photo of me on a horse, looking quite dapper.">
+    <% end %>
+
+    <meta name="twitter:card" content="<%= content_for(:twitter_card) || "summary" %>">
+    <meta name="twitter:site" content="@davidcelis">
+    <meta name="twitter:creator" content="@davidcelis">
+    <meta name="twitter:title" content="<%= content_for(:og_title) || "davidcel.is" %>">
+    <meta name="twitter:description" content="<%= content_for(:og_description) || "Thoughts and musings of a Cowboy Coder." %>">
+    <% if content_for?(:twitter_image) %>
+      <%= content_for(:twitter_image) %>
+    <% else %>
+      <meta name="twitter:image" content="<%= image_url("me.jpg") %>">
+      <meta name="twitter:image:alt" content="A photo of me on a horse, looking quite dapper.">
+    <% end %>
 
     <%= content_for(:head) %>
   </head>
