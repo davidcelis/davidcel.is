@@ -1,30 +1,39 @@
 xml.instruct! :xml, version: "1.0"
-xml.rss "version" => "2.0", "xmlns:atom" => "http://www.w3.org/2005/Atom" do
-  xml.channel do
-    xml.title "davidcel.is"
-    xml.link root_url
-    xml.description "Musings of a cowboy coder."
-    xml.pubDate @posts.first.created_at.rfc822
-    xml.lastBuildDate @posts.first.created_at.rfc822
-    xml.language "en-us"
+xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
+  xml.title "davidcel.is"
+  xml.subtitle @subtitle
+  xml.author do
+    xml.name "David Celis"
+    xml.email "me@davidcel.is"
+    xml.uri root_url
+  end
 
-    xml.image do
-      xml.title "davidcel.is"
-      xml.url asset_url("me.jpg")
-      xml.link root_url
-    end
+  xml.icon asset_url("me.jpg")
+  xml.logo asset_url("me.jpg")
 
-    xml.tag! "atom:link", rel: "self", type: "application/rss+xml", href: feed_url(format: :xml)
+  xml.link rel: "alternate", type: "text/html", href: root_url
+  xml.link rel: "self", type: "application/atom+xml", href: feed_url
 
-    @posts.each do |post|
-      xml.item do
-        xml.title post.title
-        xml.description html_escape(post.excerpt)
-        xml.pubDate post.created_at.rfc822
+  xml.id root_url
+  xml.updated @posts.first.created_at.iso8601
+  xml.rights "© #{Time.zone.now.year} David Celis"
 
-        xml.link polymorphic_url(post)
-        xml.guid post_url(post.id)
+  @posts.each do |post|
+    xml.entry do
+      xml.id post_url(post.id)
+      xml.title post.title
+
+      xml.content "type" => "html", "xml:lang" => "en" do
+        content = post.excerpt
+        content += "<p>#{link_to "Read more…", polymorphic_url(post)}</p>" if post.is_a?(Article)
+
+        xml.cdata! content
       end
+
+      xml.published post.created_at.iso8601
+      xml.updated post.updated_at.iso8601
+
+      xml.link rel: "alternate", type: "text/html", href: polymorphic_url(post)
     end
   end
 end

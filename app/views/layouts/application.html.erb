@@ -3,7 +3,8 @@
   <head>
     <title>davidcel.is</title>
     <meta name="description" content="Short posts from a cowboy coder.">
-    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="<%= feed_url %>">
+
+    <%= auto_discovery_link_tag(:atom, feed_url, title: "Atom Feed") %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 

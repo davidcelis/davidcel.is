@@ -1,4 +1,4 @@
-<footer class="border-t border-slate-200 bg-slate-50 py-10 pb-40 sm:py-16 sm:pb-32 lg:hidden">
+<footer class="flex flex-col border-t border-slate-200 bg-slate-50 pt-10 sm:pt-16 lg:hidden">
   <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4">
     <section>
       <h2 class="flex items-center font-mono text-sm font-medium leading-7 text-slate-900">
@@ -13,11 +13,11 @@
         Hey there, I’m David! I’m a staff software engineer at
         <a href="https://firehydrant.com/" class="link-primary" target="_blank">FireHydrant</a>
         (where I write APIs) out in Portland, Ore. (where I drink IPAs). I write about tech
-        (rarely), food (often), and really anything that’s on my mind.
+        (rarely), food (often), and whatever else is on my mind.
       </p>
     </section>
 
-    <section>
+    <section class="pb-40 sm:pb-32">
       <h2 class="mt-8 flex items-center font-mono text-sm font-medium leading-7 text-slate-900">
         <svg aria-hidden="true" viewBox="0 0 10 10" class="h-2.5 w-2.5">
           <path d="M0 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5Z" class="fill-indigo-300"></path>
@@ -27,6 +27,10 @@
       </h2>
 
       <%= render "social_links", class: "mt-4 flex justify-center gap-10 text-base font-medium leading-7 text-slate-700 sm:gap-8" %>
+    </section>
+
+    <section class="pb-4 sm:pb-2">
+      <p class="text-center text-slate-500">\ No newline at end of file</p>
     </section>
   </div>
 </footer>
