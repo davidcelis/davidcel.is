@@ -1,6 +1,7 @@
 ---
 title: "Distance Constraints with PostgreSQL and PostGIS"
 date: 2015-01-29 18:44
+updated: 2022-12-29 14:31
 ---
 
 So you’re a squirrel, and winter is coming. It’s time to start gathering nuts for... woah, wait! Come back! Remember last year? _Sigh_, of course you don’t... You squirrels have great spatial memory for their caches, but not the spots you’ve foraged in. Last year, you did a lot of searching for nuts in places you’d already cleaned out. What a waste of time! Don’t worry, though; I’m here to help! To increase your productivity, we’re going to keep a spatial database of all of your foraging spots.

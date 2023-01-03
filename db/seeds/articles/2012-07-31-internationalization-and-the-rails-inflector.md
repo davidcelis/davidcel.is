@@ -1,6 +1,7 @@
 ---
 title: "Internationalization and the Rails Inflector"
 date: 2012-07-31 09:50
+updated: 2022-12-29 11:39
 ---
 
 Here’s a peek at an enhancement for `ActiveSupport::Inflector` that was introduced in Rails 4.0 and which I’m proud to have [contributed](https://github.com/rails/rails/commit/7db0b073fec6bc3e6f213b58c76e7f43fcc2ab97). The Inflector is the part of Rails responsible for a good amount of the cool stuff you can do with Strings: pluralization, singularization, titleization, humanization, tableization... The list goes on. Rails uses these methods extensively to map between, say, Model names, Controller names, database table names, and more. Let’s dive into the new stuff!

@@ -1,6 +1,7 @@
 ---
 title: "Why I Hate Five-Star Ratings"
 date: 2012-02-01 11:50
+updated: 2022-12-29 9:23
 ---
 
 When I was originally developing [goodbre.ws][1] (and, later, [recommendable][0]), the very first thing I had to decide was how users would rate items. Would I give them a standard five star system? Maybe something with more granularity, like allowing for half stars? Or perhaps the humble thumbs up or down? Truth be told, going with a binary thumbs up or down system of likes and dislikes was an easy choice. After all, I _hate_ the five-star rating system.

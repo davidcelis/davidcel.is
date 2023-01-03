@@ -1,6 +1,7 @@
 ---
 title: "The State of Rails Inflections"
 date: 2012-07-18 16:30
+updated: 2022-12-29 10:10
 ---
 
 Ah, the Rails Inflector; one way or another, we all know and love it. This little part of ActiveSupport has a lot of responsibility in our Rails applications, after all! It’s used to determine table names, class names, our resourceful routes, foreign keys... It’s a small part of ActiveSupport, but it has a _huge_ footprint. Outside of Rails’ internal use of the Inflector, it also provides a lot of useful mechanisms for string manipulation to Rails developers. But how does the Inflector actually handle things like singularization and pluralization? English isn’t a regular language, after all!

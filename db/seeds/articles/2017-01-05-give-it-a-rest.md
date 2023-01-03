@@ -1,6 +1,7 @@
 ---
 title: "Give It a REST: Use GraphQL for Your APIs"
 date: 2017-01-05 8:21
+updated: 2022-12-29 15:06
 ---
 
 In the world of API architecture, REST has been the reigning ruler for well over a decade. Mobile devices like smartphones and tablets have made it nearly impossible to avoid REST APIs. If you use technology at all, chances are that you use software built on a REST API constantly every day. Maybe you’ve even worked on a REST API or written one yourself! Despite REST’s popularity, however, it has a few glaring flaws.

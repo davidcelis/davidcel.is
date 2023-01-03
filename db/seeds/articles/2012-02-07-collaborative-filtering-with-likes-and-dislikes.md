@@ -1,6 +1,7 @@
 ---
 title: "Collaborative Filtering with Likes and Dislikes"
 date: 2012-02-07 13:10
+updated: 2022-12-29 16:51
 ---
 
 We’ve talked about some of the pitfalls of the [five-star rating system](https://davidcel.is/articles/why-i-hate-five-star-ratings/) and how a binary system based on likes and dislikes can be much better, but what does using this kind of rating system look like in practice? How can we take a user’s likes and dislikes and use them to generate helpful recommendations? The answer, as with the five-star system, is through collaborative filtering, but we can rely on a methodology better suited to a binary system!

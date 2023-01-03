@@ -1,6 +1,7 @@
 ---
 title: "Deploying Discourse with Capistrano"
 date: 2013-05-02 10:42
+updated: 2022-12-29 13:08
 ---
 
 _Note: The Discourse team now provides Docker images that greatly simplify the process of deploying Discourse, so you should just use their [official installation guide](https://github.com/discourse/discourse/blob/main/docs/INSTALL-cloud.md). I’ll leave this post up for posterity but, unlike my other posts, I’m unlikely to update or maintain it._

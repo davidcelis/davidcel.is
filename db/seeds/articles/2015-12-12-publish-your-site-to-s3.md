@@ -1,6 +1,7 @@
 ---
 title: "Easily Publish Your Site to S3 and CloudFront"
 date: 2015-12-13 17:01
+updated: 2022-12-29 14:47
 ---
 
 _Note: you’ll never truly be done rewriting your site so, true to fashion, my website is now a Rails app. Also, it’s way easier to put your static site behind something like Cloudflare to get automatic SSL, a CDN with caching, and plenty more. Because of that, I don’t really recommend using this post as a guide; many parts are out of date and some are no longer true. Like other defunct posts, I’ll leave it in my garden, but I’m unlikely to tend to it._

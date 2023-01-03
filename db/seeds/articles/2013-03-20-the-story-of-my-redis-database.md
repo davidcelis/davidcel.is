@@ -1,6 +1,7 @@
 ---
 title: "From 1.5 GB to 50 MB: Debugging Memory Usage in Redis"
 date: 2013-03-20 11:42
+updated: 2022-12-29 12:57
 ---
 
 Back when I was still working on [goodbre.ws](https://github.com/davidcelis/goodbre.ws) (well... rewriting, really), there was one big issue I was dealing with. Really big. Big enough to have taken down the entire site semi-permanently without me having access to more expensive servers. Long story short, my Redis database grew out of control and ballooned to 1.5 GB. The day before publising this for the first time, I reduced that memory usage to a cool 50 MB.

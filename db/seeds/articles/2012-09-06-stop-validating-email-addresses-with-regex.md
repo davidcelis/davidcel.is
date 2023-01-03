@@ -1,6 +1,7 @@
 ---
 title: "Stop Validating Email Addresses with Regex"
 date: 2012-09-06 10:33
+updated: 2022-12-29 12:02
 ---
 
 Just stop, y’all. It’s a waste of your time and your effort. Put down your Google search for an [email regular expression](http://www.google.com/search?q=email+regex), take a step back, and breathe.<!--more--> There’s a famous quote that goes:
