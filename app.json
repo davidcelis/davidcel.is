@@ -1,0 +1,16 @@
+{
+  "name": "davidcel.is",
+  "description": "My personal website and blog.",
+  "keywords": [
+    "blog",
+    "indieweb"
+  ],
+  "website": "https://davidcel.is",
+  "repository": "https://github.com/davidcelis/davidcel.is",
+  "logo": "https://davidcel.is/me.jpg",
+  "scripts": {
+    "dokku": {
+      "postdeploy": "bundle exec rake db:migrate"
+    }
+  }
+}
