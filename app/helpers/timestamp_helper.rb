@@ -9,6 +9,6 @@ module TimestampHelper
       time_ago_in_words(post.created_at) + " ago"
     end
 
-    time_tag post.created_at, text, title: post.created_at.strftime("%-I:%M %p %Z • %b %-d, %Y"), class: "font-mono text-sm leading-7 text-slate-500", pubdate: true
+    time_tag post.created_at, text, title: post.created_at.strftime("%-I:%M %p %Z • %b %-d, %Y"), class: "font-mono text-sm leading-7 text-slate-500", pubdate: true, data: {"local-time-target" => "time"}
   end
 end
