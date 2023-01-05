@@ -14,7 +14,17 @@ Rails.application.routes.draw do
   # This also ensures that our legacy URLs listed below won't conflict.
   get "/posts/:id", to: "posts#show", as: :post, constraints: {id: /\d+/}
 
-  # Ensure legacy URLs redirect to the new location for existing articles
+  # Set up routes for me to authenticate and, later, write/edit posts.
+  namespace :github do
+    namespace :oauth do
+      get :callback
+    end
+  end
+
+  get :sign_in, to: "sessions#new"
+  delete :sign_out, to: "sessions#destroy"
+
+  # Finally, ensure old URLs redirect to the new location for existing articles
   get "/blog/2012/02/01/why-i-hate-five-star-ratings", to: redirect("/articles/why-i-hate-five-star-ratings/")
   get "/blog/2012/02/07/collaborative-filtering-with-likes-and-dislikes", to: redirect("/articles/collaborative-filtering-with-likes-and-dislikes/")
   get "/blog/2012/07/18/the-current-state-of-rails-inflections", to: redirect("/articles/the-state-of-rails-inflections/")
