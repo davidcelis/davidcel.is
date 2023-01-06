@@ -14,12 +14,14 @@ Rails.application.routes.draw do
   # This also ensures that our legacy URLs listed below won't conflict.
   get "/posts/:id", to: "posts#show", as: :post, constraints: {id: /\d+/}
 
-  # Set up routes for me to authenticate and, later, write/edit posts.
+  # Set up routes for me to authenticate and write/edit posts.
   namespace :github do
     namespace :oauth do
       get :callback
     end
   end
+
+  mount Avo::Engine, at: Avo.configuration.root_path
 
   get :sign_in, to: "sessions#new"
   delete :sign_out, to: "sessions#destroy"

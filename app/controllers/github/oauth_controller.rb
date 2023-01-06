@@ -43,6 +43,8 @@ module GitHub
       if user_response["id"] == Rails.application.credentials.dig(:github, :user_id)
         cookies.permanent.encrypted[:github_user_id] = user_response["id"]
         cookies.permanent.encrypted[:github_username] = user_response["login"]
+
+        redirect_to avo_path and return
       end
 
       redirect_to root_path
