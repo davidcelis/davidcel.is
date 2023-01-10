@@ -1,1 +1,15 @@
 /* Application styles */
+
+/*
+Each note ends up being comprised of a single <p> tag; when listing them,
+don't arbitrarly give each one a top margin. Also, prepend our
+*/
+.post-list .note .prose p:first-of-type {
+  margin-top: 0 !important;
+}
+
+@media not all and (min-width: 768px) {
+  .post-list .note .prose p:first-of-type::before {
+    content: "✏️ ";
+  }
+}

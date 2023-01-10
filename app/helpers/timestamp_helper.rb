@@ -1,5 +1,5 @@
 module TimestampHelper
-  def timestamp(post)
+  def timestamp(post, full: false)
     text = if post.created_at < 1.day.ago
       format = "%b %-d"
       format += ", %Y" if post.created_at.year < Time.now.year
@@ -9,6 +9,15 @@ module TimestampHelper
       time_ago_in_words(post.created_at) + " ago"
     end
 
-    time_tag post.created_at, text, title: post.created_at.strftime("%-I:%M %p %Z • %b %-d, %Y"), class: "font-mono text-sm leading-7 text-slate-500", pubdate: true, data: {"local-time-target" => "time"}
+    options = {
+      title: post.created_at.strftime("%-I:%M %p %Z • %b %-d, %Y"),
+      class: "font-mono text-sm leading-7",
+      data: {"local-time-target" => "time"},
+      pubdate: true
+    }
+
+    options[:data]["local-time-full"] = true if full
+
+    time_tag post.created_at, text, options
   end
 end

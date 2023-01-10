@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   resources :posts, only: [:index]
   resources :articles, only: [:index, :show]
+  resources :notes, only: [:index, :show]
 
   get "/about", to: "pages#about"
 

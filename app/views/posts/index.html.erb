@@ -1,5 +1,7 @@
 <% content_for(:page_title, params[:controller] == "posts" ? "All Posts" : params[:controller].titleize) %>
 
-<% @posts.each do |post| %>
-  <%= render post %>
-<% end %>
+<section class="post-list divide-y divide-slate-100">
+  <% @posts.each do |post| %>
+    <%= render post %>
+  <% end %>
+</section>

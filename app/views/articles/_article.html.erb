@@ -1,36 +1,24 @@
-<article aria-labelledby="article-<%= article.id %>-title" class="py-10 sm:py-12">
+<article class="article py-10 sm:py-12" aria-labelledby="article-<%= article.id %>-title" >
   <div class="lg:px-8">
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <div class="flex flex-col items-start">
-          <%= timestamp(article) %>
-
           <h2 id="article-<%= article.id %>-title" class="mt-2 text-lg font-bold text-slate-900">
+            <span class="select-none md:absolute md:-ml-6" title="Article">
+              📝
+            </span>
+
             <%= link_to article.title, polymorphic_path(article), class: "link-primary" %>
           </h2>
-
-          <%#
-            Put an icon here depending on the post type, then maybe "verbed at..."? For example:
-
-            Article: newspaper icon, "Wrote ... ago"
-            Note: note icon, "Posted ... ago"
-            CheckIn: location pin, "Checked in ... ago"
-            <i class="fas fa-code text-slate-500"></i> <span class="font-bold">Wrote</span>
-          %>
 
           <section class="prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
             <%= article.excerpt.html_safe %>
           </section>
 
           <div class="mt-4 flex items-center gap-4">
-            <%# <button type="button" class="flex items-center text-sm font-bold leading-6 link-primary" aria-label="Play episode 5: Bill Lumbergh">
-              <svg aria-hidden="true" viewBox="0 0 10 10" fill="none" class="h-2.5 w-2.5 fill-current"><path d="M8.25 4.567a.5.5 0 0 1 0 .866l-7.5 4.33A.5.5 0 0 1 0 9.33V.67A.5.5 0 0 1 .75.237l7.5 4.33Z"></path></svg>
-              <span class="ml-3" aria-hidden="true">Listen</span>
-            </button>
-
-            <span aria-hidden="true" class="text-sm font-bold text-slate-400">/</span> %>
-
-            <%= link_to "Read more →", polymorphic_path(article), class: "flex items-center text-sm font-bold leading-6 link-primary" %>
+            <%= link_to polymorphic_path(article), class: "flex items-center text-sm font-bold leading-6 link-primary" do %>
+              <%= timestamp(article) %>
+            <% end %>
           </div>
         </div>
       </div>

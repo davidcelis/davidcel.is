@@ -1,7 +1,7 @@
-class ArticleResource < Avo::BaseResource
+class NoteResource < Avo::BaseResource
   self.link_to_child_resource = true
 
-  self.title = :title
+  self.title = :id
 
   self.includes = []
   # self.search_query = -> do
@@ -11,8 +11,7 @@ class ArticleResource < Avo::BaseResource
   field :id, as: :id
 
   # Fields generated from the model
-  field :title, as: :text
-  field :slug, as: :text, readonly: true, hide_on: [:index]
+  field :slug, as: :text, readonly: true
   field :content, as: :code, language: "markdown", theme: "dracula", hide_on: [:index]
 
   # Add more fields here

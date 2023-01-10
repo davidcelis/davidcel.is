@@ -11,7 +11,7 @@
             </button>
 
             <div id="nav-popup" data-reveal-target="item" data-turbo-cache="false" class="hidden">
-              <div data-action="click->reveal#hide" class="fixed inset-0 z-25 bg-slate-800/40 backdrop-blur-sm opacity-100" aria-hidden="true"></div>
+              <div data-action="click->reveal#hide" class="fixed inset-0 z-25 h-screen w-screen bg-slate-800/40 backdrop-blur-sm opacity-100" aria-hidden="true"></div>
               <div class="fixed inset-x-4 top-8 z-50 origin-top rounded-3xl bg-white p-8 ring-1 ring-slate-900/5 opacity-100 scale-100" tabindex="-1">
                 <div class="flex flex-row-reverse items-center justify-between">
                   <button data-action="click->reveal#hide" aria-label="Close menu" class="-m-1 p-1" type="button" tabindex="0">
@@ -23,12 +23,12 @@
 
                 <nav class="mt-6">
                   <ul class="-my-2 divide-y divide-slate-100 text-base text-slate-800">
-                    <li><%= link_to "About", about_path, class: "block py-2 transition link-primary font-bold" %></li>
-                    <li><%= link_to "All Posts", posts_path, class: "block py-2 transition link-primary font-bold" %></li>
-                    <li><%= link_to "Articles", articles_path, class: "block py-2 transition link-primary font-bold" %></li>
-                    <li><%= link_to "🔜 Notes", "#", class: "block py-2 transition link-primary font-bold" %></li>
+                    <li><%= link_to "🧑‍💻 About", about_path, class: "block py-2 transition link-primary font-bold" %></li>
+                    <li><%= link_to "🗃️ All Posts", posts_path, class: "block py-2 transition link-primary font-bold" %></li>
+                    <li><%= link_to "📝 Articles", articles_path, class: "block py-2 transition link-primary font-bold" %></li>
+                    <li><%= link_to "✏️ Notes", notes_path, class: "block py-2 transition link-primary font-bold" %></li>
                     <% if authenticated? %>
-                      <li><%= link_to "Admin", avo_path, class: "block py-2 transition link-primary font-bold" %></li>
+                      <li><%= link_to "⚙️ Admin", avo_path, class: "block py-2 transition link-primary font-bold" %></li>
                     <% end %>
                   </ul>
                 </nav>
@@ -41,7 +41,7 @@
               <li><%= link_to "About", about_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
               <li><%= link_to "All Posts", posts_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
               <li><%= link_to "Articles", articles_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
-              <li><%= link_to "🔜 Notes", "#", class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
+              <li><%= link_to "Notes", notes_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
               <% if authenticated? %>
                 <li><%= link_to "Admin", avo_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
               <% end %>
