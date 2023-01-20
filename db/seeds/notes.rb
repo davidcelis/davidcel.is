@@ -1,7 +1,14 @@
 ActiveRecord::Base.record_timestamps = false
 
+resp = HTTParty.get("https://cdn.davidcel.is/tweets.json.enc")
+
+tempfile = Tempfile.new
+tempfile.binmode
+tempfile.write(resp.body)
+tempfile.rewind
+
 file = ActiveSupport::EncryptedFile.new(
-  content_path: Rails.root.join("db", "seeds", "notes", "tweets.json.enc"),
+  content_path: tempfile.path,
   key_path: Rails.root.join("config", "master.key"),
   env_key: "RAILS_MASTER_KEY",
   raise_if_missing_key: true
