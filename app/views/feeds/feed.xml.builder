@@ -1,7 +1,7 @@
 xml.instruct! :xml, version: "1.0"
 xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
   xml.title "davidcel.is"
-  xml.subtitle @subtitle
+  xml.subtitle @subtitle if @subtitle.present?
   xml.author do
     xml.name "David Celis"
     xml.email "me@davidcel.is"
@@ -11,10 +11,10 @@ xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
   xml.icon asset_url("me.jpg")
   xml.logo asset_url("me.jpg")
 
-  xml.link rel: "alternate", type: "text/html", href: root_url
-  xml.link rel: "self", type: "application/atom+xml", href: feed_url
+  xml.link rel: "alternate", type: "text/html", href: @alternate_url
+  xml.link rel: "self", type: "application/atom+xml", href: @self_url
 
-  xml.id root_url
+  xml.id @self_url
   xml.updated @posts.first.created_at.iso8601
   xml.rights "© #{Time.zone.now.year} David Celis"
 
@@ -23,10 +23,14 @@ xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
       xml.id post_url(post.id)
       xml.title post.title
 
-      xml.content "type" => "html", "xml:lang" => "en" do
-        content = post.excerpt
-        content += "<p>#{link_to "Read more…", polymorphic_url(post)}</p>" if post.is_a?(Article)
+      content = case post
+      when Article
+        "#{post.excerpt}<p>#{link_to "Continue reading…", polymorphic_url(post)}</p>"
+      when Note
+        post.html
+      end
 
+      xml.content "type" => "html", "xml:lang" => "en" do
         xml.cdata! content
       end
 

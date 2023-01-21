@@ -4,7 +4,9 @@
     <title>davidcel.is</title>
     <meta name="description" content="Thoughts and musings of a Cowboy Coder.">
 
-    <%= auto_discovery_link_tag(:atom, feed_url, title: "Atom Feed") %>
+    <%= auto_discovery_link_tag(:atom, main_feed_url, title: "davidcel.is") %>
+    <%= auto_discovery_link_tag(:atom, articles_feed_url, title: "davidcel.is - Articles") %>
+    <%= auto_discovery_link_tag(:atom, notes_feed_url, title: "davidcel.is - Notes") %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 

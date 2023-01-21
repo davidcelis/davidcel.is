@@ -1,13 +1,15 @@
 Rails.application.routes.draw do
   root to: "posts#index"
 
+  get "/about", to: "pages#about"
+
   resources :posts, only: [:index]
   resources :articles, only: [:index, :show]
   resources :notes, only: [:index, :show]
 
-  get "/about", to: "pages#about"
-
-  get "/feed", to: "posts#feed", format: :xml, as: :feed
+  get "/feeds/main", to: "feeds#main", format: :xml, as: :main_feed
+  get "/feeds/articles", to: "feeds#articles", format: :xml, as: :articles_feed
+  get "/feeds/notes", to: "feeds#notes", format: :xml, as: :notes_feed
 
   # For the generic /posts/:id route (i.e. to route to a post without using
   # its type, like Article or Note), we'll only support numeric IDs. Only
