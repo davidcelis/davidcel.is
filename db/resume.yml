@@ -1,0 +1,251 @@
+basics:
+  name: David Celis
+  label: Backend Engineer
+  image: /me.jpg
+  email: me@davidcel.is
+  url: https://davidcel.is/
+  summary: |
+    I’m an empathy-driven backend engineer specializing in designing elegant
+    APIs with a keen eye toward usability and maintainability. I strive for a
+    user-first approach, understanding that people come from a variety of
+    backgrounds that differ from my own, while also producing readable,
+    well-tested, and well-measured code. Outside of work, I’m an avid Open
+    Source Software advocate. I’ve maintained several open source libraries
+    and have contributed to many more, including Ruby on Rails, bundler,
+    Discourse, Hanami, and fish.
+  location:
+    city: Portland
+    region: Oregon
+  profiles:
+    - network: GitHub
+      username: davidcelis
+      url: https://github.com/davidcelis
+    - network: Instagram
+      username: davidcelis
+      url: https://instagram.com/davidcelis
+    - network: Mastodon
+      username: "@davidcelis@xoxo.zone"
+      url: https://xoxo.zone/@davidcelis
+    - network: Twitter
+      username: davidcelis
+      url: https://twitter.com/davidcelis
+
+skills:
+  - {name: "Ruby/Rails", level: "Expert"}
+  - {name: "Sorbet", level: "Proficient"}
+  - {name: "GraphQL", level: "Expert"}
+  - {name: "SQL/PostgreSQL/MySQL", level: "Proficient"}
+  - {name: "JavaScript/TypeScript", level: "Learning"}
+  - {name: "Redis", level: "Proficient"}
+  - {name: "Docker", level: "Intermediate"}
+  - {name: "Git(Hub)", level: "Expert"}
+
+work:
+  - name: FireHydrant
+    position: Staff Software Engineer
+    url: https://firehydrant.com/
+    startDate: 2021-07-12
+    summary: |
+      I’m the lead engineer of FireHydrant’s Incident Management team, which is
+      responsible for incidents and all parts of their lifecycle: declaration,
+      automation, resolution, retrospectives, and our Slack application that
+      enables robust incident response from the comfort of a powerful chatops
+      tool. As team lead, I have a highly collaborative relationship and
+      partnership with our manager and head of product to guide the team’s
+      roadmap, architecture, and overall process/health.
+  - name: Stripe
+    position: Staff Software Engineer
+    url: https://stripe.com
+    startDate: 2019-11-04
+    endDate: 2021-05-14
+    summary: |
+      I began at Stripe on the API Platform team, responsible for the framework
+      used by product engineering teams to create and maintain the API that has
+      firmly planted Stripe as a developer-first company. On this team, I led a
+      company-wide audit of Stripe’s heavily-used feature flagging system,
+      determining the purpose, ownership, and intended lifecycle of every
+      single feature flag that had been created. This audit had immense and
+      lasting impact on how Stripe engineers approached their use of feature
+      flags, drastically reducing the number of flags being created for private,
+      one-off features. After my time on API Platform, I moved to work on
+      Stripe’s Issuing product. There, I acted as engineering lead for the
+      launch of a brand new Commercial Payout Card product, a five month project
+      spanning almost ten separate workstreams and over a dozen other engineers.
+  - name: HashiCorp
+    position: Senior Software Engineer
+    startDate: 2017-11-06
+    endDate: 2019-11-01
+    summary: |
+      At HashiCorp, I worked on Terraform Cloud (TFC). Terraform is a free and
+      open-source utility that allows engineers and teams to automate the
+      process of provisioning infrastructure by defining that infrastructure as
+      code. Terraform Cloud is essentially to Terraform as GitHub is to Git,
+      adding remote state storage and collaborative features to Terraform. When
+      I joined HashiCorp, I was on the team responsible for TFC’s JSON API, its
+      integration with Sentinel (an embeddable policy-as-code framework) and,
+      occasionally, tinkering with its Ember frontend or surrounding Go
+      microservices. At HashiCorp, I lead several large projects, including
+      preparing version 2 of the API for exiting its beta status, a new
+      administration API for Terraform Enterprise,
+      <a href="https://www.hashicorp.com/blog/announcing-policy-sets-in-terraform-enterprise">Sentinel Policy Sets</a>,
+      and <a href="https://www.hashicorp.com/blog/announcing-cost-estimation-for-terraform-cloud-and-enterprise">Cost Estimation</a> feature.
+  - name: GitHub
+    position: Software Engineer
+    startDate: 2016-01-18
+    endDate: 2017-10-31
+    summary: |
+      As a member of GitHub’s Ecosystem Engineering organization, I shared
+      responsibility for building and maintaining GitHub’s developer APIs,
+      third-party integrations, webhooks, and developer documentation. I was a
+      member of the team that shipped the pre-release of GitHub’s GraphQL API,
+      after which I spent my time on the Identity Access Management (IAM) team
+      shipping Business accounts and GitHub Apps. I also onboarded myself onto
+      GitHub’s main on-call rotation after only three months on the job. At my
+      final performance review, I was told that my on-call logs were
+      consistently amongst the best at the company.
+  - name: Immunio
+    position: Software Engineer
+    startDate: 2015-04
+    endDate: 2015-12
+    summary: |
+      At Immunio, I designed the Ruby API that powered their front-end Angular
+      dashboard. I also helped implement features to aggregate data on
+      customers’ most important security vulnerabilities. Prior to this
+      project, suspicious events would be displayed in long, paginated lists. I
+      worked closely with the front-end developer to roll up suspicious events
+      into clear, ongoing attacks so customers could easily find them and fix
+      them in their application’s code base.
+  - name: DigitalOcean
+    position: Software Engineer
+    startDate: 2014-08
+    endDate: 2015-03
+    summary: |
+      I helped improve response times by hundreds of milliseconds in some of
+      the least performant Cloud dashboard pages and developer API endpoints. I
+      also worked on an effort to re-implement and re-design DigitalOcean’s DNS
+      product. DigitalOcean’s backend was previously a series of Perl scripts
+      running in a loop. As part of a larger effort to re- architect their
+      backend as a network of Go microservices, I aided the rewrite of DNS so I
+      could gain experience in Go. Finally, I was part of a team focused on
+      improving the usability and functionality of various internal tools,
+      including a custom CMS used heavily by their Customer Support team.
+  - name: New Relic
+    position: Senior Software Engineer
+    startDate: 2012-10
+    endDate: 2014-08
+    summary: |
+      I worked on the customer-facing dashboard for their flagship product, the
+      APM dashboard, which received billions of metrics from millions of
+      applications each day. My team developed popular features such as Key
+      Transactions and X-Ray sessions. After acting as the PM on a minor
+      feature, I joined an internal effort to lay the foundations for New Relic
+      to migrate to a service-oriented architecture, developing several
+      identity services.
+  - name: DECK Monitoring
+    position: Software Engineer
+    startDate: 2011-05
+    endDate: 2012-07
+    summary: |
+      I worked on a dashboard to display solar energy usage and generation
+      metrics to thousands of residential and business customers who would
+      report 100-200 pieces of data each minute. My major contribution to DECK
+      Monitoring was the automation of reporting this data to California
+      utility companies on behalf of customers seeking tax benefits.
+
+education:
+  - institution: Rollins College
+    url: https://rollins.edu/
+    area: Computer Science
+    studyType: B.A.H.
+    startDate: "2007"
+    endDate: "2011"
+    score: "3.99"
+    summary: |
+      I graduated summa cum laude with a B.A.H in Computer Science. I graduated
+      in the top 5 of my class with a 3.99 GPA (4.0 Major GPA) and was on the
+      President’s List for all terms.
+
+projects:
+  - name: Nook Stop API
+    description: |
+      In June 2022, I delivered a tech talk to coworkers at FireHydrant about
+      GraphQL, a technology I’m passionate about and wanted to introduce
+      internally. In order to provide an in-depth demonstration on everything I
+      love about GraphQL, I wrote a way-too-comprehensive API using data from
+      Animal Crossing: New Horizons. The code is, of course,
+      <a href="https://github.com/davidcelis/nook_stop_api">open source</a>,
+      and the demo site remains live for anybody who is interested in GraphQL
+      and who wants to play around with some queries.
+    startDate: 2022-06-02
+    url: https://acnh.apps.davidcel.is/
+    type: presentation
+  - name: Sparkles
+    description: |
+      Sparkles was an open source Slack application that replicates a silly
+      points bot that I missed from my days at GitHub. It simply provides a
+      command (<code>/sparkle</code>) that lets you recognize a teammate or
+      coworker for helping you, saying something funny, or any reason at all,
+      in the form of a meaningless sparkle point. I added my own flavor by
+      creating a web frontend to keep track of each detail about each Sparkle,
+      even providing a link back to the Slack message that originally created
+      it for context.
+    startDate: 2021-10-18
+    endDate: 2022-11-15
+    url: https://github.com/davidcelis/sparkles
+    type: application
+  - name: goodbre.ws
+    description: |
+      goodbre.ws was a project born out of my last year in the Rollins College
+      Computer Science department. As a senior in the honors program, I was
+      expected to produce, present, and defend an exceptional capstone project
+      for and to the faculty. I chose to build my own collaborative filtering
+      system based on the
+      <a href="http://en.wikipedia.org/wiki/Jaccard_index">Jaccardian Similarity Coefficient</a>.
+      To provide a practical application for this system, I created goodbre.ws,
+      a recommendation website for beer written in Ruby on Rails. The site was
+      unexpectedly featured on
+      <a href="http://lifehacker.com/5947790/goodbrews-tracks-the-beer-you-like-suggests-brews-youd-love">Lifehacker</a>
+      and <a href="http://www.huffingtonpost.com/2012/10/01/goodbrews-beer-recommendations-exploration-website_n_1930567.html">The Huffington Post</a>.
+    startDate: 2011-01
+    endDate: 2014-03
+    url: https://github.com/davidcelis/goodbre.ws
+    type: application
+  - name: Recommendable
+    description: |
+      Recommendable was a Ruby library that I extracted from goodbre.ws to be a
+      drop-in recommender system using Likes and Dislikes. Ratings and
+      recommendations were stored in Redis to utilize fast set mathematics for
+      collaborative filtering.
+    startDate: 2012-01
+    endDate: 2018-04
+    url: https://github.com/davidcelis/recommendable
+    type: library
+  - name: rack-console
+    description: |
+      rack-console is a Ruby gem to provide an interactive Ruby interpreter for
+      any Rack-based web application. Think of it like <code>rails console</code>
+      for everything but Rails.
+    startDate: 2014-07
+    url: https://github.com/davidcelis/rack-console
+    type: library
+  - name: Crêpe
+    description: |
+      Crêpe was a lightweight API framework designed to help you write clean,
+      fast web services in Ruby. I joined as a maintainer in 2013 and provided
+      pieces to Crêpe’s surrounding ecosystem such as Crêperie (a project
+      scaffolder and CLI) and a plugin to report metrics to New Relic.
+    startDate: 2013-09
+    endDate: 2017-12
+    url: https://github.com/crepe
+    type: library
+  - name: Sunscreen
+    description: |
+      Sunscreen was a macOS app that I wrote just for fun. A lightweight menu
+      bar app that changed your desktop wallpaper based on local sunrise and
+      sunset times, Sunscreen was my first (but hopefully not last) foray into
+      Swift and Xcode. I stopped maintaining it when Apple sherlocked the idea
+      and introduced wallpapers that changed alongside Night Shift.
+    startDate: 2016-02
+    endDate: 2016-03
+    url: https://github.com/davidcelis/sunscreen
+    type: application
