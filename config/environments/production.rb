@@ -36,6 +36,11 @@ Rails.application.configure do
   # config.action_cable.url = "wss://example.com/cable"
   # config.action_cable.allowed_request_origins = [ "http://example.com", /http:\/\/example.*/ ]
 
+  # Store files in DigitalOcean Spaces.
+  config.active_storage.service = :production
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
+  config.cdn_host = "https://cdn.davidcel.is"
+
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 

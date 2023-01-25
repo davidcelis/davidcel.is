@@ -2,7 +2,9 @@ class Post < ApplicationRecord
   MARKDOWN_MODE = [:UNSAFE, :FOOTNOTES]
   MARKDOWN_EXTENSIONS = [:strikethrough, :autolink]
 
-  validates :content, presence: true
+  has_many :media_attachments
+
+  validates :content, presence: true, unless: -> { media_attachments.any? }
 
   before_create :generate_slug
   before_save :render_html

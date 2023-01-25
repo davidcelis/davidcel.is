@@ -33,6 +33,11 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
+  # Store files in a test DigitalOcean Spaces bucket.
+  config.active_storage.service = :development
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
+  config.cdn_host = "https://davidcelis-test.sfo3.cdn.digitaloceanspaces.com"
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 

@@ -9,5 +9,5 @@
 Dir[Rails.root.join("db", "seeds", "**", "*.rb")].sort.each do |file|
   puts "Seeding #{file}"
 
-  load file
+  Kernel.silence_warnings { load file }
 end

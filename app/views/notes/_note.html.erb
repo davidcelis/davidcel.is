@@ -9,6 +9,12 @@
             </span>
 
             <%= note.html.html_safe %>
+
+            <% note.media_attachments.each do |media_attachment| %>
+              <div class="mt-4">
+                <%= image_tag cdn_file_url(media_attachment.file), loading: "lazy" if media_attachment.image? %>
+              </div>
+            <% end %>
           </section>
 
           <div class="mt-4 flex items-center gap-4">

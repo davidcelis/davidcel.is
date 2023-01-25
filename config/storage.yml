@@ -1,0 +1,19 @@
+default: &default
+  service: S3
+  endpoint: https://sfo3.digitaloceanspaces.com
+  access_key_id: <%= Rails.application.credentials.dig(:digitalocean, :access_key) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:digitalocean, :secret_key) %>
+  region: sfo3
+  public: true
+
+production:
+  <<: *default
+  bucket: davidcelis
+
+development:
+  <<: *default
+  bucket: davidcelis-test
+
+test:
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage") %>
