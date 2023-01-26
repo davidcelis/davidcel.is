@@ -10,6 +10,10 @@
           <%= @note.html.html_safe %>
         </div>
 
+        <% if @note.media_attachments.any? %>
+          <%= render partial: "media_gallery", locals: {media_attachments: @note.media_attachments.includes(file_attachment: :blob)} %>
+        <% end %>
+
         <div class="pt-4 text-sm text-slate-500">
           <%= timestamp(@note, full: true) %>
         </div>

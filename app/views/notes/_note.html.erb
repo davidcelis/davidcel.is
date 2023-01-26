@@ -9,13 +9,11 @@
             </span>
 
             <%= note.html.html_safe %>
-
-            <% note.media_attachments.each do |media_attachment| %>
-              <div class="mt-4">
-                <%= image_tag cdn_file_url(media_attachment.file), loading: "lazy" if media_attachment.image? %>
-              </div>
-            <% end %>
           </section>
+
+          <% if note.media_attachments.any? %>
+            <%= render partial: "notes/media_gallery", locals: {media_attachments: note.media_attachments} %>
+          <% end %>
 
           <div class="mt-4 flex items-center gap-4">
             <%= link_to polymorphic_path(note), class: "flex items-center text-sm font-bold leading-6 link-primary" do %>

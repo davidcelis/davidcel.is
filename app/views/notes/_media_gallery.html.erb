@@ -1,0 +1,11 @@
+<ul role="list" class="grid<%= " grid-cols-2" if media_attachments.length > 1 %> gap-x-1 gap-y-1 mt-4 rounded-lg overflow-hidden">
+  <% media_attachments.each_with_index do |media_attachment, i| %>
+    <li class="relative<%= " row-span-2" if i == 0 && media_attachments.length.odd? %>">
+      <% if media_attachment.image? %>
+        <%= image_tag cdn_file_url(media_attachment), loading: "lazy", alt: (media_attachment.description || media_attachment.filename), class: "h-full object-cover max-h-[750px] hover:opacity-75" %>
+      <% # elsif media_attachment.video? %>
+        <% # image_tag media_attachment.preview(resize_to_limit: [media_attachment.metadata["width"], media_attachment.metadata["height"]]).processed, loading: "lazy", alt: (media_attachment.description || media_attachment.filename), class: "h-full object-cover max-h-[750px] hover:opacity-75" %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
