@@ -1,6 +1,8 @@
+CDN_URL = "https://davidcelis-test.sfo3.cdn.digitaloceanspaces.com".freeze
+
 ActiveRecord::Base.record_timestamps = false
 
-resp = HTTParty.get("https://cdn.davidcel.is/tweets.json.enc")
+resp = HTTParty.get("#{CDN_URL}/twitter_circle_tweets.json.enc")
 
 tempfile = Tempfile.new
 tempfile.binmode
@@ -13,9 +15,26 @@ file = ActiveSupport::EncryptedFile.new(
   env_key: "RAILS_MASTER_KEY",
   raise_if_missing_key: true
 )
+twitter_circle_tweets = JSON.parse(file.read)
+twitter_circle_tweet_ids = twitter_circle_tweets.map { |t| t["id"].to_i }
 
-tweets = JSON.parse(file.read)
+tweets = HTTParty.get("#{CDN_URL}/tweets.json")
 tweets.each do |tweet|
+  tweet_id = tweet["id"].to_i
+
+  # Absolutely do not import tweets that I posted to my Twitter Circle. And for
+  # any that might accidentally exist in the database, make sure to delete them.
+  if twitter_circle_tweet_ids.include?(tweet_id)
+    if (note = Note.find_by(id: tweet_id))
+      note.destroy!
+      puts "Deleted Note: #{note.id} (#{note.slug})"
+    else
+      puts "Skipping Note: #{tweet_id} (Circle)"
+    end
+
+    next
+  end
+
   # Skip replies and retweets for now.
   next if tweet["in_reply_to_status_id"]
   next if tweet["full_text"].match?(/^RT @\w+:/)
@@ -23,7 +42,7 @@ tweets.each do |tweet|
   # Skip anything with media for now.
   next if tweet.dig("extended_entities", "media").present?
 
-  note = Note.find_or_initialize_by(id: tweet["id"].to_i)
+  note = Note.find_or_initialize_by(id: tweet_id.to_i)
   note.created_at = note.updated_at = Time.parse(tweet["created_at"])
 
   # Parse the original tweet's text and auto-link stuff.
