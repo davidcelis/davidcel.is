@@ -22,6 +22,10 @@ class MediaAttachment < ApplicationRecord
     metadata[:height]
   end
 
+  def gif?
+    custom_metadata[:original_content_type] == "image/gif"
+  end
+
   private
 
   def generate_preview_image

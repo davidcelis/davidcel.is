@@ -20,6 +20,7 @@ export default class extends Lightbox {
   get defaultOptions() {
     return {
       licenseKey: '4444-4444-4444-4444',
+      selector: 'a',
       download: false,
       getCaptionFromTitleOrAlt: false,
       hideControlOnEnd: true,
