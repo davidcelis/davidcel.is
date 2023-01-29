@@ -26,6 +26,12 @@ class MediaAttachment < ApplicationRecord
     custom_metadata[:original_content_type] == "image/gif"
   end
 
+  def video?
+    return false if gif?
+
+    file.video?
+  end
+
   private
 
   def generate_preview_image

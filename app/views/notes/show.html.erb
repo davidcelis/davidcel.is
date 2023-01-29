@@ -11,7 +11,7 @@
         </div>
 
         <% if @note.media_attachments.any? %>
-          <%= render partial: "media_gallery", locals: {media_attachments: @note.media_attachments.includes(file_attachment: :blob)} %>
+          <%= media_gallery_tag(@note.media_attachments.includes(file_attachment: :blob)) %>
         <% end %>
 
         <div class="pt-4 text-sm text-slate-500">

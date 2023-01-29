@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   def index
-    @pagy, @posts = pagy(Post.includes(media_attachments: {file_attachment: :blob}))
+    @pagy, @posts = pagy(Post.includes(media_attachments: {file_attachment: :blob, preview_image_attachment: :blob}))
   end
 
   def show

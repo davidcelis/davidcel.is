@@ -12,7 +12,7 @@
           </section>
 
           <% if note.media_attachments.any? %>
-            <%= render partial: "notes/media_gallery", locals: {media_attachments: note.media_attachments} %>
+            <%= media_gallery_tag(note.media_attachments) %>
           <% end %>
 
           <div class="mt-4 flex items-center gap-4">
