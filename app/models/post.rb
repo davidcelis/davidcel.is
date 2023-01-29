@@ -2,7 +2,7 @@ class Post < ApplicationRecord
   MARKDOWN_MODE = [:UNSAFE, :FOOTNOTES]
   MARKDOWN_EXTENSIONS = [:strikethrough, :autolink]
 
-  has_many :media_attachments
+  has_many :media_attachments, dependent: :destroy
 
   validates :content, presence: true, unless: -> { media_attachments.any? }
 

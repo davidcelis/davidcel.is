@@ -29,17 +29,8 @@ class MediaAttachment < ApplicationRecord
   private
 
   def generate_preview_image
-    return if preview_image.attached? && !file.blob.saved_changes?
+    return if preview_image.attached?
 
-    preview = file.preview(resize_to_limit: [width, height]).processed
-
-    preview_image.attach(
-      key: "blog/previews/#{id}.jpg",
-      io: StringIO.new(preview.image.blob.download),
-      filename: "#{id}.jpg",
-      content_type: "image/jpeg"
-    )
-
-    preview.image.purge_later
+    GeneratePreviewImageJob.perform_async(id)
   end
 end
