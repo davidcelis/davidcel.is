@@ -8,7 +8,10 @@ module MediaGalleryHelper
     data = {}
     unless media_attachments.all?(&:gif?)
       data["controller"] = "lightbox"
-      data["lightbox-options-value"] = {video: media_attachments.any?(&:video?)}.to_json
+      data["lightbox-options-value"] = {
+        video: media_attachments.any?(&:video?),
+        counter: media_attachments.length > 1
+      }.to_json
     end
 
     tag.div(class: classes, data: data) do
