@@ -19,13 +19,13 @@ export default class extends Controller {
     this.buttonTarget.classList.remove('hidden');
   }
 
-  playOrPause() {
+  playOrPause(event) {
+    event.stopPropagation();
+
     if (this.itemTarget.paused) {
-      this.buttonTarget.classList.add('hidden');
-      this.itemTarget.play();
+      this.play();
     } else {
-      this.itemTarget.pause();
-      this.buttonTarget.classList.remove('hidden');
+      this.pause();
     }
   }
 }

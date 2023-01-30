@@ -34,7 +34,9 @@ module MediaGalleryHelper
       image_classes = %w[h-full object-cover max-h-[750px] hover:opacity-75]
       image_classes += additional_classes_for(i, total)
 
-      image_tag cdn_file_url(media_attachment), loading: "lazy", alt: (media_attachment.description || media_attachment.filename), class: image_classes
+      image_element = image_tag(cdn_file_url(media_attachment), loading: "lazy", alt: (media_attachment.description || media_attachment.filename), class: image_classes)
+
+      image_element + alt_text_badge(media_attachment)
     end
   end
 
@@ -47,10 +49,12 @@ module MediaGalleryHelper
       video_element = video_tag(cdn_file_url(media_attachment.file), poster: cdn_file_url(media_attachment.preview_image), preload: "none", playsinline: true, controls: false, loop: true, width: media_attachment.width, height: media_attachment.height, class: video_classes, data: {"play-target" => "item", "action" => "playOrPause"})
 
       gif_badge = tag.div(class: "absolute left-2 bottom-2") do
-        tag.button("GIF", class: "font-bold font-ui-sans rounded-[.25rem] bg-black bg-opacity-[.65] text-white hover:bg-black px-1", data: {action: "click->play#playOrPause:prevent"})
+        tag.button("GIF", class: "font-bold font-ui-sans rounded-l-[.25rem] bg-black bg-opacity-[.65] text-white hover:bg-black px-1 select-none", data: {action: "click->play#playOrPause:prevent"})
       end
 
-      play_button + video_element + gif_badge
+      alt_text_badge = alt_text_badge(media_attachment, fully_rounded: false)
+
+      play_button + video_element + gif_badge + alt_text_badge
     end
   end
 
@@ -80,7 +84,33 @@ module MediaGalleryHelper
 
       image_element = image_tag(cdn_file_url(media_attachment.preview_image), loading: "lazy", alt: (media_attachment.description || media_attachment.filename), class: image_classes)
 
-      play_button + image_element
+      duration_badge = tag.div(class: "absolute left-2 bottom-2") do
+        mm, ss = media_attachment.metadata[:duration].to_i.divmod(60)
+        duration = "#{mm}:#{ss.to_s.rjust(2, "0")}"
+
+        tag.button(duration, class: "font-bold font-ui-sans rounded-[.25rem] bg-black bg-opacity-[.65] text-white hover:bg-black px-1 select-none", data: {action: "click->play#playOrPause:prevent"})
+      end
+
+      play_button + image_element + duration_badge
+    end
+  end
+
+  def alt_text_badge(media_attachment, fully_rounded: true)
+    tag.div(class: "absolute left-#{fully_rounded ? 2 : 11} bottom-2", data: {controller: "tooltip"}) do
+      button_classes = %w[font-bold font-ui-sans bg-black bg-opacity-[.65] text-white hover:bg-black px-1 select-none]
+      button_classes << (fully_rounded ? "rounded-[.25rem]" : "rounded-r-[.25rem]")
+
+      button = tag.button("ALT", class: button_classes, data: {"action" => "click->tooltip#ignore:prevent", "tooltip-target" => "trigger"})
+
+      description = tag.div(class: "hidden flex flex-col gap-4 p-4 max-w-prose", data: {"tooltip-target" => "content"}) do
+        header = tag.div(class: "flex justify-between") do
+          tag.h2("Description", class: "text-xl font-bold text-slate-900") + tag.button("Dismiss", class: "text-sm py-0 px-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary", data: {"action" => "click->tooltip#ignore:prevent"})
+        end
+
+        header + tag.p(media_attachment.description || media_attachment.filename, class: "whitespace-pre-wrap text-base text-slate-700")
+      end
+
+      button + description
     end
   end
 
