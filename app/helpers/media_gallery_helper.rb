@@ -34,7 +34,7 @@ module MediaGalleryHelper
     classes << "row-span-2" if i == 0 && total == 3
 
     link_to cdn_file_url(media_attachment), class: classes do
-      image_classes = %w[h-full object-cover max-h-[750px] hover:opacity-75]
+      image_classes = %w[h-full object-cover max-h-[750px]]
       image_classes += additional_classes_for(i, total)
 
       image_element = image_tag(cdn_file_url(media_attachment), loading: "lazy", alt: (media_attachment.description || media_attachment.filename), class: image_classes)
@@ -44,7 +44,7 @@ module MediaGalleryHelper
   end
 
   def media_gallery_gif_tag(media_attachment, i:, total:)
-    classes = %w[group flex justify-center items-center cursor-pointer relative]
+    classes = %w[flex justify-center items-center cursor-pointer relative]
     classes << "row-span-2" if i == 0 && total == 3
 
     tag.div(class: classes, data: {controller: "play", action: "click->play#playOrPause"}) do
@@ -62,7 +62,7 @@ module MediaGalleryHelper
   end
 
   def media_gallery_video_tag(media_attachment, i:, total:)
-    classes = %w[group flex justify-center items-center cursor-pointer relative]
+    classes = %w[flex justify-center items-center cursor-pointer relative]
     classes << "row-span-2" if i == 0 && total == 3
 
     data = {
@@ -82,7 +82,7 @@ module MediaGalleryHelper
     }
 
     tag.a(class: classes, data: data) do
-      image_classes = %w[h-full object-cover max-h-[750px] group-hover:opacity-75]
+      image_classes = %w[h-full object-cover max-h-[750px]]
       image_classes += additional_classes_for(i, total)
 
       image_element = image_tag(cdn_file_url(media_attachment.preview_image), loading: "lazy", alt: (media_attachment.description || media_attachment.filename), class: image_classes)
