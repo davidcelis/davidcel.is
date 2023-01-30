@@ -37,7 +37,7 @@ module MediaGalleryHelper
       image_classes = %w[h-full object-cover max-h-[750px]]
       image_classes += additional_classes_for(i, total)
 
-      image_element = image_tag(cdn_file_url(media_attachment), loading: "lazy", alt: (media_attachment.description || media_attachment.filename), class: image_classes)
+      image_element = image_tag(cdn_file_url(media_attachment), loading: "lazy", alt: media_attachment.description, class: image_classes)
 
       image_element + alt_text_badge(media_attachment)
     end
@@ -85,7 +85,7 @@ module MediaGalleryHelper
       image_classes = %w[h-full object-cover max-h-[750px]]
       image_classes += additional_classes_for(i, total)
 
-      image_element = image_tag(cdn_file_url(media_attachment.preview_image), loading: "lazy", alt: (media_attachment.description || media_attachment.filename), class: image_classes)
+      image_element = image_tag(cdn_file_url(media_attachment.preview_image), loading: "lazy", alt: media_attachment.description, class: image_classes)
 
       duration_badge = tag.div(class: "absolute left-2 bottom-2") do
         mm, ss = media_attachment.metadata[:duration].to_i.divmod(60)
@@ -99,6 +99,8 @@ module MediaGalleryHelper
   end
 
   def alt_text_badge(media_attachment, fully_rounded: true)
+    return if media_attachment.description.blank?
+
     tag.div(class: "absolute left-#{fully_rounded ? 2 : 11} bottom-2", data: {controller: "tooltip"}) do
       button_classes = %w[font-bold font-ui-sans bg-black bg-opacity-[.65] text-white hover:bg-black px-1 select-none]
       button_classes << (fully_rounded ? "rounded-[.25rem]" : "rounded-r-[.25rem]")
@@ -110,7 +112,7 @@ module MediaGalleryHelper
           tag.h2("Description", class: "text-xl font-bold text-slate-900") + tag.button("Dismiss", class: "text-sm py-0 px-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary", data: {"action" => "click->tooltip#ignore:prevent"})
         end
 
-        header + tag.p(media_attachment.description || media_attachment.filename, class: "whitespace-pre-wrap text-base text-slate-700")
+        header + tag.p(media_attachment.description, class: "whitespace-pre-wrap text-base text-slate-700")
       end
 
       button + description
