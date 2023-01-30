@@ -1,6 +1,10 @@
 <% content_for(:page_title, params[:controller] == "posts" ? "All Posts" : params[:controller].titleize) %>
 
 <section class="post-list divide-y divide-slate-100">
+  <% if authenticated? && @pagy.page == 1 %>
+    <%= render "posts/form" %>
+  <% end %>
+
   <% @posts.each do |post| %>
     <%= render post %>
   <% end %>

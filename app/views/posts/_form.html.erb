@@ -1,0 +1,44 @@
+<section class="py-10 sm:py-12">
+  <div class="lg:px-8">
+    <div class="lg:max-w-4xl">
+      <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+        <div class="flex">
+          <%= form_for Post.new, multipart: true, html: {class: "relative grow", data: {"controller" => "post-composer"}} do |f| %>
+            <div class="border border-slate-300 rounded-lg shadow-sm overflow-hidden focus-within:border-pink-500 focus-within:ring-1 focus-within:ring-pink-500">
+              <%= hidden_field_tag "post[type]", "Note", data: {"post-composer-target" => "type"} %>
+
+              <%= f.label :title, class: "sr-only" %>
+              <%= f.text_field :title, placeholder: "Title", class: "hidden block w-full border-0 pt-2.5 text-lg font-medium placeholder-slate-500 focus:ring-0", data: {"post-composer-target" => "title"} %>
+
+              <%= f.label :content, class: "sr-only" %>
+              <%= f.text_area :content, placeholder: "What's happening?", rows: 6, class: "block w-full border-0 pt-2.5 resize-none placeholder-slate-500 focus:ring-0 sm:text-sm font-mono", data: {"post-composer-target" => "content", "action" => "input->post-composer#resizeContent input->post-composer#countCharacters"} %>
+
+              <div aria-hidden="true">
+                <!-- Re-add this spacer element when pill buttons for categories, location, etc. are added.
+                <div class="py-2">
+                  <div class="h-9"></div>
+                </div>  -->
+                <div class="h-px"></div>
+                <div class="py-2">
+                  <div class="py-px">
+                    <div class="h-9"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="absolute bottom-0 inset-x-px">
+              <div class="border-t border-slate-200 px-2 py-2 flex justify-between items-center space-x-3 sm:px-3">
+                <div class="flex-shrink-0"><%# Photo uploads will go here. %></div>
+                <div class="flex-shrink-0">
+                  <span id="character_counter" class="select-none text-sm text-slate-500 italic px-2" data-post-composer-target="characterCounter">0/280</span>
+                  <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-500 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">Create</button>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
