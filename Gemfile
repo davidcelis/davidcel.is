@@ -38,6 +38,15 @@ gem "tailwindcss-rails"
 # Use Redis adapter to run Action Cable in production
 gem "redis", "~> 4.0"
 
+# Use Sidekiq to perform asynchronous jobs
+gem "sidekiq", "~> 7.0"
+
+# Use ImageProcessing to handle ActiveStorage variants
+gem "image_processing", ">= 1.12"
+
+# Upload ActiveStorage files to DigitalOcean Spaces
+gem "aws-sdk-s3"
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 

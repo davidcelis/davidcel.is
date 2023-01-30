@@ -11,6 +11,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Satoshi', ...defaultTheme.fontFamily.sans],
+        'ui-sans': [...defaultTheme.fontFamily.sans]
       },
       spacing: {
         18: '4.5rem',

@@ -40,7 +40,7 @@ tweets.each do |tweet|
   next if tweet["full_text"].match?(/^RT @\w+:/)
 
   # Skip anything with media for now.
-  next if tweet.dig("extended_entities", "media").present?
+  # next if tweet.dig("extended_entities", "media").present?
 
   note = Note.find_or_initialize_by(id: tweet_id.to_i)
   note.created_at = note.updated_at = Time.parse(tweet["created_at"])
@@ -69,6 +69,11 @@ tweets.each do |tweet|
     entities << {range: Range.new(*h["indices"].map(&:to_i), true), replacement: "[##{h["text"]}](https://twitter.com/search?q=%24#{h["text"]})"}
   end
 
+  # Remove media URLs since we'll be adding them as attachments instead of text.
+  Array(tweet.dig("entities", "media")).each do |h|
+    entities << {range: Range.new(*h["indices"].map(&:to_i), true), replacement: ""}
+  end
+
   # Replace entities in reverse order so that indices don't change.
   entities.sort_by { |e| e[:range].first }.reverse_each do |e|
     text[e[:range]] = e[:replacement]
@@ -81,9 +86,54 @@ tweets.each do |tweet|
     "[@#{$1}@#{$2}](https://#{$2}/@#{$1})"
   end
 
-  note.content = text
+  note.content = text.strip
 
-  note.save!
+  ActiveRecord::Base.transaction do
+    Array(tweet.dig("extended_entities", "media")).each do |media|
+      media_attachment = note.media_attachments.find_or_initialize_by(id: media["id"].to_i)
+
+      # Grab the file from our seed data in DigitalOcean and attach it.
+      file_url = if media.dig("video_info", "variants").present?
+        variant = media["video_info"]["variants"].max_by { |v| v["bitrate"].to_i }
+
+        File.join(CDN_URL, "tweets_media", "#{note.id}-#{File.basename(variant["url"]).sub(/\?.*$/, "")}")
+      else
+        File.join(CDN_URL, "tweets_media", "#{note.id}-#{File.basename(media["media_url"])}")
+      end
+
+      response = HTTParty.get(file_url)
+      raise "Error downloading #{file_url}: #{response.code}" if response.code >= 400
+
+      # Most media will already have the correct content_type set, but gifs are
+      # different. Twitter converts these into mp4s, but we want to track the
+      # fact that they were originally gifs so that, when we display them, we
+      # can set them to play in a loop and without controls.
+      file_extension = File.extname(file_url)
+      original_content_type = (media["type"] == "animated_gif") ? "image/gif" : Rack::Mime::MIME_TYPES[file_extension]
+      filename = "#{media_attachment.id}#{file_extension}"
+
+      if media_attachment.file.attached?
+        media_attachment.file.blob.custom_metadata = {original_content_type: original_content_type}
+        media_attachment.file.blob.save!
+      else
+        media_attachment.file.attach(
+          key: "blog/#{filename}",
+          io: StringIO.new(response.body),
+          filename: filename,
+          metadata: {custom: {original_content_type: original_content_type}}
+        )
+      end
+
+      description_url = File.join(CDN_URL, "tweets_media_descriptions", "#{media["id"]}.txt")
+      response = HTTParty.get(description_url)
+
+      media_attachment.created_at = media_attachment.updated_at = note.created_at
+      media_attachment.description = (response.code < 400) ? response.body.strip : nil
+      media_attachment.save!
+    end
+
+    note.save!
+  end
 
   if note.previous_changes.any?
     puts "Updated Note: #{note.id} (#{note.slug})"

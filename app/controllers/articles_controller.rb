@@ -1,6 +1,6 @@
 class ArticlesController < ApplicationController
   def index
-    @pagy, @posts = pagy(Article.all)
+    @pagy, @posts = pagy(Article.includes(media_attachments: {file_attachment: :blob, preview_image_attachment: :blob}))
 
     render "posts/index"
   end

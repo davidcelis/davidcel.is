@@ -11,6 +11,10 @@
             <%= note.html.html_safe %>
           </section>
 
+          <% if note.media_attachments.any? %>
+            <%= media_gallery_tag(note.media_attachments) %>
+          <% end %>
+
           <div class="mt-4 flex items-center gap-4">
             <%= link_to polymorphic_path(note), class: "flex items-center text-sm font-bold leading-6 link-primary" do %>
               <%= timestamp(note) %>

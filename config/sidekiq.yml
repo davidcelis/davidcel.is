@@ -1,0 +1,7 @@
+# inside config/sidekiq.yml
+concurrency: <%= ENV.fetch("SIDEKIQ_CONCURRENCY", 5) %>
+
+max_retries: 25
+
+queues:
+  - default

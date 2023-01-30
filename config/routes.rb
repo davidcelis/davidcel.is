@@ -1,3 +1,5 @@
+require "sidekiq/web"
+
 Rails.application.routes.draw do
   root to: "posts#index"
 
@@ -24,7 +26,19 @@ Rails.application.routes.draw do
     end
   end
 
-  mount Avo::Engine, at: Avo.configuration.root_path
+  # Route media attachments through a CDN.
+  direct :cdn_file do |file|
+    if Rails.configuration.cdn_host.present?
+      File.join(Rails.configuration.cdn_host, file.key)
+    else
+      route_for(:rails_blob, file)
+    end
+  end
+
+  constraints(AdminConstraint.new) do
+    mount Avo::Engine, at: Avo.configuration.root_path
+    mount Sidekiq::Web => "/admin/sidekiq"
+  end
 
   get :sign_in, to: "sessions#new"
   delete :sign_out, to: "sessions#destroy"
