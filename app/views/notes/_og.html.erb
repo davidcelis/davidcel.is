@@ -1,6 +1,13 @@
 <% content_for(:og_description, strip_tags(note.html).strip) %>
 <% content_for(:og_type, "article") %>
-<% content_for(:og_url, post_url(note.id)) %>
+
+<% if link_preview_requested? %>
+  <% content_for(:og_title, "@davidcelis") %>
+  <% content_for(:og_url, "https://twitter.com/x/status/x") %>
+  <script>window.location.replace("<%= polymorphic_url(note) %>");</script>
+<% else %>
+  <% content_for(:og_url, post_url(note.id)) %>
+<% end %>
 
 <% content_for(:og_image) do %>
   <% note.media_attachments.select(&:image?).each do |image| %>

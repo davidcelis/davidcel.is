@@ -9,7 +9,6 @@
             <%= @note.html.html_safe %>
           </div>
 
-
           <% if @note.media_attachments.any? %>
             <%= media_gallery_tag(@note.media_attachments.includes(file_attachment: :blob, preview_image_attachment: :blob)) %>
           <% end %>
