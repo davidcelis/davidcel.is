@@ -1,5 +1,13 @@
 class MediaAttachmentResource < Avo::BaseResource
   self.title = :id
+  self.description = -> do
+    if view.in?(%i[show edit])
+      model.post.content
+    else
+      "Photos, videos, and other media attachments"
+    end
+  end
+
   self.includes = [:post, {file_attachment: :blob, preview_image_attachment: :blob}]
   self.default_view_type = :grid
   self.after_update_path = :index
