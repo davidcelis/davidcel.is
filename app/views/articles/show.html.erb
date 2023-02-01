@@ -1,13 +1,10 @@
+<%= content_for(:page_title, @article.title) %>
 <% content_for(:head) do %>
   <%= stylesheet_link_tag "prism", "data-turbo-track": "reload" %>
   <%= javascript_include_tag "prism", "data-turbo-track": "reload" %>
 <% end %>
 
-<%= content_for(:page_title, @article.title) %>
-<%= content_for(:og_title, @article.title) %>
-<%= content_for(:og_description, strip_tags(@article.excerpt)) %>
-<%= content_for(:og_type, "article") %>
-<%= content_for(:og_url, post_url(@article.id)) %>
+<%= render partial: "og", locals: {article: @article} %>
 
 <article class="py-10 sm:py-12">
   <div class="lg:px-8">

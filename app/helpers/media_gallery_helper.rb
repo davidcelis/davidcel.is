@@ -34,7 +34,7 @@ module MediaGalleryHelper
     classes << "row-span-2" if i == 0 && total == 3
 
     link_to cdn_file_url(media_attachment), class: classes do
-      image_classes = %w[h-full object-cover max-h-[750px]]
+      image_classes = %w[h-full max-h-[750px] object-cover]
       image_classes += additional_classes_for(i, total)
 
       image_element = image_tag(cdn_file_url(media_attachment), loading: "lazy", alt: media_attachment.description, class: image_classes)
@@ -82,7 +82,7 @@ module MediaGalleryHelper
     }
 
     tag.a(class: classes, data: data) do
-      image_classes = %w[h-full object-cover max-h-[750px]]
+      image_classes = %w[h-full max-h-[750px] object-cover]
       image_classes += additional_classes_for(i, total)
 
       image_element = image_tag(cdn_file_url(media_attachment.preview_image), loading: "lazy", alt: media_attachment.description, class: image_classes)
@@ -101,7 +101,9 @@ module MediaGalleryHelper
   def alt_text_badge(media_attachment, fully_rounded: true)
     return if media_attachment.description.blank?
 
-    tag.div(class: "absolute left-#{fully_rounded ? 2 : 11} bottom-2", data: {controller: "tooltip"}) do
+    badge_classes = %w[absolute bottom-2]
+    badge_classes << (fully_rounded ? "left-2" : "left-11")
+    tag.div(class: badge_classes, data: {controller: "tooltip"}) do
       button_classes = %w[font-bold font-ui-sans bg-black bg-opacity-[.65] text-white hover:bg-black px-1 select-none]
       button_classes << (fully_rounded ? "rounded-[.25rem]" : "rounded-r-[.25rem]")
 

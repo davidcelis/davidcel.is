@@ -40,6 +40,7 @@
       <meta property="og:image" content="<%= image_url("me.jpg") %>">
       <meta property="og:image:alt" content="A photo of me on a horse, looking quite dapper.">
     <% end %>
+    <%= content_for(:og_video) %>
 
     <meta name="twitter:card" content="<%= content_for(:twitter_card) || "summary" %>">
     <meta name="twitter:site" content="@davidcelis">
