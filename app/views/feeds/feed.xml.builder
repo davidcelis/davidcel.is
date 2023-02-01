@@ -23,15 +23,8 @@ xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
       xml.id post_url(post.id)
       xml.title post.title
 
-      content = case post
-      when Article
-        "#{post.excerpt}<p>#{link_to "Continue reading…", polymorphic_url(post)}</p>"
-      when Note
-        post.html
-      end
-
       xml.content "type" => "html", "xml:lang" => "en" do
-        xml.cdata! content
+        xml.cdata! atom_content_for(post)
       end
 
       xml.published post.created_at.iso8601
