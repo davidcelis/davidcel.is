@@ -7,11 +7,11 @@
             <div class="border border-slate-300 rounded-lg shadow-sm overflow-hidden focus-within:border-pink-500 focus-within:ring-1 focus-within:ring-pink-500">
               <%= hidden_field_tag "post[type]", "Note", data: {"post-composer-target" => "type"} %>
 
-              <%= f.label :title, class: "sr-only" %>
               <%= f.text_field :title, placeholder: "Title", class: "hidden block w-full border-0 pt-2.5 text-lg font-medium placeholder-slate-500 focus:ring-0", data: {"post-composer-target" => "title"} %>
 
-              <%= f.label :content, class: "sr-only" %>
-              <%= f.text_area :content, placeholder: "What's happening?", rows: 6, class: "block w-full border-0 pt-2.5 resize-none placeholder-slate-500 focus:ring-0 sm:text-sm font-mono", data: {"post-composer-target" => "content", "action" => "input->post-composer#resizeContent input->post-composer#countCharacters"} %>
+              <div data-post-composer-target="editor"></div>
+
+              <%= hidden_field_tag "post[content]", "", data: {"post-composer-target" => "content"} %>
 
               <div aria-hidden="true">
                 <!-- Re-add this spacer element when pill buttons for categories, location, etc. are added.
@@ -42,3 +42,25 @@
     </div>
   </div>
 </section>
+
+<style>
+  /* Ink MDE customization */
+  .ink-mde {
+    border: none !important;
+
+    --ink-code-font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    --ink-font-family: var(--ink-code-font-family);
+  }
+
+  .cm-editor {
+    min-height: 128px;
+  }
+
+  .cm-editor:hover {
+    cursor: text;
+  }
+
+  .cm-focused {
+    outline: none !important;
+  }
+</style>

@@ -1,19 +1,33 @@
 import { Controller } from '@hotwired/stimulus'
+import { defineOptions, ink } from 'ink-mde'
 
 export default class extends Controller {
-  static targets = ['type', 'title', 'content', 'characterCounter']
+  static targets = ['editor', 'type', 'title', 'content', 'characterCounter']
   static values = {
     characterLimit: { type: Number, default: 500 }
   }
 
-  resizeContent() {
-    this.contentTarget.style.height = 'auto';
-    this.contentTarget.style.height = `${this.contentTarget.scrollHeight}px`;
+  connect () {
+    const options = defineOptions({
+      interface: {
+        attribution: false,
+      },
+      hooks: {
+        afterUpdate: (content) => {
+          this.countCharacters(content);
+          this.setHiddenContentField(content);
+        }
+      }
+    });
+
+    ink(this.editorTarget, options);
   }
 
-  countCharacters() {
-    const rawContent = this.contentTarget.value || '';
+  setHiddenContentField(content) {
+    this.contentTarget.value = content;
+  }
 
+  countCharacters(rawContent) {
     // First, parse any URLs in the content and replace them with a placeholder
     // so that each one properly registers as 23 characters.
     const urlPlaceholder = 'xxxxxxxxxxxxxxxxxxxxxxx';
@@ -31,11 +45,13 @@ export default class extends Controller {
 
     if (textLength > this.characterLimitValue) {
       this.titleTarget.classList.remove('hidden');
-      this.characterCounterTarget.classList.add('text-red-500');
+      this.characterCounterTarget.classList.remove('text-slate-500');
+      this.characterCounterTarget.classList.add('text-pink-500');
       this.typeTarget.value = 'Article';
     } else {
       this.titleTarget.classList.add('hidden');
-      this.characterCounterTarget.classList.remove('text-red-500');
+      this.characterCounterTarget.classList.remove('text-pink-500');
+      this.characterCounterTarget.classList.add('text-slate-500');
       this.typeTarget.value = 'Note';
     }
   }
