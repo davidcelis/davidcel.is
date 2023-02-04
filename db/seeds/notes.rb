@@ -54,19 +54,19 @@ tweets.each do |tweet|
   entities = []
 
   Array(tweet.dig("entities", "user_mentions")).each do |h|
-    entities << {range: Range.new(*h["indices"].map(&:to_i), true), replacement: "[@#{h["screen_name"]}@twitter.com](https://twitter.com/#{h["screen_name"]})"}
+    entities << {range: Range.new(*h["indices"].map(&:to_i), true), replacement: "@#{h["screen_name"]}@twitter.com"}
   end
 
   Array(tweet.dig("entities", "urls")).each do |h|
-    entities << {range: Range.new(*h["indices"].map(&:to_i), true), replacement: "[#{h["display_url"]}](#{h["expanded_url"]})"}
+    entities << {range: Range.new(*h["indices"].map(&:to_i), true), replacement: h["expanded_url"]}
   end
 
   Array(tweet.dig("entities", "hashtags")).each do |h|
-    entities << {range: Range.new(*h["indices"].map(&:to_i), true), replacement: "[##{h["text"]}](https://twitter.com/hashtag/#{h["text"]})"}
+    entities << {range: Range.new(*h["indices"].map(&:to_i), true), replacement: "##{h["text"]}"}
   end
 
   Array(tweet.dig("entities", "symbols")).each do |h|
-    entities << {range: Range.new(*h["indices"].map(&:to_i), true), replacement: "[##{h["text"]}](https://twitter.com/search?q=%24#{h["text"]})"}
+    entities << {range: Range.new(*h["indices"].map(&:to_i), true), replacement: "$#{h["text"]}"}
   end
 
   # Remove media URLs since we'll be adding them as attachments instead of text.
@@ -77,13 +77,6 @@ tweets.each do |tweet|
   # Replace entities in reverse order so that indices don't change.
   entities.sort_by { |e| e[:range].first }.reverse_each do |e|
     text[e[:range]] = e[:replacement]
-  end
-
-  # Also parse and linkify Mastodon mentions
-  text.gsub!(/@(\w+)@([a-z0-9.-]+)/) do |match|
-    next match if $2 == "twitter.com"
-
-    "[@#{$1}@#{$2}](https://#{$2}/@#{$1})"
   end
 
   note.content = text.strip
