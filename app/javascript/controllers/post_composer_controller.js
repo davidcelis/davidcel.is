@@ -11,8 +11,8 @@ export default class extends Controller {
     characterLimit: { type: Number, default: 500 }
   }
 
-  static mentionRegex = /(@[\S]+)@[\S]+\.[\S]{2,}/g
-  static urlRegex = /https?:\/\/[\S]+\.[\S]{2,}/g
+  static mentionRegex = /(?<=^|[^\/\w])(?:(@[a-z0-9_]+)((?:@[\w.-]+\w+)?))/gi
+  static urlRegex = /https?:\/\/[\S]+\.[\S]{2,}/gi
   static urlPlaceholder = 'xxxxxxxxxxxxxxxxxxxxxxx'
 
   static markdownProcessor = remark()
@@ -40,17 +40,17 @@ export default class extends Controller {
   }
 
   async countCharacters(rawContent) {
-    // First, parse out any Markdown syntax from the content.
-    let content = await this.constructor.markdownProcessor.process(rawContent);
-    content = String(content).trim();
+    // First, parse out the domain fragment from any mentions; for mentions like
+    // @davidcelis@xoxo.zone, the "@xoxo.zone" is not counted against the limit.
+    let content = rawContent.replaceAll(this.constructor.mentionRegex, '$1');
 
     // Then, parse any URLs in the content and replace them with a placeholder
     // so that each one properly registers as 23 characters.
-    content = content.replace(this.constructor.urlRegex, this.constructor.urlPlaceholder);
+    content = content.replaceAll(this.constructor.urlRegex, this.constructor.urlPlaceholder);
 
-    // Finally, parse out the domain fragment from any @mentions; for mentions like
-    // @davidcelis@xoxo.zone, the "@xoxo.zone" is not counted against the limit.
-    content = content.replace(this.constructor.mentionRegex, '$1');
+    // Finally, parse out any remaining Markdown syntax from the content.
+    content = await this.constructor.markdownProcessor.process(content);
+    content = String(content).trim();
 
     const textLength = content.length;
 
