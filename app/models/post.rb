@@ -1,5 +1,5 @@
 class Post < ApplicationRecord
-  MARKDOWN_MODE = [:UNSAFE, :FOOTNOTES]
+  MARKDOWN_MODE = [:UNSAFE, :FOOTNOTES, :SMART]
   MARKDOWN_EXTENSIONS = [:strikethrough, :autolink]
 
   has_many :media_attachments, dependent: :destroy

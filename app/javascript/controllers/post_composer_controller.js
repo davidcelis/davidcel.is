@@ -1,6 +1,10 @@
 import { Controller } from '@hotwired/stimulus'
 import { defineOptions, ink } from 'ink-mde'
 
+import { remark } from 'remark'
+import remarkGfm from 'remark-gfm'
+import remarkSmartypants from '@davidcelis/remark-smartypants'
+
 export default class extends Controller {
   static targets = ['editor', 'type', 'title', 'content', 'characterCounter']
   static values = {
@@ -10,6 +14,10 @@ export default class extends Controller {
   static mentionRegex = /(@[\S]+)@[\S]+\.[\S]{2,}/g
   static urlRegex = /https?:\/\/[\S]+\.[\S]{2,}/g
   static urlPlaceholder = 'xxxxxxxxxxxxxxxxxxxxxxx'
+
+  static markdownProcessor = remark()
+    .use(remarkGfm)
+    .use(remarkSmartypants)
 
   connect () {
     const options = defineOptions({
@@ -28,15 +36,19 @@ export default class extends Controller {
   }
 
   setHiddenContentField(content) {
-    this.contentTarget.value = content;
+    this.contentTarget.value = content.trim();
   }
 
-  countCharacters(rawContent) {
-    // First, parse any URLs in the content and replace them with a placeholder
-    // so that each one properly registers as 23 characters.
-    let content = rawContent.replace(this.constructor.urlRegex, this.constructor.urlPlaceholder);
+  async countCharacters(rawContent) {
+    // First, parse out any Markdown syntax from the content.
+    let content = await this.constructor.markdownProcessor.process(rawContent);
+    content = String(content).trim();
 
-    // Then, parse out the domain fragment from any @mentions; for mentions like
+    // Then, parse any URLs in the content and replace them with a placeholder
+    // so that each one properly registers as 23 characters.
+    content = content.replace(this.constructor.urlRegex, this.constructor.urlPlaceholder);
+
+    // Finally, parse out the domain fragment from any @mentions; for mentions like
     // @davidcelis@xoxo.zone, the "@xoxo.zone" is not counted against the limit.
     content = content.replace(this.constructor.mentionRegex, '$1');
 
