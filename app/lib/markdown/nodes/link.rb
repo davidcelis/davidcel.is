@@ -28,7 +28,7 @@ module Markdown
 
       def self.from_mention(username, domain)
         new(:link).tap do |node|
-          node.url = "https://#{domain}/@#{username}"
+          node.url = "https://#{domain}/#{"@" unless domain == "instagram.com"}#{username}"
           node.title = "#{username}@#{domain}"
 
           node.append_child(CommonMarker::Node.new(:text).tap { |n| n.string_content = "@#{username}" })

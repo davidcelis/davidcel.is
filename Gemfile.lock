@@ -226,6 +226,8 @@ GEM
     redis-client (0.12.1)
       connection_pool
     regexp_parser (2.6.2)
+    reverse_markdown (2.1.1)
+      nokogiri
     rexml (3.2.5)
     rspec-core (3.12.0)
       rspec-support (~> 3.12.0)
@@ -322,6 +324,7 @@ DEPENDENCIES
   puma (~> 5.0)
   rails (~> 7.0.4)
   redis (~> 4.0)
+  reverse_markdown
   rspec-rails (~> 6)
   sidekiq (~> 7.0)
   standardrb

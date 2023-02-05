@@ -128,6 +128,13 @@ tweets.each do |tweet|
       media_attachment.save!
     end
 
+    twitter_link = note.syndication_links.find_or_initialize_by(
+      platform: "twitter",
+      url: "https://twitter.com/davidcelis/status/#{tweet["id"]}"
+    )
+    twitter_link.created_at = twitter_link.updated_at = note.created_at
+    twitter_link.save!
+
     note.save!
   end
 
