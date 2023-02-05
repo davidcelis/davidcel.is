@@ -205,6 +205,20 @@ CREATE SEQUENCE public.snowflake_id_seq
 
 
 --
+-- Name: syndication_links; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.syndication_links (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    post_id bigint NOT NULL,
+    platform character varying NOT NULL,
+    url character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: active_storage_attachments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -282,6 +296,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: syndication_links syndication_links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.syndication_links
+    ADD CONSTRAINT syndication_links_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: index_active_storage_attachments_on_blob_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -338,6 +360,21 @@ CREATE UNIQUE INDEX index_posts_on_type_and_slug_and_created_at ON public.posts 
 
 
 --
+-- Name: index_syndication_links_on_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_syndication_links_on_post_id ON public.syndication_links USING btree (post_id);
+
+
+--
+-- Name: syndication_links fk_rails_012a515b9c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.syndication_links
+    ADD CONSTRAINT fk_rails_012a515b9c FOREIGN KEY (post_id) REFERENCES public.posts(id);
+
+
+--
 -- Name: media_attachments fk_rails_6d5c9ccfc8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -371,6 +408,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221030011319'),
 ('20221030014919'),
 ('20230111000240'),
-('20230111000416');
+('20230111000416'),
+('20230205022836');
 
 

@@ -12,6 +12,7 @@ class Post < ApplicationRecord
   URL_REGEX = URI::DEFAULT_PARSER.make_regexp(%w[http https])
 
   has_many :media_attachments, dependent: :destroy
+  has_many :syndication_links, dependent: :destroy
 
   validates :content, presence: true, unless: -> { media_attachments.any? }
 
