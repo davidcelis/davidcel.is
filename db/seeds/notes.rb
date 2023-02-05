@@ -117,11 +117,14 @@ tweets.each do |tweet|
         )
       end
 
-      description_url = File.join(CDN_URL, "tweets_media_descriptions", "#{media["id"]}.txt")
-      response = HTTParty.get(description_url)
+      if media_attachment.description.blank?
+        description_url = File.join(CDN_URL, "tweets_media_descriptions", "#{media["id"]}.txt")
+        response = HTTParty.get(description_url)
+
+        media_attachment.description = response.body.strip if response.code < 400
+      end
 
       media_attachment.created_at = media_attachment.updated_at = note.created_at
-      media_attachment.description = (response.code < 400) ? response.body.strip : nil
       media_attachment.save!
     end
 
