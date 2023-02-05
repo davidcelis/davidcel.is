@@ -1,5 +1,9 @@
 /* Application styles */
 
+span.ellipsis::after {
+  content: "…";
+}
+
 /*
 Each note ends up being comprised of a single <p> tag; when listing them,
 don't arbitrarly give each one a top margin. Also, prepend our
