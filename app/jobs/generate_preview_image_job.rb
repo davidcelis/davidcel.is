@@ -1,6 +1,4 @@
-class GeneratePreviewImageJob
-  include Sidekiq::Job
-
+class GeneratePreviewImageJob < ApplicationJob
   def perform(media_attachment_id)
     media_attachment = MediaAttachment.find(media_attachment_id)
 

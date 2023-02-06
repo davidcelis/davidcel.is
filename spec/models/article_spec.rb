@@ -23,6 +23,17 @@ RSpec.describe Article, type: :model do
     end
   end
 
+  describe "syndication" do
+    it "enqueues a job to syndicate the post to Mastodon on creation" do
+      allow(SyndicateToMastodonJob).to receive(:perform_async)
+
+      article.save!
+      article.update!(content: "Updated article")
+
+      expect(SyndicateToMastodonJob).to have_received(:perform_async).with(article.id).once
+    end
+  end
+
   describe "slug generation" do
     it "generates a slug on creation" do
       expect(article.slug).to be_nil

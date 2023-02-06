@@ -19,6 +19,8 @@ class Post < ApplicationRecord
   before_create :generate_slug
   before_save :update_html, if: :content_changed?
 
+  after_commit :syndicate, on: :create
+
   default_scope { order(id: :desc) }
 
   def update_html
@@ -26,6 +28,10 @@ class Post < ApplicationRecord
   end
 
   private
+
+  def syndicate
+    SyndicateToMastodonJob.perform_async(id)
+  end
 
   def generate_slug
     raise NoMethodError, "Subclasses must implement `generate_slug`"

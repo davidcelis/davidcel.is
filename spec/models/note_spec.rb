@@ -23,6 +23,17 @@ RSpec.describe Note, type: :model do
     end
   end
 
+  describe "syndication" do
+    it "enqueues a job to syndicate the post to Mastodon on creation" do
+      allow(SyndicateToMastodonJob).to receive(:perform_async)
+
+      note.save!
+      note.update!(content: "Updated note")
+
+      expect(SyndicateToMastodonJob).to have_received(:perform_async).with(note.id).once
+    end
+  end
+
   describe "slug generation" do
     it "generates a slug on creation" do
       expect(note.slug).to be_nil

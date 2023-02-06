@@ -25,6 +25,11 @@ require "rspec/rails"
 # require only the support files necessary.
 #
 # Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
+require "sidekiq/testing"
+Sidekiq::Testing.fake!
+Sidekiq.configure_client do |config|
+  config.logger.level = Logger::WARN
+end
 
 VCR.configure do |config|
   config.cassette_library_dir = Rails.root.join("spec", "support", "vcr_cassettes")
