@@ -50,6 +50,10 @@ gem "image_processing", ">= 1.12"
 # Upload ActiveStorage files to DigitalOcean Spaces
 gem "aws-sdk-s3"
 
+# Use Faraday for external HTTP/API requests and clients
+gem "faraday"
+gem "faraday-retry"
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
@@ -58,6 +62,8 @@ group :development, :test do
   gem "pry-rails"
 
   gem "rspec-rails", "~> 6"
+  gem "webmock"
+  gem "vcr"
 
   gem "standardrb"
 end

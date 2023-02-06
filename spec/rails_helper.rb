@@ -26,6 +26,12 @@ require "rspec/rails"
 #
 # Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
 
+VCR.configure do |config|
+  config.cassette_library_dir = Rails.root.join("spec", "support", "vcr_cassettes")
+  config.hook_into :webmock
+  config.filter_sensitive_data(Rails.application.credentials.dig(:mastodon, :access_token)) { "MASTODON_ACCESS_TOKEN" }
+end
+
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
 begin
@@ -33,10 +39,8 @@ begin
 rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
-RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
+RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
