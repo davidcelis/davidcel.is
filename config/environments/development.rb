@@ -17,6 +17,10 @@ Rails.application.configure do
   # Enable server timing
   config.server_timing = true
 
+  # Use different credentials locally.
+  config.credentials.key_path = "config/credentials/local.key"
+  config.credentials.content_path = "config/credentials/local.yml.enc"
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join("tmp/caching-dev.txt").exist?

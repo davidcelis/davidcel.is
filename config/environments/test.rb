@@ -16,6 +16,10 @@ Rails.application.configure do
   # system, or in some way before deploying your code.
   config.eager_load = ENV["CI"].present?
 
+  # Use different credentials locally.
+  config.credentials.key_path = "config/credentials/local.key"
+  config.credentials.content_path = "config/credentials/local.yml.enc"
+
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
   config.public_file_server.headers = {
