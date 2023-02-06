@@ -76,19 +76,19 @@ RSpec.describe Article, type: :model do
     end
 
     it "renders the content as HTML" do
-      expect(article.html).to eq(<<~HTML)
+      expect(article.html).to eq(<<~HTML.strip)
         <h1>Chunky Bacon</h1>
-        <p>Today, I'd <em>love</em> to talk about <strong>chunky bacon</strong>. But what <em>is</em> chunky bacon? Based on the name, one could assume that chunky bacon is:</p>
+        <p>Today, I’d <em>love</em> to talk about <strong>chunky bacon</strong>. But what <em>is</em> chunky bacon? Based on the name, one could assume that chunky bacon is:</p>
         <ol>
         <li>Chunky</li>
         <li>Bacon</li>
         </ol>
-        <p>But don't take my word for it! Let's ask some <del>mischevious</del> adorable cartoon foxes from <a href="https://poignant.guide/">Why's Poignant Guide to Ruby</a></p>
+        <p>But don’t take my word for it! Let’s ask some <del>mischevious</del> adorable cartoon foxes from <a href="https://poignant.guide/" target="_blank" rel="nofollow noopener noreferrer">Why’s Poignant Guide to Ruby</a></p>
         <p><img src="https://poignant.guide/images/the.foxes-4f.png" alt="chunky bacon" /></p>
         <blockquote>
-        <p>Woohoo! I don't know what chunky bacon is, but we did it! We're in the book!</p>
+        <p>Woohoo! I don’t know what chunky bacon is, but we did it! We’re in the book!</p>
         </blockquote>
-        <p>Well! I'm not sure what to make of that. I'll just leave you with one more part of the poignant guide:</p>
+        <p>Well! I’m not sure what to make of that. I’ll just leave you with one more part of the poignant guide:</p>
         <pre><code class="language-ruby">2.times {
           print &quot;Yes, I've used chunky bacon in my examples, but never again!&quot;
         }

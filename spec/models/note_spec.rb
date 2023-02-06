@@ -65,7 +65,7 @@ RSpec.describe Note, type: :model do
     end
 
     it "renders the content as HTML" do
-      expect(note.html).to eq(<<~HTML)
+      expect(note.html).to eq(<<~HTML.strip)
         <p>Variables which begin with a <strong>dollar sign</strong> are <em>global</em>.</p>
         <p><code>$x</code>, <code>$1</code>, <code>$chunky</code> and <code>$CHunKY_bACOn</code> are examples.</p>
       HTML

@@ -9,6 +9,13 @@ module Mastodon
       @access_token = access_token
     end
 
+    def create_status(content:, idempotency_key: nil)
+      headers = {"Idempotency-Key" => idempotency_key.to_s} if idempotency_key.present?
+      params = {status: content}
+
+      connection.post("/api/v1/statuses", params.to_json, headers).body
+    end
+
     def verify_credentials
       connection.get("/api/v1/apps/verify_credentials").body
     end
