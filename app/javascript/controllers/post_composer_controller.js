@@ -11,7 +11,9 @@ export default class extends Controller {
     characterLimit: { type: Number, default: 500 }
   }
 
-  static mentionRegex = /(?<=^|[^\/\w])(?:(@[a-z0-9_]+)((?:@[\w.-]+\w+)?))/gi
+  // TODO: Remove this once Safari supports positive look-behinds.
+  // static mentionRegex = /(?<=^|[^\/\w])(?:(@[a-z0-9_]+)((?:@[\w.-]+\w+)?))/gi
+  static mentionRegex = /(?:^|[^\/\w])(?:(@[a-z0-9_]+)((?:@[\w.-]+\w+)?))/gi
   static urlRegex = /https?:\/\/[\S]+\.[\S]{2,}/gi
   static urlPlaceholder = 'xxxxxxxxxxxxxxxxxxxxxxx'
 
@@ -22,6 +24,7 @@ export default class extends Controller {
   connect () {
     const options = defineOptions({
       interface: {
+        appearance: 'light',
         attribution: false,
       },
       hooks: {

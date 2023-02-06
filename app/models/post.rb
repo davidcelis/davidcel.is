@@ -38,7 +38,7 @@ class Post < ApplicationRecord
   end
 
   def commonmark_doc
-    return @commonmark_doc if defined?(@commonmark_doc)
+    return @commonmark_doc if defined?(@commonmark_doc) && !content_changed?
 
     @commonmark_doc = CommonMarker.render_doc(content, markdown_parsing_options, markdown_extensions)
 
