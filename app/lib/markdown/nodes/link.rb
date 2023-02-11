@@ -11,7 +11,7 @@ module Markdown
           node.url = url
           node.title = url
 
-          node.append_child(CommonMarker::Node.new(:inline_html).tap { |n| n.string_content = %(<span class="hidden">) })
+          node.append_child(CommonMarker::Node.new(:inline_html).tap { |n| n.string_content = %(<span class="invisible">) })
           node.append_child(CommonMarker::Node.new(:text).tap { |n| n.string_content = scheme })
           node.append_child(CommonMarker::Node.new(:inline_html).tap { |n| n.string_content = %(</span>) })
           node.append_child(CommonMarker::Node.new(:inline_html).tap { |n| n.string_content = %(<span#{' class="ellipsis"' if rest_of_url.present?}>) })
@@ -19,7 +19,7 @@ module Markdown
           node.append_child(CommonMarker::Node.new(:inline_html).tap { |n| n.string_content = %(</span>) })
 
           if rest_of_url.present?
-            node.append_child(CommonMarker::Node.new(:inline_html).tap { |n| n.string_content = %(<span class="hidden">) })
+            node.append_child(CommonMarker::Node.new(:inline_html).tap { |n| n.string_content = %(<span class="invisible">) })
             node.append_child(CommonMarker::Node.new(:text).tap { |n| n.string_content = rest_of_url })
             node.append_child(CommonMarker::Node.new(:inline_html).tap { |n| n.string_content = %(</span>) })
           end

@@ -16,7 +16,26 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
 
-    if @post.save
+    ActiveRecord::Base.transaction do
+      params[:post][:media_attachments].each do |file|
+        media_attachment = @post.media_attachments.new(id: ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id();"))
+        file_extension = Rack::Mime::MIME_TYPES.invert[file.content_type]
+        filename = "#{media_attachment.id}#{file_extension}"
+
+        media_attachment.file.attach(
+          key: "blog/#{filename}",
+          io: file.to_io,
+          filename: filename,
+          metadata: {custom: {original_content_type: file.content_type}}
+        )
+
+        media_attachment.save!
+      end
+
+      @post.save!
+    end
+
+    if @post.persisted?
       redirect_to polymorphic_path(@post)
     else
       render :index
