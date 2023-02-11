@@ -17,9 +17,6 @@ gem "puma", "~> 5.0"
 # Use CommonMark to render posts as HTML [https://github.com/gjtorikian/commonmarker]
 gem "commonmarker", "~> 0.23"
 
-# Mastodon stores post content as HTML; this gem converts it back to Markdown
-gem "reverse_markdown"
-
 # Use Pagy to paginate through collections
 gem "pagy", "~> 5.10"
 
