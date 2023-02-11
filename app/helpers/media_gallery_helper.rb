@@ -34,7 +34,7 @@ module MediaGalleryHelper
     classes << "row-span-2" if i == 0 && total == 3
 
     link_to cdn_file_url(media_attachment), class: classes do
-      image_classes = %w[h-full max-h-[750px] object-cover]
+      image_classes = %w[max-h-[750px] object-cover]
       image_classes += additional_classes_for(i, total)
 
       image_element = image_tag(cdn_file_url(media_attachment), loading: "lazy", alt: media_attachment.description, class: image_classes)
@@ -82,7 +82,7 @@ module MediaGalleryHelper
     }
 
     tag.a(class: classes, data: data) do
-      image_classes = %w[h-full max-h-[750px] object-cover]
+      image_classes = %w[max-h-[750px] object-cover]
       image_classes += additional_classes_for(i, total)
 
       image_element = image_tag(cdn_file_url(media_attachment.preview_image), loading: "lazy", alt: media_attachment.description, class: image_classes)
