@@ -66,7 +66,7 @@ module MediaGalleryHelper
     classes << "row-span-2" if i == 0 && total == 3
 
     data = {
-      "lg-size" => [media_attachment.width.to_i, media_attachment.height.to_i].join("-"),
+      "lg-size" => [media_attachment.height.to_i, media_attachment.width.to_i].join("-"),
       "poster" => cdn_file_url(media_attachment.preview_image),
       "video" => {
         source: [{
