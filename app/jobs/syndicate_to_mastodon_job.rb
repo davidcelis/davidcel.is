@@ -11,7 +11,12 @@ class SyndicateToMastodonJob < ApplicationJob
       "“#{post.title}”\n\n#{article_url(post)}"
     end
 
-    status = client.create_status(content: content, idempotency_key: post.id)
+    media_ids = post.media_attachments.map do |media_attachment|
+      response = client.upload_media(media_attachment)
+      response["id"]
+    end
+
+    status = client.create_status(content: content, media_ids: media_ids, idempotency_key: post.id)
 
     post.syndication_links.create!(
       platform: "mastodon",

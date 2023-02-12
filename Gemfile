@@ -50,6 +50,7 @@ gem "aws-sdk-s3"
 # Use Faraday for external HTTP/API requests and clients
 gem "faraday"
 gem "faraday-retry"
+gem "faraday-multipart"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
