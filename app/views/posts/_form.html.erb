@@ -14,13 +14,10 @@
               <%= hidden_field_tag "post[content]", "", data: {"post-composer-target" => "content"} %>
 
               <%= file_field_tag "post[media_attachments][]", multiple: true, hidden: true, accept: "image/*,video/*", data: {"post-composer-target" => "mediaAttachments"} %>
-              <%= hidden_field_tag "post[media_attachment_metadata]", "{}", data: {"post-composer-target" => "content"} %>
 
               <div aria-hidden="true">
-                <!-- Re-add this spacer element when pill buttons for categories, location, etc. are added.
-                <div class="py-2">
-                  <div class="h-9"></div>
-                </div>  -->
+                <div class="flex flex-wrap px-2 gap-x-2" data-post-composer-target="mediaPreviewZone"></div>
+
                 <div class="border-t border-slate-200 px-2 py-2 flex justify-between items-center space-x-3 sm:px-3">
                   <div class="flex-shrink-0">
                     <button type="button" class="group flex items-center" data-action="click->post-composer#selectFiles">
