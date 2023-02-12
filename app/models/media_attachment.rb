@@ -15,11 +15,22 @@ class MediaAttachment < ApplicationRecord
   after_commit :generate_preview_image, if: :video?
 
   def width
-    metadata[:width]
+    dimensions.first
   end
 
   def height
-    metadata[:height]
+    dimensions.last
+  end
+
+  def dimensions
+    # I have no idea why, but it looks like ActiveStorage is consistently flipping
+    # the dimensions of my videos. The preview images always seem to have the
+    # correct dimensions, so I'm using those instead.
+    @dimensions ||= if video? || gif?
+      [preview_image.metadata[:width], preview_image.metadata[:height]]
+    else
+      [metadata[:width], metadata[:height]]
+    end
   end
 
   def gif?
