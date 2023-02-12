@@ -21,27 +21,18 @@
                 <div class="py-2">
                   <div class="h-9"></div>
                 </div>  -->
-                <div class="h-px"></div>
-                <div class="py-2">
-                  <div class="py-px">
-                    <div class="h-9"></div>
+                <div class="border-t border-slate-200 px-2 py-2 flex justify-between items-center space-x-3 sm:px-3">
+                  <div class="flex-shrink-0">
+                    <button type="button" class="group flex items-center" data-action="click->post-composer#selectFiles">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M220.6 121.2L271.1 96 448 96v96H333.2c-21.9-15.1-48.5-24-77.2-24s-55.2 8.9-77.2 24H64V128H192c9.9 0 19.7-2.3 28.6-6.8zM0 128V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H271.1c-9.9 0-19.7 2.3-28.6 6.8L192 64H160V48c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16l0 16C28.7 64 0 92.7 0 128zM168 304a88 88 0 1 1 176 0 88 88 0 1 1 -176 0z"/></svg>
+                      <span class="hidden">Attach media</span>
+                    </button>
+                    <%= file_field_tag :files, multiple: true, hidden: true, accept: "image/*,video/*", data: {"post-composer-target" => "dummyFileField", "action" => "change->post-composer#dummyFileFieldChanged"} %>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="absolute bottom-0 inset-x-px">
-              <div class="border-t border-slate-200 px-2 py-2 flex justify-between items-center space-x-3 sm:px-3">
-                <div class="flex-shrink-0">
-                  <button type="button" class="group flex items-center" data-action="click->post-composer#selectFiles">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M220.6 121.2L271.1 96 448 96v96H333.2c-21.9-15.1-48.5-24-77.2-24s-55.2 8.9-77.2 24H64V128H192c9.9 0 19.7-2.3 28.6-6.8zM0 128V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H271.1c-9.9 0-19.7 2.3-28.6 6.8L192 64H160V48c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16l0 16C28.7 64 0 92.7 0 128zM168 304a88 88 0 1 1 176 0 88 88 0 1 1 -176 0z"/></svg>
-                    <span class="hidden">Attach media</span>
-                  </button>
-                  <%= file_field_tag :files, multiple: true, hidden: true, accept: "image/*,video/*", data: {"post-composer-target" => "dummyFileField", "action" => "change->post-composer#dummyFileFieldChanged"} %>
-                </div>
-                <div class="flex-shrink-0">
-                  <span id="character_counter" class="select-none text-sm text-slate-500 italic px-2" data-post-composer-target="characterCounter">500</span>
-                  <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-500 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">Create</button>
+                  <div class="flex-shrink-0">
+                    <span id="character_counter" class="select-none text-sm text-slate-500 italic px-2" data-post-composer-target="characterCounter">500</span>
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-500 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">Create</button>
+                  </div>
                 </div>
               </div>
             </div>
