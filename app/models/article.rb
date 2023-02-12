@@ -1,4 +1,6 @@
 class Article < Post
+  EXCERPT_SEPARATOR = "<!--more-->".freeze
+
   # Allow Articles to have footnotes, tables, and task lists.
   self.markdown_parsing_options = [:UNSAFE, :SMART, :FOOTNOTES]
   self.markdown_rendering_options = [:UNSAFE, :SMART, :FOOTNOTES]
@@ -7,7 +9,11 @@ class Article < Post
   validates :title, presence: true
 
   def excerpt
-    @excerpt ||= html.split("<!--more-->").first.strip
+    @excerpt ||= if html.include?(EXCERPT_SEPARATOR)
+      html.split(EXCERPT_SEPARATOR).first.strip
+    else
+      html.split(/(?<=<\/p>)/).first.strip
+    end
   end
 
   def to_param
