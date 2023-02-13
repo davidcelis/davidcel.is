@@ -31,6 +31,7 @@ export default class extends Controller {
 
   connect () {
     const options = defineOptions({
+      placeholder: "What’s happening?",
       interface: {
         appearance: 'light',
         attribution: false,
