@@ -17,7 +17,7 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
 
     ActiveRecord::Base.transaction do
-      params[:post][:media_attachments].each_with_index do |file, i|
+      Array(params[:post][:media_attachments]).each_with_index do |file, i|
         media_attachment = @post.media_attachments.new(
           id: ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id();"),
           description: params[:post][:media_attachment_descriptions][i].strip.presence
