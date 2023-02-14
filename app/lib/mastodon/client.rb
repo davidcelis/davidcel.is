@@ -18,11 +18,21 @@ module Mastodon
     end
 
     def upload_media(media_attachment)
-      media_attachment.open do |tmpfile|
+      response = media_attachment.open do |tmpfile|
         file = Faraday::UploadIO.new(tmpfile.path, media_attachment.content_type)
 
-        media_upload_connection.post("/api/v2/media", file: file, description: media_attachment.description).body
+        media_upload_connection.post("/api/v2/media", file: file, description: media_attachment.description)
       end
+
+      # If the upload is large enough, it gets processed asynchronously. In that
+      # case, we need to poll the API until the processing is done.
+      if response.status == 202
+        id = response.body["id"]
+
+        sleep(1) until connection.get("/api/v1/media/#{id}").status != 206
+      end
+
+      response.body
     end
 
     def verify_credentials

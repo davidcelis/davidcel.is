@@ -8,7 +8,7 @@ RSpec.describe SyndicateToMastodonJob, type: :job do
 
     it "shares the note's content to Mastodon" do
       expect_any_instance_of(Mastodon::Client).to receive(:create_status)
-        .with(content: "Hello, world!", idempotency_key: note.id)
+        .with(content: "Hello, world!", media_ids: [], idempotency_key: note.id)
         .and_call_original
 
       expect {
@@ -28,7 +28,7 @@ RSpec.describe SyndicateToMastodonJob, type: :job do
 
     it "shares the Article's title and URL to Mastodon" do
       expect_any_instance_of(Mastodon::Client).to receive(:create_status)
-        .with(content: "“Hello, world!”\n\nhttp://localhost:3000/articles/hello-world", idempotency_key: article.id)
+        .with(content: "“Hello, world!”\n\nhttp://localhost:3000/articles/hello-world", media_ids: [], idempotency_key: article.id)
         .and_call_original
 
       expect {
