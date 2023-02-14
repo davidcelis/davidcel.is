@@ -44,6 +44,8 @@ class Post < ApplicationRecord
   private
 
   def syndicate
+    return if Rails.env.development?
+
     SyndicateToMastodonJob.perform_async(id)
   end
 

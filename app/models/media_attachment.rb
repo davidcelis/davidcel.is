@@ -14,7 +14,7 @@ class MediaAttachment < ApplicationRecord
   has_one_attached :preview_image
   after_commit :generate_preview_image, on: [:create], if: :video?
 
-  default_scope { order(id: :desc) }
+  default_scope { order(id: :asc) }
 
   def width
     dimensions.first

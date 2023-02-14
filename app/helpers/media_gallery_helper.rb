@@ -138,7 +138,7 @@ module MediaGalleryHelper
       return classes
     end
 
-    classes << "aspect-[4/3]" if total > 2
+    classes << "aspect-[4/3]" if total > 1
 
     case i
     when 0

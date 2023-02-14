@@ -33,6 +33,7 @@ class PostsController < ApplicationController
           metadata: {custom: {original_content_type: file.content_type}}
         )
 
+        media_attachment.processed = true unless media_attachment.video? || media_attachment.gif?
         media_attachment.save!
       end
 

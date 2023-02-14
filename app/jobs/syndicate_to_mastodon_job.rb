@@ -11,9 +11,12 @@ class SyndicateToMastodonJob < ApplicationJob
       "“#{post.title}”\n\n#{article_url(post)}"
     end
 
-    media_ids = post.media_attachments.map do |media_attachment|
-      response = client.upload_media(media_attachment)
-      response["id"]
+    media_ids = []
+    if post.is_a?(Note) && post.media_attachments.any?
+      post.media_attachments.map do |media_attachment|
+        response = client.upload_media(media_attachment)
+        media_ids << response["id"]
+      end
     end
 
     status = client.create_status(content: content, media_ids: media_ids, idempotency_key: post.id)
