@@ -1,6 +1,6 @@
 class NotesController < ApplicationController
   def index
-    @pagy, @posts = pagy(Note.includes(media_attachments: {file_attachment: :blob, preview_image_attachment: :blob}))
+    @pagy, @posts = pagy(Note.includes(Post::DEFAULT_INCLUDES).viewable)
 
     render "posts/index"
   end

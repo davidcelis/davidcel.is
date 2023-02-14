@@ -12,7 +12,9 @@ class MediaAttachment < ApplicationRecord
   # To keep things simple for now, I'm only generating preview images for videos, but
   # I may eventually use it to store smaller thumbnails for regular images as well.
   has_one_attached :preview_image
-  after_commit :generate_preview_image, if: :video?
+  after_commit :generate_preview_image, on: [:create], if: :video?
+
+  default_scope { order(id: :desc) }
 
   def width
     dimensions.first
@@ -23,10 +25,7 @@ class MediaAttachment < ApplicationRecord
   end
 
   def dimensions
-    # I have no idea why, but it looks like ActiveStorage is consistently flipping
-    # the dimensions of my videos. The preview images always seem to have the
-    # correct dimensions, so I'm using those instead.
-    @dimensions ||= if video? || gif?
+    @dimensions ||= if (video? || gif?) && preview_image.attached?
       [preview_image.metadata[:width], preview_image.metadata[:height]]
     else
       [metadata[:width], metadata[:height]]

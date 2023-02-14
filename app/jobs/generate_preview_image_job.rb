@@ -11,6 +11,8 @@ class GeneratePreviewImageJob < ApplicationJob
       content_type: "image/jpeg"
     )
 
+    media_attachment.update!(processed: true)
+
     preview.image.purge_later
   end
 end

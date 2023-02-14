@@ -162,7 +162,8 @@ CREATE TABLE public.media_attachments (
     post_id bigint NOT NULL,
     description text,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    processed boolean DEFAULT false NOT NULL
 );
 
 
@@ -360,6 +361,13 @@ CREATE UNIQUE INDEX index_posts_on_type_and_slug_and_created_at ON public.posts 
 
 
 --
+-- Name: index_processed_media_attachments_on_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_processed_media_attachments_on_post_id ON public.media_attachments USING btree (post_id, processed) WHERE (processed = true);
+
+
+--
 -- Name: index_syndication_links_on_post_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -409,6 +417,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221030014919'),
 ('20230111000240'),
 ('20230111000416'),
-('20230205022836');
+('20230205022836'),
+('20230214012129');
 
 

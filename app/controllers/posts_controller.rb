@@ -2,7 +2,7 @@ class PostsController < ApplicationController
   before_action :require_authentication, only: [:create]
 
   def index
-    @pagy, @posts = pagy(Post.includes(media_attachments: {file_attachment: :blob, preview_image_attachment: :blob}))
+    @pagy, @posts = pagy(Post.includes(Post::DEFAULT_INCLUDES).viewable)
   end
 
   def show
@@ -42,7 +42,7 @@ class PostsController < ApplicationController
     if @post.persisted?
       redirect_to polymorphic_path(@post)
     else
-      render :index
+      render :index, alert: @post.errors.full_messages.to_sentence
     end
   end
 

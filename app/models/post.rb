@@ -1,4 +1,14 @@
 class Post < ApplicationRecord
+  DEFAULT_INCLUDES = [
+    :syndication_links,
+    {
+      media_attachments: {
+        file_attachment: :blob,
+        preview_image_attachment: :blob
+      }
+    }
+  ].freeze
+
   class_attribute :markdown_parsing_options, instance_writer: false
   class_attribute :markdown_rendering_options, instance_writer: false
   class_attribute :markdown_extensions, instance_writer: false
@@ -20,6 +30,10 @@ class Post < ApplicationRecord
   before_save :update_html, if: :content_changed?
 
   after_commit :syndicate, on: :create
+
+  scope :without_media, -> { where.missing(:media_attachments) }
+  scope :with_processed_media, -> { where(media_attachments: {processed: true}) }
+  scope :viewable, -> { without_media.or(with_processed_media).distinct }
 
   default_scope { order(id: :desc) }
 
