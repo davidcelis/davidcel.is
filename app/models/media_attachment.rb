@@ -12,7 +12,7 @@ class MediaAttachment < ApplicationRecord
   # To keep things simple for now, I'm only generating preview images for videos, but
   # I may eventually use it to store smaller thumbnails for regular images as well.
   has_one_attached :preview_image
-  after_commit :generate_preview_image, on: [:create], if: :video?
+  after_commit :generate_preview_image, on: [:create], if: :video_or_gif?
 
   default_scope { order(id: :asc) }
 
@@ -25,7 +25,7 @@ class MediaAttachment < ApplicationRecord
   end
 
   def dimensions
-    @dimensions ||= if (video? || gif?) && preview_image.attached?
+    @dimensions ||= if video_or_gif? && preview_image.attached?
       [preview_image.metadata[:width], preview_image.metadata[:height]]
     else
       [metadata[:width], metadata[:height]]
@@ -40,6 +40,10 @@ class MediaAttachment < ApplicationRecord
     return false if gif?
 
     file.video?
+  end
+
+  def video_or_gif?
+    video? || gif?
   end
 
   private

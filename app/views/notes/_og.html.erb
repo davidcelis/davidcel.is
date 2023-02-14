@@ -20,7 +20,7 @@
 <% end %>
 
 <% content_for(:og_video) do %>
-  <% note.media_attachments.select { |m| m.video? || m.gif? }.each do |video| %>
+  <% note.media_attachments.select(&:video_or_gif?).each do |video| %>
     <meta property="og:video" content="<%= cdn_file_url(video) %>">
     <meta property="og:video:alt" content="<%= video.description %>">
     <meta property="og:video:type" content="<%= video.content_type %>">
@@ -33,7 +33,7 @@
   <% if (image = note.media_attachments.first(&:image?)) %>
     <meta property="twitter:image" content="<%= cdn_file_url(image) %>">
     <meta property="twitter:image:alt" content="<%= image.description %>">
-  <% elsif (video = note.media_attachments.find { |m| m.video? || m.gif? }) %>
+  <% elsif (video = note.media_attachments.find(&:video_or_gif?)) %>
     <meta property="twitter:image" content="<%= cdn_file_url(video.preview_image) %>">
     <meta property="twitter:image:alt" content="<%= video.description %>">
   <% end %>

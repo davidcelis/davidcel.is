@@ -29,7 +29,7 @@ module AtomFeedHelper
   def atom_media_tag(media_attachment)
     if media_attachment.image?
       image_tag(cdn_file_url(media_attachment), alt: media_attachment.description)
-    elsif media_attachment.video? || media_attachment.gif?
+    elsif media_attachment.video_or_gif?
       options = {title: media_attachment.description, poster: cdn_file_url(media_attachment.preview_image)}
       options[:controls] = true unless media_attachment.gif?
       options[:loop] = true if media_attachment.gif?

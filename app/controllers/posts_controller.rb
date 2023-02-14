@@ -23,6 +23,17 @@ class PostsController < ApplicationController
           description: params[:post][:media_attachment_descriptions][i].strip.presence
         )
 
+        # If the file is a GIF, convert it to a webm file to save on space, while
+        # preserving the fact that it was a GIF and is meant to play like a gif.
+        original_content_type = file.content_type
+        if original_content_type == "image/gif"
+          webm = ActionDispatch::Http::UploadedFile.new(tempfile: Tempfile.open([file.original_filename, ".webm"]), type: "video/webm")
+
+          ffmpeg = ActiveStorage::Previewer::VideoPreviewer.ffmpeg_path
+          system(ffmpeg, "-y", "-i", file.path, "-movflags", "faststart", "-pix_fmt", "yuv420p", "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2", webm.path, exception: true)
+          file = webm
+        end
+
         file_extension = Rack::Mime::MIME_TYPES.invert[file.content_type]
         filename = "#{media_attachment.id}#{file_extension}"
 
@@ -30,10 +41,10 @@ class PostsController < ApplicationController
           key: "blog/#{filename}",
           io: file.to_io,
           filename: filename,
-          metadata: {custom: {original_content_type: file.content_type}}
+          metadata: {custom: {original_content_type: original_content_type}}
         )
 
-        media_attachment.processed = true unless media_attachment.video? || media_attachment.gif?
+        media_attachment.processed = true unless file.content_type.start_with?("video/")
         media_attachment.save!
       end
 
