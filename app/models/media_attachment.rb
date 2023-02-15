@@ -17,19 +17,11 @@ class MediaAttachment < ApplicationRecord
   default_scope { order(id: :asc) }
 
   def width
-    dimensions.first
+    metadata[:width]
   end
 
   def height
-    dimensions.last
-  end
-
-  def dimensions
-    @dimensions ||= if video_or_gif? && preview_image.attached?
-      [preview_image.metadata[:width], preview_image.metadata[:height]]
-    else
-      [metadata[:width], metadata[:height]]
-    end
+    metadata[:height]
   end
 
   def gif?
