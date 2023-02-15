@@ -24,6 +24,7 @@ export default class extends Lightbox {
       download: false,
       getCaptionFromTitleOrAlt: false,
       hideControlOnEnd: true,
+      gotoNextSlideOnVideoEnd: false,
       loop: false,
     }
   }
