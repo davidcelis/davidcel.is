@@ -38,6 +38,16 @@ class MediaAttachment < ApplicationRecord
     video? || gif?
   end
 
+  def processed?
+    return true if image?
+
+    preview_image.attached?
+  end
+
+  def unprocessed?
+    !processed?
+  end
+
   private
 
   def generate_preview_image

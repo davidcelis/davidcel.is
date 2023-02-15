@@ -31,11 +31,11 @@ class Post < ApplicationRecord
 
   after_commit :syndicate, on: :create
 
-  scope :without_media, -> { where.missing(:media_attachments) }
-  scope :with_processed_media, -> { where(media_attachments: {processed: true}) }
-  scope :viewable, -> { without_media.or(with_processed_media).distinct }
-
   default_scope { order(id: :desc) }
+
+  def self.filter_posts_with_unprocessed_media(posts)
+    posts.reject { |post| post.media_attachments.any?(&:unprocessed?) }
+  end
 
   def update_html
     self.html = Markdown::Renderer.new(options: markdown_rendering_options, extensions: markdown_extensions).render(commonmark_doc).strip

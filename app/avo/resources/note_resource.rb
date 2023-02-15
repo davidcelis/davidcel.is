@@ -3,7 +3,7 @@ class NoteResource < Avo::BaseResource
 
   self.title = :id
 
-  self.includes = [{media_attachments: {file_attachment: :blob}}]
+  self.includes = Post::DEFAULT_INCLUDES
   # self.search_query = -> do
   #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
   # end

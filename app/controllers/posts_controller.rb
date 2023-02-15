@@ -2,7 +2,8 @@ class PostsController < ApplicationController
   before_action :require_authentication, only: [:create]
 
   def index
-    @pagy, @posts = pagy(Post.includes(Post::DEFAULT_INCLUDES).viewable)
+    @pagy, @posts = pagy(Post.includes(Post::DEFAULT_INCLUDES))
+    @posts = Post.filter_posts_with_unprocessed_media(@posts)
   end
 
   def show
@@ -44,7 +45,6 @@ class PostsController < ApplicationController
           metadata: {custom: {original_content_type: original_content_type}}
         )
 
-        media_attachment.processed = true unless file.content_type.start_with?("video/")
         media_attachment.save!
       end
 
