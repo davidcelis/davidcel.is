@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus'
+import { DirectUpload } from '@rails/activestorage'
 import { defineOptions, ink } from 'ink-mde'
 
 export default class extends Controller {
@@ -7,7 +8,6 @@ export default class extends Controller {
     'title',
     'content',
     'type',
-    'mediaAttachments',
 
     // Utility targets
     'editor',
@@ -20,6 +20,7 @@ export default class extends Controller {
   static values = {
     characterLimit: { type: Number, default: 500 },
     fileLimit: { type: Number, default: 4 },
+    directUploadUrl: String,
   };
 
   // TODO: Once Safari supports positive look-behinds, we can use these instead:
@@ -66,52 +67,37 @@ export default class extends Controller {
   }
 
   addMediaAttachments(files) {
-    // Create a new DataTransfer object to store any already-selected files
-    // along with the new files we're adding here.
-    const dataTransfer = new DataTransfer();
-
-    // Add the existing files to the DataTransfer object
-    for (let i = 0; i < this.mediaAttachmentsTarget.files.length; i++) {
-      dataTransfer.items.add(this.mediaAttachmentsTarget.files[i]);
-    }
-
-    // Add newly selected files to the DataTransfer object, skipping any
-    // files that are already attached to the post.
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const alreadyAttached = Array.from(this.mediaAttachmentsTarget.files).some((attachedFile) => {
-        return attachedFile.name === file.name && attachedFile.size === file.size && attachedFile.type === file.type && attachedFile.lastModified === file.lastModified;
-      });
-
-      if (!alreadyAttached) {
-        dataTransfer.items.add(file);
-      }
-    }
-
-    if (dataTransfer.files.length > this.fileLimitValue) {
-      alert(`This post can only have ${this.fileLimitValue} files.`);
+    if (this.mediaPreviewTargets.length + files.length > this.fileLimitValue) {
+      alert(`You can only attach ${this.fileLimitValue} images or videos to this post.`);
       return;
     }
 
-    this.mediaAttachmentsTarget.files = dataTransfer.files;
-    this.mediaPreviewZoneTarget.innerHTML = '';
+    Array.from(files).forEach(file => this.uploadMediaAttachment(file))
+  };
 
-    // If we have any files, unhide the media preview zone and render image or
-    // video previews for each file.
-    for (let i = 0; i < this.mediaAttachmentsTarget.files.length; i++) {
-      const file = this.mediaAttachmentsTarget.files[i];
-      const previewElement = this.createPreviewElementFor(file);
-
-      this.mediaPreviewZoneTarget.appendChild(previewElement);
+  uploadMediaAttachment(file) {
+    // Make sure we haven't already uploaded this file
+    if (this.mediaPreviewTargets.some(preview => {
+      return preview.dataset.fileName === file.name &&
+        preview.dataset.fileType === file.type &&
+        preview.dataset.fileSize === String(file.size) &&
+        preview.dataset.fileLastModified === String(file.lastModified);
+    })) {
+      return;
     }
-  }
 
-  createPreviewElementFor(file) {
     const previewElement = document.createElement('div');
     previewElement.classList.add('relative', 'w-32', 'h-32', 'mb-2');
     previewElement.dataset.postComposerTarget = 'mediaPreview';
     previewElement.dataset.controller = 'tooltip';
 
+    // Add the file's metadata to the preview element so we can prevent duplicates
+    previewElement.dataset.fileName = file.name;
+    previewElement.dataset.fileSize = file.size;
+    previewElement.dataset.fileType = file.type;
+    previewElement.dataset.fileLastModified = file.lastModified;
+
+    // Set up the preview element's content, starting with the media itself.
     let mediaPreview;
     if (file.type.startsWith('image/')) {
       mediaPreview = document.createElement('img');
@@ -123,29 +109,36 @@ export default class extends Controller {
     mediaPreview.classList.add('object-cover', 'rounded', 'h-full', 'w-full', 'shadow-md');
     previewElement.appendChild(mediaPreview);
 
-    // Add a button that'll toggle a small, tooltip-enabled form for alt text
+    // Add a hidden input to store the file's ID once it's uploaded.
+    const signedIdHiddenInput = document.createElement('input');
+    signedIdHiddenInput.type = 'hidden';
+    signedIdHiddenInput.name = 'post[media_attachments][][signed_id]';
+    previewElement.appendChild(signedIdHiddenInput);
+
+    // Add a button that'll toggle a small, tooltip-enabled form for alt text.
+    // This will be hidden at first, and then shown when the upload completes.
     const altTextButton = document.createElement('button');
-    altTextButton.classList.add('absolute', 'bottom-1', 'left-1', 'px-1', 'font-bold', 'font-ui-sans', 'rounded-[.25rem]', 'bg-black', 'bg-opacity-[.65]', 'hover:bg-black', 'text-white', 'select-none');
+    altTextButton.classList.add('hidden', 'absolute', 'bottom-1', 'left-1', 'px-1', 'font-bold', 'font-ui-sans', 'rounded-[.25rem]', 'bg-black', 'bg-opacity-[.65]', 'hover:bg-black', 'text-white', 'select-none');
     altTextButton.innerHTML = '+ALT'
     altTextButton.dataset.action = 'click->tooltip#ignore:prevent'
     altTextButton.dataset.tooltipTarget = 'trigger';
     previewElement.appendChild(altTextButton);
 
-    // First, add a hidden input that will sync with the form's alt text field.
-    // This is necessary because the form is in a tooltip, which is appended to
-    // the document body, so it's not a child of the form.
+    // Add a hidden input that will sync with the form's alt text field. This
+    // is necessary because the form is in a tooltip, which is appended to the
+    // document body, so it's not a child of the form.
     const altTextHiddenInput = document.createElement('input');
     altTextHiddenInput.type = 'hidden';
-    altTextHiddenInput.name = 'post[media_attachment_descriptions][]';
+    altTextHiddenInput.name = 'post[media_attachments][][description]';
     altTextHiddenInput.value = '';
     previewElement.appendChild(altTextHiddenInput);
 
-    // Then, start building the tooltip form by creating a wrapper div
+    // Then, start building the tooltip form by creating a wrapper div...
     const altTextForm = document.createElement('div');
     altTextForm.classList.add('hidden', 'flex', 'flex-col', 'gap-4', 'p-4', 'max-w-prose')
     altTextForm.dataset.tooltipTarget = 'content';
 
-    // Add a header with a dismiss button
+    // ... add a header with a dismiss button...
     const altTextFormHeader = document.createElement('div');
     altTextFormHeader.classList.add('flex', 'justify-between');
     const altTextFormH2 = document.createElement('h2');
@@ -156,13 +149,13 @@ export default class extends Controller {
     altTextFormDismissButton.dataset.action = 'click->tooltip#ignore:prevent';
     altTextFormDismissButton.innerHTML = 'Close';
 
-    // Add a text input for the alt text
+    // ... and a text input for the alt text...
     const altTextInput = document.createElement('textarea');
     altTextInput.classList.add('border', 'border-slate-200', 'rounded', 'p-2', 'text-slate-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-pink-500', 'focus:border-transparent', 'placeholder:italic', 'h-32', 'w-64', 'sm:w-96', 'md:w-120');
     altTextInput.placeholder = 'Describe the image';
 
-    // Set up an event listener that will sync the alt text input's value with
-    // the hidden input's value.
+    // ... and finally, set up an event listener that will sync the alt text
+    // input's value with the hidden input's value.
     altTextInput.addEventListener('input', (event) => {
       altTextHiddenInput.value = event.target.value;
     });
@@ -173,32 +166,54 @@ export default class extends Controller {
     altTextForm.appendChild(altTextInput);
     previewElement.appendChild(altTextForm);
 
+    // Add a button to remove the media attachment from the post. Like the alt
+    // text button, this will start hidden and be shown when the upload's done.
     const removeButton = document.createElement('button');
-    removeButton.classList.add('absolute', 'top-1', 'right-1', 'p-1', 'rounded-full', 'bg-black', 'bg-opacity-[.65]', 'hover:bg-black');
+    removeButton.classList.add('hidden', 'absolute', 'top-1', 'right-1', 'p-1', 'rounded-full', 'bg-black', 'bg-opacity-[.65]', 'hover:bg-black');
     removeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-white" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>'
     removeButton.dataset.action = 'click->post-composer#removeMediaAttachment:prevent';
-    removeButton.dataset.postComposerFilenameParam = file.name;
-    removeButton.dataset.postComposerFilesizeParam = file.size;
-    removeButton.dataset.postComposerFiletypeParam = file.type;
-    removeButton.dataset.postComposerFileLastModifiedParam = file.lastModified;
     previewElement.appendChild(removeButton);
 
-    return previewElement;
-  };
+    // Add a progress bar to show the upload's progress.
+    const progressBar = document.createElement('div');
+    progressBar.classList.add('absolute', 'top-0', 'left-0', 'w-full', 'h-1', 'bg-slate-200', 'bg-opacity-[.65]');
+    progressBar.innerHTML = `
+      <div class="bg-pink-500 h-1" style="width: 0%"></div>
+    `;
+    previewElement.appendChild(progressBar);
 
-  removeMediaAttachment(event) {
-    const dataTransfer = new DataTransfer();
-
-    for (let i = 0; i < this.mediaAttachmentsTarget.files.length; i++) {
-      const file = this.mediaAttachmentsTarget.files[i];
-
-      if (file.name !== event.params.filename || file.size !== event.params.filesize || file.type !== event.params.filetype || file.lastModified !== event.params.fileLastModified) {
-        dataTransfer.items.add(file);
+    // Create an "Uploader" object that can bind to the upload's progress
+    // events and update the progress bar.
+    const uploader = {
+      directUploadWillStoreFileWithXHR: (request) => {
+        request.upload.addEventListener('progress', (event) => {
+          const progress = event.loaded / event.total * 100;
+          progressBar.firstElementChild.style.width = `${progress}%`;
+        });
       }
     }
 
-    this.mediaAttachmentsTarget.files = dataTransfer.files;
+    // Finally, append the preview element to the DOM and start the upload.
+    this.mediaPreviewZoneTarget.appendChild(previewElement);
+    const upload = new DirectUpload(file, this.directUploadUrlValue, uploader);
+    upload.create((error, blob) => {
+      if (error) {
+        console.error(error);
+        previewElement.remove();
+      } else {
+        // When the upload is done, get rid of the progress bar and show the
+        // buttons to add alt text or remove the media attachment from the post
+        progressBar.remove();
+        altTextButton.classList.remove('hidden');
+        removeButton.classList.remove('hidden');
 
+        // Then, set the hidden input's value to the blob's signed ID.
+        signedIdHiddenInput.value = blob.signed_id;
+      }
+    });
+  };
+
+  removeMediaAttachment(event) {
     const previewElement = event.target.closest('[data-post-composer-target="mediaPreview"]');
     previewElement.remove();
   };

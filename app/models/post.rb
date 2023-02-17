@@ -33,10 +33,6 @@ class Post < ApplicationRecord
 
   default_scope { order(id: :desc) }
 
-  def self.filter_posts_with_unprocessed_media(posts)
-    posts.reject { |post| post.media_attachments.any?(&:unprocessed?) }
-  end
-
   def update_html
     self.html = Markdown::Renderer.new(options: markdown_rendering_options, extensions: markdown_extensions).render(commonmark_doc).strip
   end

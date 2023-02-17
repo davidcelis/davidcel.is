@@ -3,7 +3,6 @@ class PostsController < ApplicationController
 
   def index
     @pagy, @posts = pagy(Post.includes(Post::DEFAULT_INCLUDES))
-    @posts = Post.filter_posts_with_unprocessed_media(@posts)
   end
 
   def show
@@ -18,32 +17,24 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
 
     ActiveRecord::Base.transaction do
-      Array(params[:post][:media_attachments]).each_with_index do |file, i|
+      media_attachments_params.each do |blob|
         media_attachment = @post.media_attachments.new(
-          id: ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id();"),
-          description: params[:post][:media_attachment_descriptions][i].strip.presence
+          file: blob[:signed_id],
+          description: blob.fetch(:description, "").strip.presence
         )
 
-        # If the file is a GIF, convert it to a webm file to save on space, while
-        # preserving the fact that it was a GIF and is meant to play like a gif.
-        original_content_type = file.content_type
-        if original_content_type == "image/gif"
-          webm = ActionDispatch::Http::UploadedFile.new(tempfile: Tempfile.open([file.original_filename, ".webm"]), type: "video/webm")
+        # If the post is being created with any video attachments, which need to
+        # have a preview image generated, or a GIF, which needs to be converted
+        # to a video, we'll push the post creation into a background job. This
+        # lets us handle the processing of the media attachments without hogging
+        # a web worker and also ensures we can wait to create the Post object
+        # until the media is done processing.
+        if media_attachment.file.video? || media_attachment.file.content_type == "image/gif"
+          CreatePostWithMediaJob.perform_async(post_params.to_h, media_attachments_params.map(&:to_h))
 
-          ffmpeg = ActiveStorage::Previewer::VideoPreviewer.ffmpeg_path
-          system(ffmpeg, "-y", "-i", file.path, "-movflags", "faststart", "-pix_fmt", "yuv420p", "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2", webm.path, exception: true)
-          file = webm
+          @post_will_be_created_later = true
+          raise ActiveRecord::Rollback
         end
-
-        file_extension = Rack::Mime::MIME_TYPES.invert[file.content_type]
-        filename = "#{media_attachment.id}#{file_extension}"
-
-        media_attachment.file.attach(
-          key: "blog/#{filename}",
-          io: file.to_io,
-          filename: filename,
-          metadata: {custom: {original_content_type: original_content_type}}
-        )
 
         media_attachment.save!
       end
@@ -53,6 +44,8 @@ class PostsController < ApplicationController
 
     if @post.persisted?
       redirect_to polymorphic_path(@post)
+    elsif @post_will_be_created_later
+      redirect_to root_path, notice: "Your post's media is being processed and will be available shortly."
     else
       render :index, alert: @post.errors.full_messages.to_sentence
     end
@@ -64,5 +57,9 @@ class PostsController < ApplicationController
     params.require(:post).permit(:type, :title, :content).tap do |p|
       p.delete(:title) unless p[:type] == "Article"
     end
+  end
+
+  def media_attachments_params
+    params.require(:post).permit(media_attachments: [:signed_id, :description]).fetch(:media_attachments, [])
   end
 end

@@ -10,7 +10,7 @@
           </div>
 
           <% if @note.media_attachments.any? %>
-            <% if @note.media_attachments.all?(&:processed) %>
+            <% if @note.media_attachments.all?(&:processed?) %>
               <%= media_gallery_tag(@note.media_attachments.includes(file_attachment: :blob, preview_image_attachment: :blob)) %>
             <% else %>
               <div class="mt-4">

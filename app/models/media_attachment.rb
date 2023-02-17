@@ -12,7 +12,6 @@ class MediaAttachment < ApplicationRecord
   # To keep things simple for now, I'm only generating preview images for videos, but
   # I may eventually use it to store smaller thumbnails for regular images as well.
   has_one_attached :preview_image
-  after_commit :generate_preview_image, on: [:create], if: :video_or_gif?
 
   default_scope { order(id: :asc) }
 
@@ -36,23 +35,5 @@ class MediaAttachment < ApplicationRecord
 
   def video_or_gif?
     video? || gif?
-  end
-
-  def processed?
-    return true if image?
-
-    preview_image.attached?
-  end
-
-  def unprocessed?
-    !processed?
-  end
-
-  private
-
-  def generate_preview_image
-    return if preview_image.attached?
-
-    GeneratePreviewImageJob.perform_async(id)
   end
 end

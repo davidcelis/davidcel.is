@@ -3,7 +3,7 @@
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <div class="flex">
-          <%= form_for Post.new, multipart: true, html: {class: "relative grow", data: {"controller" => "post-composer"}} do |f| %>
+          <%= form_for Post.new, html: {class: "relative grow", data: {"controller" => "post-composer", "post-composer-direct-upload-url-value" => direct_uploads_url}} do |f| %>
             <div class="border border-slate-300 rounded-lg shadow-sm overflow-hidden focus-within:border-pink-500 focus-within:ring-1 focus-within:ring-pink-500">
               <%= hidden_field_tag "post[type]", "Note", data: {"post-composer-target" => "type"} %>
 
@@ -12,8 +12,6 @@
               <div data-post-composer-target="editor"></div>
 
               <%= hidden_field_tag "post[content]", "", data: {"post-composer-target" => "content"} %>
-
-              <%= file_field_tag "post[media_attachments][]", multiple: true, hidden: true, accept: "image/*,video/*", data: {"post-composer-target" => "mediaAttachments"} %>
 
               <div aria-hidden="true">
                 <div class="flex flex-wrap px-2 gap-x-2" data-post-composer-target="mediaPreviewZone"></div>
