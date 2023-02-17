@@ -5,3 +5,8 @@ max_retries: 25
 
 queues:
   - default
+
+scheduler:
+  schedule:
+    PurgeUnattachedBlobsJob:
+      every: ["1d", first_in: "0s"]
