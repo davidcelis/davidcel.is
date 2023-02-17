@@ -51,11 +51,14 @@ module MediaGalleryHelper
       video_classes = additional_classes_for(file: media_attachment, i: i, total: total)
       video_element = video_tag(cdn_file_url(media_attachment.file), poster: cdn_file_url(media_attachment.preview_image), preload: "none", playsinline: true, controls: false, loop: true, width: media_attachment.width, height: media_attachment.height, class: video_classes, data: {"play-target" => "item", "action" => "playOrPause"})
 
-      gif_badge = tag.div(class: "absolute left-2 bottom-2") do
-        tag.button("GIF", class: "font-bold font-ui-sans rounded-l-[.25rem] bg-black bg-opacity-[.65] text-white hover:bg-black px-1 select-none", data: {action: "click->play#playOrPause:prevent"})
-      end
-
       alt_text_badge = alt_text_badge(media_attachment, fully_rounded: false)
+
+      gif_badge = tag.div(class: "absolute left-2 bottom-2") do
+        gif_badge_classes = %w[font-bold font-ui-sans rounded-l-[.25rem] bg-black bg-opacity-[.65] text-white hover:bg-black px-1 select-none]
+        gif_badge_classes << "rounded-r-[.25rem]" if alt_text_badge.blank?
+
+        tag.button("GIF", class: gif_badge_classes, data: {action: "click->play#playOrPause:prevent"})
+      end
 
       play_button + video_element + gif_badge + alt_text_badge
     end
