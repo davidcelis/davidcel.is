@@ -2,7 +2,7 @@
 <% content_for(:og_type, "article") %>
 
 <% if link_preview_requested? %>
-  <% content_for(:og_title, "@davidcelis") %>
+  <% content_for(:og_title, "david celis") %>
   <% content_for(:og_url, "https://twitter.com/x/status/x") %>
   <script>window.location.replace("<%= polymorphic_url(note) %>");</script>
 <% else %>
