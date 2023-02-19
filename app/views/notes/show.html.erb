@@ -10,13 +10,7 @@
           </div>
 
           <% if @note.media_attachments.any? %>
-            <% if @note.media_attachments.all?(&:processed?) %>
-              <%= media_gallery_tag(@note.media_attachments.includes(file_attachment: :blob, preview_image_attachment: :blob)) %>
-            <% else %>
-              <div class="mt-4">
-                This post’s media attachments are still processing. Try refreshing in a few seconds.
-              </div>
-            <% end %>
+            <%= media_gallery_tag(@note.media_attachments.includes(file_attachment: :blob, preview_image_attachment: :blob)) %>
           <% end %>
 
           <div class="pt-4 text-sm text-slate-500">
