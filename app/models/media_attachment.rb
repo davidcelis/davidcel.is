@@ -1,4 +1,5 @@
 class MediaAttachment < ApplicationRecord
+  DEFAULT_INCLUDES = [:post, {file_attachment: :blob, preview_image_attachment: :blob}].freeze
   belongs_to :post
 
   has_one_attached :file
@@ -14,6 +15,8 @@ class MediaAttachment < ApplicationRecord
   has_one_attached :preview_image
 
   default_scope { order(id: :asc) }
+
+  scope :featured, -> { where(featured: true) }
 
   def width
     metadata[:width]

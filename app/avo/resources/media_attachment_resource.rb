@@ -8,7 +8,8 @@ class MediaAttachmentResource < Avo::BaseResource
     end
   end
 
-  self.includes = [:post, {file_attachment: :blob, preview_image_attachment: :blob}]
+  self.includes = MediaAttachment::DEFAULT_INCLUDES
+  self.unscoped_queries_on_index = true
   self.default_view_type = :grid
   self.after_update_path = :index
 
@@ -24,24 +25,32 @@ class MediaAttachmentResource < Avo::BaseResource
     end
 
     title :title, as: :text, required: true, link_to_resource: true do |media|
-      case media.post
+      title = case media.post
       when Note
         media.post.content || media.post.id
       when Article
         media.post.title
       end
+
+      title = "⭐️ #{title}" if media.featured
+
+      title
     end
 
     body :description, as: :text
   end
 
   filter HasAltTextFilter
+  filter IsFeaturedFilter
+
+  action ToggleFeatured
 
   field :id, as: :id
 
   # Fields generated from the model
   field :description, as: :textarea
   field :file, as: :file
+  field :featured, as: :boolean
 
   # Add more fields here
 end

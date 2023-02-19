@@ -162,7 +162,8 @@ CREATE TABLE public.media_attachments (
     post_id bigint NOT NULL,
     description text,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    featured boolean DEFAULT false NOT NULL
 );
 
 
@@ -411,6 +412,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230111000416'),
 ('20230205022836'),
 ('20230214012129'),
-('20230215164722');
+('20230215164722'),
+('20230218162820');
 
 
