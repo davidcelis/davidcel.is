@@ -20,6 +20,9 @@ module.exports = {
       },
     },
   },
+  safelist: [
+    'invisible',
+  ],
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
