@@ -74,6 +74,15 @@ class Post < ApplicationRecord
           new_text = ""
         elsif (match = part.match(MENTION_REGEX))
           link_node = Markdown::Nodes::Link.from_mention(match[1], match[2])
+
+          # Mentions are a bit more complicated, because we need to handle when
+          # the mention is possessive or wrapped in something like parens or quotes.
+          # We'll handle this by splitting the string on the mention and then
+          # recombining it with the link node in the middle.
+          index = part.index(MENTION_REGEX)
+          new_text += part[0...index]
+          part = part[index..]
+
           new_text_node = CommonMarker::Node.new(:text).tap { |n| n.string_content = new_text }
 
           node.insert_before(new_text_node)
