@@ -1,7 +1,7 @@
 /* Application styles */
 
 span.ellipsis::after {
-  content: "…";
+  content: "\2026";
 }
 
 /*
@@ -14,6 +14,14 @@ don't arbitrarly give each one a top margin. Also, prepend our
 
 @media not all and (min-width: 768px) {
   .post-list .note .prose p:first-of-type::before {
-    content: "✏️ ";
+    content: "\270F\ ";
   }
+}
+
+.prose .invisible {
+  font-size: 0;
+  line-height: 0;
+  display: inline-block;
+  width: 0;
+  height: 0;
 }
