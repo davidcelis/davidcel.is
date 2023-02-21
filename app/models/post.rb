@@ -79,7 +79,7 @@ class Post < ApplicationRecord
           node.insert_before(new_text_node)
           node.insert_before(link_node)
 
-          new_text = ""
+          new_text = part.sub(MENTION_REGEX, "")
         else
           new_text += part
         end
