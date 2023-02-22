@@ -20,6 +20,7 @@ class Post < ApplicationRecord
 
   MENTION_REGEX = /(?<=^|[^\/\w])@(?:([a-z0-9_]+)@((?:[\w.-]+\w+)?))/i
   URL_REGEX = URI::DEFAULT_PARSER.make_regexp(%w[http https])
+  HASHTAG_REGEX = /(?<=^|[^\/\w])#(\S+)/i
 
   has_many :media_attachments, dependent: :destroy
   has_many :syndication_links, dependent: :destroy

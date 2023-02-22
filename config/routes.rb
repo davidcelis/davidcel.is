@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :posts, only: [:index, :create]
   resources :articles, only: [:index, :show]
   resources :notes, only: [:index, :show]
+  resources :photos, only: [:index]
 
   get "/feeds/main", to: "feeds#main", format: :xml, as: :main_feed
   get "/feeds/articles", to: "feeds#articles", format: :xml, as: :articles_feed

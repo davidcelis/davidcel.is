@@ -1,0 +1,23 @@
+<% content_for(:page_title, "Photos") %>
+
+<div class="py-10 sm:py-12">
+  <div class="lg:px-8">
+    <div class="lg:max-w-4xl">
+      <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+        <section class="photo-gallery grid grid-cols-3 gap-4">
+          <% @media_attachments.each do |media| %>
+            <% media = media.preview_image if media.video? %>
+
+            <%= link_to polymorphic_path(media.post) do %>
+              <%= image_tag cdn_file_url(media), loading: "lazy", alt: media.description, class: "h-full w-full aspect-[1/1] object-cover rounded-md" %>
+            <% end %>
+          <% end %>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="border-t border-slate-100">
+  <%= render "pagination" %>
+</section>
