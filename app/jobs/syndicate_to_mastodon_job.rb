@@ -13,7 +13,7 @@ class SyndicateToMastodonJob < ApplicationJob
 
     media_ids = []
     if post.is_a?(Note) && post.media_attachments.any?
-      post.media_attachments.map do |media_attachment|
+      post.media_attachments.each do |media_attachment|
         response = client.upload_media(media_attachment)
         media_ids << response["id"]
       end
