@@ -5,11 +5,11 @@
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <section class="photo-gallery grid grid-cols-3 gap-4">
-          <% @media_attachments.each do |media| %>
-            <% media = media.preview_image if media.video? %>
+          <% @media_attachments.each do |media_attachment| %>
+            <% file = media_attachment.video? ? media_attachment.preview_image : media_attachment.file %>
 
-            <%= link_to polymorphic_path(media.post) do %>
-              <%= image_tag cdn_file_url(media), loading: "lazy", alt: media.description, class: "h-full w-full aspect-[1/1] object-cover rounded-md" %>
+            <%= link_to polymorphic_path(media_attachment.post) do %>
+              <%= image_tag cdn_file_url(file), loading: "lazy", alt: media_attachment.description, class: "h-full w-full aspect-[1/1] object-cover rounded-md" %>
             <% end %>
           <% end %>
         </section>
