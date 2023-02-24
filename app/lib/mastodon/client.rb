@@ -23,12 +23,13 @@ module Mastodon
 
     def upload_media(media_attachment)
       response = media_attachment.open do |blob|
-        tmpfile = if media_attachment.image?
-          compress_image(blob)
+        tmpfile = blob
+
+        if media_attachment.image?
+          tmpfile = compress_image(tmpfile)
         elsif media_attachment.video?
-          convert_video(blob, metadata: media_attachment.file.metadata)
-        else
-          blob
+          tmpfile = downscale_video(tmpfile, metadata: media_attachment.file.metadata)
+          tmpfile = compress_video(tmpfile, metadata: media_attachment.file.metadata)
         end
 
         file = Faraday::UploadIO.new(tmpfile.path, media_attachment.content_type)
@@ -73,7 +74,7 @@ module Mastodon
       result
     end
 
-    def convert_video(blob, metadata:)
+    def downscale_video(blob, metadata:)
       result = blob
 
       # First, we need to downscale the video if it exceeds Mastodon's limit of
@@ -91,22 +92,30 @@ module Mastodon
         system(ffmpeg, "-y", "-i", blob.path, "-vf", "scale=#{new_width}:#{new_height}", result.path)
       end
 
-      # Next, we'll compress the video using two-pass encoding if necessary.
-      bitrate = (VIDEO_SIZE_LIMIT * 8000) / blob.metadata[:duration]
+      result
+    end
+
+    def compress_video(blob, metadata:)
+      result = blob
+
+      bitrate = (VIDEO_SIZE_LIMIT * 8000) / metadata[:duration]
       bitrate -= 128 if metadata[:audio]
       buffer = (bitrate * 0.05).floor
 
       while File.size(result.path) > VIDEO_SIZE_LIMIT.megabytes
+        new_result = Tempfile.new(["video", ".mp4"])
+
         # We'll use the video's duration and Mastodon's 40MB limit to determine
         # the target bitrate for two-pass compression, making sure to account
         # for a targeted 128k audio bitrate.
         #
         # https://trac.ffmpeg.org/wiki/Encode/H.264#twopass
-        system(ffmpeg, "-y", "-i", blob.path, "-c:v", "libx264", "-b:v", "#{bitrate}k", "-pass", "1", "-an", "-f", "mp4", "/dev/null")
-        system(ffmpeg, "-y", "-i", blob.path, "-c:v", "libx264", "-b:v", "#{bitrate}k", "-pass", "2", "-c:a", "aac", "-b:a", "128k", result.path)
-        result.rewind
+        system(ffmpeg, "-y", "-i", result.path, "-c:v", "libx264", "-b:v", "#{bitrate}k", "-pass", "1", "-an", "-f", "mp4", "/dev/null")
+        system(ffmpeg, "-y", "-i", result.path, "-c:v", "libx264", "-b:v", "#{bitrate}k", "-pass", "2", "-c:a", "aac", "-b:a", "128k", new_result.path)
+        new_result.rewind
 
-        # If the file is still too big, reduce the bitrate by 5% and try again.
+        result = new_result
+        # Reduce the bitrate by 5% before trying again.
         bitrate -= buffer
       end
 

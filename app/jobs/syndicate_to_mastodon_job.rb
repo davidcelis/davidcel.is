@@ -13,6 +13,13 @@ class SyndicateToMastodonJob < ApplicationJob
 
     media_ids = []
     if post.is_a?(Note) && post.media_attachments.any?
+      # Wait if any of the media attachments are still waiting to be analyzed.
+      unless post.media_attachments.all?(&:analyzed)
+        logger.info("Media attachments are still being analyzed; trying again in 5 seconds...")
+        SyndicateToMastodonJob.perform_in(5.seconds, post_id)
+        return
+      end
+
       post.media_attachments.each do |media_attachment|
         response = client.upload_media(media_attachment)
         media_ids << response["id"]
