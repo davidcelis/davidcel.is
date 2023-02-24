@@ -39,5 +39,10 @@ module Blog
 
     # Generate a SQL representation of the database schema.
     config.active_record.schema_format = :sql
+
+    # Intercept exceptions to render a custom error page.
+    config.exceptions_app = ->(env) {
+      ErrorsController.action(:show).call(env)
+    }
   end
 end

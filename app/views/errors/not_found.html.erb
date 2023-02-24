@@ -1,0 +1,31 @@
+<div class="py-12 sm:py-8">
+  <div class="lg:px-8">
+    <div class="lg:max-w-4xl">
+      <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+        <h1 class="text-2xl font-bold leading-7 text-slate-900">❓ 404 Not Found</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
+    <article class="py-10 sm:py-12">
+      <div class="lg:px-8">
+        <div class="lg:max-w-4xl">
+          <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+            <div class="prose prose-slate mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
+              <p>
+                Oops! Looks like the page you’re looking for doesn’t exist.
+              </p>
+
+              <p>
+                You can head back to the <a href="/" class="link-primary">homepage</a> or,
+                if you were sent here in error and want to let me know, you can
+                <a class="link-primary" href="mailto:me@davidcel.is?subject=I got sent to a 404 page!&body=Hey David, I got sent to a 404 page and thought you might wanna know about it: <%= root_url.chomp("/") %><%= request.env["REQUEST_PATH"] %>">✉️ say "hey"</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>

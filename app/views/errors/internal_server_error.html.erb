@@ -1,0 +1,32 @@
+<div class="py-12 sm:py-8">
+  <div class="lg:px-8">
+    <div class="lg:max-w-4xl">
+      <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+        <h1 class="text-2xl font-bold leading-7 text-slate-900">💣 500 Internal Server Error</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
+    <article class="py-10 sm:py-12">
+      <div class="lg:px-8">
+        <div class="lg:max-w-4xl">
+          <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+            <div class="prose prose-slate mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
+              <p>
+                Woah, something went wrong! I’m not sure what, but I’ve been notified and
+                will hopefully fix it soon.
+              </p>
+
+              <p>
+                You can head back to the <a href="/" class="link-primary">homepage</a> for now
+                or, if it’s been a while and it doesn’t seem like I’m fixing this, you can
+                <a class="link-primary" href="mailto:me@davidcel.is?subject=I got a 500!&body=Hey David, I'm getting a 500 error and thought you might wanna know about it: <%= root_url.chomp("/") %><%= request.env["REQUEST_PATH"] %>">✉️ say "hey"</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>
