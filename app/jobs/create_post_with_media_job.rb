@@ -1,3 +1,5 @@
+require "vips"
+
 class CreatePostWithMediaJob < ApplicationJob
   def perform(post_params, media_attachments_params)
     ActiveRecord::Base.transaction do
@@ -13,16 +15,25 @@ class CreatePostWithMediaJob < ApplicationJob
           description: blob_params.fetch(:description, "").strip.presence
         )
 
-        content_type = media_attachment.file.content_type
-
         # If the file is a video, but not a web-friendly format, convert it to mp4.
         # Likewise, convert GIFs to mp4 to save on space.
-        if content_type == "image/gif" || (content_type.start_with?("video/") && content_type != "video/mp4")
-          convert_to_mp4(media_attachment, original_content_type: content_type)
+        if media_attachment.gif? || (media_attachment.video? && media_attachment.file.content_type != "video/mp4")
+          convert_to_mp4(media_attachment, original_content_type: media_attachment.file.content_type)
         end
 
         # If the file is a video, generate and immediately attach a preview image.
         generate_preview_image(media_attachment) if media_attachment.file.video?
+
+        # I've noticed really funky stuff happening with images that have EXIF
+        # orientation data. Uploaded images have been appearing normal in almost
+        # every location, but in very specific circumstances, the rotation seems
+        # to get repeated. The two places I've noticed this so far are iMessage
+        # link previews and RSS feed previews (specifically Reeder). When the
+        # image is embedded in HTML, it renders correctly, but when rendered
+        # independently of the HTML, it's re-rotated and looks wrong. To avoid
+        # this, we'll just manually rotate the image to the correct orientation
+        # and then strip the orientation EXIF data.
+        rotate_image(media_attachment) if media_attachment.image?
       end
 
       post.save!
@@ -32,7 +43,7 @@ class CreatePostWithMediaJob < ApplicationJob
   private
 
   def convert_to_mp4(media_attachment, original_content_type:)
-    filename = media_attachment.file.blob.filename.to_s
+    filename = File.basename(media_attachment.file.blob.filename.to_s, ".*")
 
     Tempfile.open([filename, ".mp4"], binmode: true) do |tempfile|
       media_attachment.file.blob.open do |file|
@@ -40,11 +51,10 @@ class CreatePostWithMediaJob < ApplicationJob
       end
       tempfile.rewind
 
-      filename = "#{media_attachment.id}.mp4"
       blob = ActiveStorage::Blob.create_and_upload!(
-        key: "blog/#{filename}",
+        key: "blog/#{media_attachment.id}.mp4",
         io: tempfile.to_io,
-        filename: filename,
+        filename: "#{filename}.mp4",
         metadata: {custom: {original_content_type: original_content_type}}
       )
 
@@ -53,7 +63,7 @@ class CreatePostWithMediaJob < ApplicationJob
   end
 
   def generate_preview_image(media_attachment)
-    filename = media_attachment.file.blob.filename.to_s
+    filename = File.basename(media_attachment.file.blob.filename.to_s, ".*")
 
     Tempfile.open([filename, ".jpg"], binmode: true) do |tempfile|
       media_attachment.file.blob.open do |file|
@@ -61,14 +71,34 @@ class CreatePostWithMediaJob < ApplicationJob
       end
       tempfile.rewind
 
-      filename = "#{media_attachment.id}.jpg"
       blob = ActiveStorage::Blob.create_and_upload!(
-        key: "blog/previews/#{filename}",
+        key: "blog/previews/#{media_attachment.id}.jpg",
         io: tempfile.to_io,
-        filename: filename
+        filename: "#{filename}.jpg"
       )
 
       media_attachment.preview_image.attach(blob)
+    end
+  end
+
+  def rotate_image(media_attachment)
+    filename = File.basename(media_attachment.file.blob.filename.to_s, ".*")
+
+    Tempfile.open([filename, ".jpg"], binmode: true) do |tempfile|
+      media_attachment.file.blob.open do |file|
+        image = Vips::Image.new_from_file(file.path)
+        image = image.autorot
+        image.write_to_file(tempfile.path)
+        tempfile.rewind
+      end
+
+      blob = ActiveStorage::Blob.create_and_upload!(
+        key: "blog/#{media_attachment.id}.jpg",
+        io: tempfile.to_io,
+        filename: "#{filename}.jpg"
+      )
+
+      media_attachment.file.attach(blob)
     end
   end
 
