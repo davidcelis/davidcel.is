@@ -1,23 +1,69 @@
-<%= content_for(:page_title, @article.title) %>
 <% content_for(:head) do %>
   <%= stylesheet_link_tag "prism", "data-turbo-track": "reload" %>
   <%= javascript_include_tag "prism", "data-turbo-track": "reload" %>
 <% end %>
 
-<%= render partial: "articles/og", locals: {article: @article} %>
-
-<article class="py-10 sm:py-12">
+<div class="py-12 sm:py-8">
   <div class="lg:px-8">
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
-        <div class="text-sm text-slate-500">
-          <%= timestamp(@article, full: true) %>
-        </div>
-
-        <div class="prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
-          <%= @article.html.html_safe %>
-        </div>
+        <h1 class="text-2xl font-bold leading-7 text-slate-900">
+          <%= @article.title %>
+        </h1>
       </div>
     </div>
   </div>
-</article>
+
+  <div class="sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
+    <article class="py-10 sm:py-12">
+      <div class="lg:px-8">
+        <div class="lg:max-w-4xl">
+          <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+            <div class="text-sm text-slate-500">
+              <%= timestamp(@article, full: true) %>
+            </div>
+
+            <div class="prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
+              <%= @article.html.html_safe %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>
+
+<%= content_for(:og_title, @article.title) %>
+<%= content_for(:og_description, strip_tags(@article.excerpt).strip) %>
+<%= content_for(:og_type, "article") %>
+<%= content_for(:og_url, post_url(@article.id)) %>
+
+<% content_for(:og_image) do %>
+  <% @article.media_attachments.select(&:image?).each do |image| %>
+    <meta property="og:image" content="<%= cdn_file_url(image) %>">
+    <meta property="og:image:alt" content="<%= image.description %>">
+    <meta property="og:image:type" content="<%= image.content_type %>">
+    <meta property="og:image:width" content="<%= image.width %>">
+    <meta property="og:image:height" content="<%= image.height %>">
+  <% end %>
+<% end %>
+
+<% content_for(:og_video) do %>
+  <% @article.media_attachments.select(&:video_or_gif?).each do |video| %>
+    <meta property="og:video" content="<%= cdn_file_url(video) %>">
+    <meta property="og:video:alt" content="<%= video.description %>">
+    <meta property="og:video:type" content="<%= video.content_type %>">
+    <meta property="og:video:width" content="<%= video.width %>">
+    <meta property="og:video:height" content="<%= video.height %>">
+  <% end %>
+<% end %>
+
+<% content_for(:twitter_image) do %>
+  <% if (image = @article.media_attachments.first(&:image?)) %>
+    <meta property="twitter:image" content="<%= cdn_file_url(image) %>">
+    <meta property="twitter:image:alt" content="<%= image.description %>">
+  <% elsif (video = @article.media_attachments.first(&:video_or_gif?)) %>
+    <meta property="twitter:image" content="<%= cdn_file_url(video.preview_image) %>">
+    <meta property="twitter:image:alt" content="<%= video.description %>">
+  <% end %>
+<% end %>
