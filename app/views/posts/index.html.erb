@@ -3,7 +3,9 @@
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <h1 class="p-name text-2xl font-bold leading-7 text-slate-900">
-          <%= params[:controller] == "posts" ? "All Posts" : params[:controller].titleize %>
+          <%= link_to request.path, class: "u-url" do %>
+            <%= params[:controller] == "posts" ? "All Posts" : params[:controller].titleize %>
+          <% end %>
         </h1>
       </div>
     </div>
@@ -11,7 +13,7 @@
 
   <div class="sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
     <section class="post-list divide-y divide-slate-100">
-      <% if authenticated? && params[:controller] == "posts" &&@pagy.page == 1 %>
+      <% if authenticated? && params[:controller] == "posts" && @pagy.page == 1 %>
         <%= render "posts/form" %>
       <% end %>
 

@@ -106,7 +106,7 @@ export default class extends Controller {
     }
 
     mediaPreview.src = URL.createObjectURL(file);
-    mediaPreview.classList.add('object-cover', 'rounded', 'h-full', 'w-full', 'shadow-md');
+    mediaPreview.classList.add('object-cover', 'rounded', 'height-full', 'w-full', 'shadow-md');
     previewElement.appendChild(mediaPreview);
 
     // Add a hidden input to store the file's ID once it's uploaded.

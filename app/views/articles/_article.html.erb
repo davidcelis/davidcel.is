@@ -1,4 +1,4 @@
-<article class="article py-10 sm:py-12" aria-labelledby="article-<%= article.id %>-title" >
+<article class="h-entry article py-10 sm:py-12" aria-labelledby="article-<%= article.id %>-title" >
   <div class="lg:px-8">
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
@@ -8,10 +8,10 @@
               📝
             </span>
 
-            <%= link_to article.title, polymorphic_path(article), class: "link-primary" %>
+            <%= link_to article.title, polymorphic_path(article), class: "p-name link-primary" %>
           </h2>
 
-          <section class="prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
+          <section class="p-summary prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
             <%= article.excerpt.html_safe %>
           </section>
 
@@ -20,9 +20,20 @@
               <%= timestamp(article.created_at, classes: ["dt-published"]) %>
             <% end %>
 
-            <% if article.updated_at != article.created_at %>
-              <%= timestamp(article.updated_at, classes: ["dt-updated hidden"]) %>
-            <% end %>
+            <div class="hidden">
+              <div class="u-author h-card">
+                <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
+                <%= link_to "David Celis", root_path, class: "p-name u-url" %>
+              </div>
+
+              <% if article.updated_at != article.created_at %>
+                <%= timestamp(article.updated_at, classes: ["dt-updated"]) %>
+              <% end %>
+
+              <% article.syndication_links.each do |link| %>
+                <%= link_to link.platform, link.url, class: "u-syndication" %>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>

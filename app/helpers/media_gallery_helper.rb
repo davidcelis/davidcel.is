@@ -152,7 +152,7 @@ module MediaGalleryHelper
     when 0
       classes << "rounded-tl-lg"
       classes << "rounded-bl-lg" if total <= 3
-      classes << "h-full" if total == 3
+      classes << "height-full" if total == 3
     when 1
       classes << "rounded-tr-lg"
       classes << "rounded-br-lg" if total == 2

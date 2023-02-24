@@ -1,13 +1,15 @@
-<div class="h-feed py-12 sm:py-8">
+<div class="py-12 sm:py-8">
   <div class="lg:px-8">
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
-        <h1 class="p-name text-2xl font-bold leading-7 text-slate-900">Photos</h1>
+        <h1 class="p-name text-2xl font-bold leading-7 text-slate-900">
+          <%= link_to "Photos", request.path %>
+        </h1>
       </div>
     </div>
   </div>
 
-  <div class="py-10 sm:py-12">
+  <div class="sm:mt-4 lg:mt-8 py-10 sm:py-12 lg:border-t lg:border-slate-100">
     <div class="lg:px-8">
       <div class="lg:max-w-4xl">
         <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
@@ -16,7 +18,7 @@
               <% file = media_attachment.video? ? media_attachment.preview_image : media_attachment.file %>
 
               <%= link_to polymorphic_path(media_attachment.post) do %>
-                <%= image_tag cdn_file_url(file), loading: "lazy", alt: media_attachment.description, class: "h-full w-full aspect-[1/1] object-cover rounded-md" %>
+                <%= image_tag cdn_file_url(file), loading: "lazy", alt: media_attachment.description, class: "height-full w-full aspect-[1/1] object-cover rounded-md" %>
               <% end %>
             <% end %>
           </section>
