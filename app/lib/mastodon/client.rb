@@ -4,7 +4,8 @@ require "faraday/multipart"
 
 module Mastodon
   class Client
-    BASE_URL = "https://xoxo.zone"
+    BASE_URL = Rails.application.credentials.dig(:mastodon, :url)
+
     IMAGE_SIZE_LIMIT = 8.megabytes
     VIDEO_SIZE_LIMIT = 40
     VIDEO_PIXEL_LIMIT = 2_304_000
