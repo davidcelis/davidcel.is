@@ -1,5 +1,3 @@
-require "vips"
-
 class CreatePostWithMediaJob < ApplicationJob
   def perform(post_params, media_attachments_params)
     ActiveRecord::Base.transaction do

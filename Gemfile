@@ -44,6 +44,7 @@ gem "sidekiq-scheduler", "~> 5.0"
 
 # Use ImageProcessing to handle ActiveStorage variants
 gem "image_processing", ">= 1.12"
+gem "ruby-vips"
 
 # Upload ActiveStorage files to DigitalOcean Spaces
 gem "aws-sdk-s3"

@@ -357,6 +357,7 @@ DEPENDENCIES
   rails (~> 7.0.4)
   redis (~> 4.0)
   rspec-rails (~> 6)
+  ruby-vips
   sidekiq (~> 7.0)
   sidekiq-scheduler (~> 5.0)
   standardrb
@@ -371,4 +372,4 @@ RUBY VERSION
    ruby 3.2.1p31
 
 BUNDLED WITH
-   2.4.2
+   2.4.7
