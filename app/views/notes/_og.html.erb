@@ -17,6 +17,16 @@
     <meta property="og:image:width" content="<%= image.width %>">
     <meta property="og:image:height" content="<%= image.height %>">
   <% end %>
+
+  <% if link_preview_requested? %>
+    <% note.media_attachments.select(&:video?).each do |video| %>
+      <meta property="og:image" content="<%= cdn_file_url(video.preview_image) %>">
+      <meta property="og:image:alt" content="<%= video.description %>">
+      <meta property="og:image:type" content="<%= video.preview_image.content_type %>">
+      <meta property="og:image:width" content="<%= video.preview_image.metadata[:width] %>">
+      <meta property="og:image:height" content="<%= video.preview_image.metadata[:height] %>">
+    <% end %>
+  <% end %>
 <% end %>
 
 <% content_for(:og_video) do %>
