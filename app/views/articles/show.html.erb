@@ -20,7 +20,11 @@
         <div class="lg:max-w-4xl">
           <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
             <div class="text-sm text-slate-500">
-              <%= timestamp(@article, full: true) %>
+              <%= timestamp(@article.created_at, full: true, classes: ["dt-published"]) %>
+
+              <% if @article.updated_at != @article.created_at %>
+                <%= timestamp(@article.updated_at, full: true, classes: ["dt-updated hidden"]) %>
+              <% end %>
             </div>
 
             <div class="prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">

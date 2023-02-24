@@ -34,7 +34,7 @@ module MediaGalleryHelper
     classes << "row-span-2" if i == 0 && total == 3
 
     link_to cdn_file_url(media_attachment), class: classes do
-      image_classes = %w[object-cover]
+      image_classes = %w[u-photo object-cover]
       image_classes += additional_classes_for(file: media_attachment, i: i, total: total)
 
       image_element = image_tag(cdn_file_url(media_attachment), loading: "lazy", alt: media_attachment.description, class: image_classes)
@@ -48,8 +48,9 @@ module MediaGalleryHelper
     classes << "row-span-2" if i == 0 && total == 3
 
     tag.div(class: classes, data: {controller: "play", action: "click->play#playOrPause"}) do
-      video_classes = additional_classes_for(file: media_attachment, i: i, total: total)
-      video_element = video_tag(cdn_file_url(media_attachment.file), poster: cdn_file_url(media_attachment.preview_image), preload: "none", playsinline: true, controls: false, loop: true, width: media_attachment.width, height: media_attachment.height, class: video_classes, data: {"play-target" => "item", "action" => "playOrPause"})
+      video_classes = %w[u-video]
+      video_classes += additional_classes_for(file: media_attachment, i: i, total: total)
+      video_element = content_tag("video", media_attachment.description, src: cdn_file_url(media_attachment.file), poster: cdn_file_url(media_attachment.preview_image), preload: "none", playsinline: true, controls: false, loop: true, width: media_attachment.width, height: media_attachment.height, class: video_classes, data: {"play-target" => "item", "action" => "playOrPause"})
 
       alt_text_badge = alt_text_badge(media_attachment, fully_rounded: false)
 
@@ -97,7 +98,11 @@ module MediaGalleryHelper
         tag.button(duration, class: "font-bold font-ui-sans rounded-[.25rem] bg-black bg-opacity-[.65] text-white hover:bg-black px-1 select-none", data: {action: "click->play#playOrPause:prevent"})
       end
 
-      play_button + image_element + duration_badge
+      # Just to ensure the video is included in microformats, we'll include a
+      # hidden video element that is not visible to the user.
+      hidden_video_element = content_tag("video", media_attachment.description, src: cdn_file_url(media_attachment.file), preload: "none", class: "u-video hidden")
+
+      play_button + image_element + duration_badge + hidden_video_element
     end
   end
 

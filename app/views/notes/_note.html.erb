@@ -1,4 +1,4 @@
-<article class="note py-10 sm:py-12">
+<article class="h-entry note py-10 sm:py-12">
   <div class="lg:px-8">
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
@@ -8,7 +8,9 @@
               ✏️
             </span>
 
-            <%= note.html.html_safe %>
+            <div class="e-content">
+              <%= note.html.html_safe %>
+            </div>
           </section>
 
           <% if note.media_attachments.any? %>
@@ -16,8 +18,16 @@
           <% end %>
 
           <div class="mt-4 flex items-center gap-4">
-            <%= link_to polymorphic_path(note), class: "flex items-center text-sm font-bold leading-6 link-primary" do %>
-              <%= timestamp(note) %>
+            <%= link_to polymorphic_path(note), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
+              <%= timestamp(note.created_at, classes: ["dt-published"]) %>
+            <% end %>
+
+            <% if note.updated_at != note.created_at %>
+              <%= timestamp(note.updated_at, classes: ["dt-updated hidden"]) %>
+            <% end %>
+
+            <% note.syndication_links.each do |link| %>
+              <%= link_to link.platform, link.url, class: ["u-syndication", "hidden"] %>
             <% end %>
           </div>
         </div>

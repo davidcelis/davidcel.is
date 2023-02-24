@@ -16,8 +16,12 @@
           </section>
 
           <div class="mt-4 flex items-center gap-4">
-            <%= link_to polymorphic_path(article), class: "flex items-center text-sm font-bold leading-6 link-primary" do %>
-              <%= timestamp(article) %>
+            <%= link_to polymorphic_path(article), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
+              <%= timestamp(article.created_at, classes: ["dt-published"]) %>
+            <% end %>
+
+            <% if article.updated_at != article.created_at %>
+              <%= timestamp(article.updated_at, classes: ["dt-updated hidden"]) %>
             <% end %>
           </div>
         </div>

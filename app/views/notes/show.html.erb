@@ -14,7 +14,11 @@
               <% end %>
 
               <div class="pt-4 text-sm text-slate-500">
-                <%= timestamp(@note, full: true) %>
+                <%= timestamp(@note.created_at, full: true, classes: ["dt-published"]) %>
+
+                <% if @note.updated_at != @note.created_at %>
+                  <%= timestamp(@note.updated_at, full: true, classes: ["dt-updated hidden"]) %>
+                <% end %>
               </div>
             </div>
           </div>
