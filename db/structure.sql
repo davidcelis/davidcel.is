@@ -10,6 +10,17 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: webmention_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.webmention_status AS ENUM (
+    'unprocessed',
+    'verified',
+    'failed'
+);
+
+
+--
 -- Name: snowflake_id(timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -220,6 +231,23 @@ CREATE TABLE public.syndication_links (
 
 
 --
+-- Name: webmentions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.webmentions (
+    id bigint DEFAULT public.snowflake_id() NOT NULL,
+    post_id bigint,
+    source character varying NOT NULL,
+    target character varying NOT NULL,
+    status public.webmention_status DEFAULT 'unprocessed'::public.webmention_status NOT NULL,
+    html text,
+    mf2 jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: active_storage_attachments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -305,6 +333,14 @@ ALTER TABLE ONLY public.syndication_links
 
 
 --
+-- Name: webmentions webmentions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webmentions
+    ADD CONSTRAINT webmentions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: index_active_storage_attachments_on_blob_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -368,11 +404,33 @@ CREATE INDEX index_syndication_links_on_post_id ON public.syndication_links USIN
 
 
 --
+-- Name: index_webmentions_on_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_webmentions_on_post_id ON public.webmentions USING btree (post_id);
+
+
+--
+-- Name: index_webmentions_on_source_and_target; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_webmentions_on_source_and_target ON public.webmentions USING btree (source, target);
+
+
+--
 -- Name: syndication_links fk_rails_012a515b9c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.syndication_links
     ADD CONSTRAINT fk_rails_012a515b9c FOREIGN KEY (post_id) REFERENCES public.posts(id);
+
+
+--
+-- Name: webmentions fk_rails_36ae3448c9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.webmentions
+    ADD CONSTRAINT fk_rails_36ae3448c9 FOREIGN KEY (post_id) REFERENCES public.posts(id);
 
 
 --
@@ -413,6 +471,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230205022836'),
 ('20230214012129'),
 ('20230215164722'),
-('20230218162820');
+('20230218162820'),
+('20230225013704');
 
 
