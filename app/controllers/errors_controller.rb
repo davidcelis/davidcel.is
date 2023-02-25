@@ -5,6 +5,8 @@ class ErrorsController < ApplicationController
   }.freeze
 
   def show
+    Sentry.capture_exception(exception) if status_code >= 500
+
     render view_for_code(status_code), status: status_code
   end
 
