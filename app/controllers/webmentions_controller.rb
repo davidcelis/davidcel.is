@@ -4,7 +4,7 @@ class WebmentionsController < ApplicationController
   def receive
     webmention = Webmention.find_or_create_by!(webmention_params)
 
-    ProcessWebmentionJob.perform_later(webmention.id)
+    ProcessWebmentionJob.perform_async(webmention.id)
 
     head :accepted
   end
