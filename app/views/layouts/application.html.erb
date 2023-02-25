@@ -8,6 +8,8 @@
     <%= auto_discovery_link_tag(:atom, articles_feed_url, title: "davidcel.is - Articles") %>
     <%= auto_discovery_link_tag(:atom, notes_feed_url, title: "davidcel.is - Notes") %>
 
+    <link rel="webmention" href="<%= webmention_url %>" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <%= csrf_meta_tags %>

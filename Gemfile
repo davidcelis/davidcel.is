@@ -17,6 +17,9 @@ gem "puma", "~> 5.0"
 # Use CommonMark to render posts as HTML [https://github.com/gjtorikian/commonmarker]
 gem "commonmarker", "~> 0.23"
 
+# Parse webmentions with microformats
+gem "microformats", github: "microformats/microformats-ruby"
+
 # Use Pagy to paginate through collections
 gem "pagy", "~> 5.10"
 

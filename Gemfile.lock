@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/microformats/microformats-ruby.git
+  revision: ead4d83affa34a554f437e51979ee46582b3ec98
+  specs:
+    microformats (4.4.1)
+      json
+      nokogiri
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -181,9 +189,9 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
-    nokogiri (1.14.1-arm64-darwin)
+    nokogiri (1.14.2-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.14.1-x86_64-linux)
+    nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
     pagy (5.10.1)
       activesupport
@@ -348,6 +356,7 @@ DEPENDENCIES
   faraday-retry
   image_processing (>= 1.12)
   importmap-rails
+  microformats!
   pagy (~> 5.10)
   pg (~> 1.1)
   propshaft

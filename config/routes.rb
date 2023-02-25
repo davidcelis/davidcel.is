@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   # This also ensures that our legacy URLs listed below won't conflict.
   get "/posts/:id", to: "posts#show", as: :post, constraints: {id: /\d+/}
 
+  post :webmention, to: "webmentions#receive"
+
   # Set up routes for me to authenticate and write/edit posts.
   namespace :github do
     namespace :oauth do
