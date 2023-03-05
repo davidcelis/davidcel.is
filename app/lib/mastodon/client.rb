@@ -26,10 +26,10 @@ module Mastodon
         tmpfile = blob
 
         if media_attachment.image?
-          tmpfile = compress_image(tmpfile)
+          tmpfile = ImageProcessor.process(tmpfile, size_limit: IMAGE_SIZE_LIMIT)
         elsif media_attachment.video?
-          tmpfile = downscale_video(tmpfile, metadata: media_attachment.file.metadata)
-          tmpfile = compress_video(tmpfile, metadata: media_attachment.file.metadata)
+          metadata = media_attachment.file.metadata.slice(:width, :height, :duration, :audio).symbolize_keys
+          tmpfile = VideoProcessor.process(tmpfile, size_limit: VIDEO_SIZE_LIMIT, pixel_limit: VIDEO_PIXEL_LIMIT, **metadata)
         end
 
         file = Faraday::UploadIO.new(tmpfile.path, media_attachment.content_type)
@@ -54,74 +54,6 @@ module Mastodon
 
     private
 
-    def compress_image(blob)
-      result = blob
-      quality = 100
-
-      while File.size(result.path) > IMAGE_SIZE_LIMIT
-        # It might seem silly to start at 99% and work our way down by single
-        # digits, but often even the first pass at 99% will result in a much
-        # smaller size. This lets us post high quality images with, hopefully,
-        # only a few passes of compression.
-        quality -= 1
-
-        result = ImageProcessing::Vips
-          .source(blob.path)
-          .saver(Q: quality, optimize_coding: true, trellis_quant: true)
-          .call
-      end
-
-      result
-    end
-
-    def downscale_video(blob, metadata:)
-      result = blob
-
-      # First, we need to downscale the video if it exceeds Mastodon's limit of
-      # 2,304,000 pixels (roughly 1920x1200 either way) while maintaining the
-      # correct aspect ratio.
-      if metadata[:width] * metadata[:height] > VIDEO_PIXEL_LIMIT
-        result = Tempfile.new(["video", ".mp4"])
-
-        # Get the aspect ratio of the video and use it to calculate the new
-        # dimensions, making sure that each dimension is divisible by 2.
-        aspect_ratio = metadata[:width].to_f / metadata[:height]
-        new_width = (Math.sqrt(VIDEO_PIXEL_LIMIT * aspect_ratio) / 2).floor * 2
-        new_height = (Math.sqrt(VIDEO_PIXEL_LIMIT / aspect_ratio) / 2).floor * 2
-
-        system(ffmpeg, "-y", "-i", blob.path, "-vf", "scale=#{new_width}:#{new_height}", result.path)
-      end
-
-      result
-    end
-
-    def compress_video(blob, metadata:)
-      result = blob
-
-      bitrate = (VIDEO_SIZE_LIMIT * 8000) / metadata[:duration]
-      bitrate -= 128 if metadata[:audio]
-      buffer = (bitrate * 0.05).floor
-
-      while File.size(result.path) > VIDEO_SIZE_LIMIT.megabytes
-        new_result = Tempfile.new(["video", ".mp4"])
-
-        # We'll use the video's duration and Mastodon's 40MB limit to determine
-        # the target bitrate for two-pass compression, making sure to account
-        # for a targeted 128k audio bitrate.
-        #
-        # https://trac.ffmpeg.org/wiki/Encode/H.264#twopass
-        system(ffmpeg, "-y", "-i", result.path, "-c:v", "libx264", "-b:v", "#{bitrate}k", "-pass", "1", "-an", "-f", "mp4", "/dev/null")
-        system(ffmpeg, "-y", "-i", result.path, "-c:v", "libx264", "-b:v", "#{bitrate}k", "-pass", "2", "-c:a", "aac", "-b:a", "128k", new_result.path)
-        new_result.rewind
-
-        result = new_result
-        # Reduce the bitrate by 5% before trying again.
-        bitrate -= buffer
-      end
-
-      result
-    end
-
     def connection
       @connection ||= Faraday.new(BASE_URL) do |f|
         f.request :retry
@@ -143,10 +75,6 @@ module Mastodon
         f.response :raise_error
         f.response :json
       end
-    end
-
-    def ffmpeg
-      @ffmpeg ||= ActiveStorage::Previewer::VideoPreviewer.ffmpeg_path
     end
   end
 end
