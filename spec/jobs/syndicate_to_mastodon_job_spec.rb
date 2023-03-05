@@ -19,7 +19,7 @@ RSpec.describe SyndicateToMastodonJob, type: :job do
 
       syndication_link = note.syndication_links.first
       expect(syndication_link.platform).to eq("mastodon")
-      expect(syndication_link.url).to eq("https://xoxo.zone/@ewdavidcelis/109815732381019049")
+      expect(syndication_link.url).to eq("https://botsin.space/@ewdavidcelis/109815732381019049")
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.describe SyndicateToMastodonJob, type: :job do
 
       syndication_link = article.syndication_links.first
       expect(syndication_link.platform).to eq("mastodon")
-      expect(syndication_link.url).to eq("https://xoxo.zone/@ewdavidcelis/109815732381019049")
+      expect(syndication_link.url).to eq("https://botsin.space/@ewdavidcelis/109815732381019049")
     end
   end
 end

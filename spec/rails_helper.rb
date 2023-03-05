@@ -34,7 +34,9 @@ end
 VCR.configure do |config|
   config.cassette_library_dir = Rails.root.join("spec", "support", "vcr_cassettes")
   config.hook_into :webmock
-  config.filter_sensitive_data(Rails.application.credentials.dig(:mastodon, :access_token)) { "MASTODON_ACCESS_TOKEN" }
+  config.filter_sensitive_data("MASTODON_ACCESS_TOKEN") { Rails.application.credentials.dig(:mastodon, :access_token) }
+
+  config.allow_http_connections_when_no_cassette = true
 end
 
 # Checks for pending migrations and applies them before tests are run.
