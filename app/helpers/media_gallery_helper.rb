@@ -34,7 +34,7 @@ module MediaGalleryHelper
     classes << "row-span-2" if i == 0 && total == 3
 
     link_to cdn_file_url(media_attachment), class: classes do
-      image_classes = %w[u-photo object-cover]
+      image_classes = %w[u-photo object-cover height-full w-full]
       image_classes += additional_classes_for(file: media_attachment, i: i, total: total)
 
       image_element = image_tag(cdn_file_url(media_attachment), loading: "lazy", alt: media_attachment.description, class: image_classes)
@@ -152,7 +152,6 @@ module MediaGalleryHelper
     when 0
       classes << "rounded-tl-lg"
       classes << "rounded-bl-lg" if total <= 3
-      classes << "height-full" if total == 3
     when 1
       classes << "rounded-tr-lg"
       classes << "rounded-br-lg" if total == 2
