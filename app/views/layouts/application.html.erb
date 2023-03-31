@@ -32,6 +32,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
+    <%= content_for(:head) %>
+
     <meta property="og:title" content="<%= content_for(:og_title) || "davidcel.is" %>">
     <meta property="og:description" content="<%= content_for(:og_description) || "Thoughts and musings of a Cowboy Coder." %>">
     <meta property="og:type" content="<%= content_for(:og_type) || "website" %>">
@@ -56,8 +58,6 @@
       <meta name="twitter:image" content="<%= image_url("me.jpg") %>">
       <meta name="twitter:image:alt" content="A photo of me on a horse, looking quite dapper.">
     <% end %>
-
-    <%= content_for(:head) %>
   </head>
 
   <body data-controller="local-time" class="bg-white antialiased">

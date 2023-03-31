@@ -41,34 +41,24 @@
   </div>
 </article>
 
-<% content_for(:og_description, strip_tags(@note.html).strip) %>
+<% content_for(:og_description, strip_tags(@note.html).strip.presence || polymorphic_url(@note)) %>
 <% content_for(:og_type, "article") %>
-
-<% if link_preview_requested? %>
-  <% content_for(:og_title, "david celis") %>
-  <% content_for(:og_url, "https://twitter.com/x/status/x") %>
-  <script>window.location.replace("<%= polymorphic_url(@note) %>");</script>
-<% else %>
-  <% content_for(:og_url, post_url(@note.id)) %>
+<% content_for(:og_title, "david celis") %>
+<% content_for(:og_url, post_url(@note.id)) %>
+<% content_for(:head) do %>
+  <meta property="og:site_name" content="david celis" data-rh="true">
+  <link href="<%= polymorphic_url(@note) %>" rel="alternate" type="application/activity+json" data-rh="true">
 <% end %>
 
 <% content_for(:og_image) do %>
-  <% @note.media_attachments.select(&:image?).each do |image| %>
-    <meta property="og:image" content="<%= cdn_file_url(image) %>">
-    <meta property="og:image:alt" content="<%= image.description %>">
-    <meta property="og:image:type" content="<%= image.content_type %>">
-    <meta property="og:image:width" content="<%= image.width %>">
-    <meta property="og:image:height" content="<%= image.height %>">
-  <% end %>
+  <% @note.media_attachments.each do |media| %>
+    <% file = media.preview_image.attached? ? media.preview_image : media.file %>
 
-  <% if link_preview_requested? %>
-    <% @note.media_attachments.select(&:video?).each do |video| %>
-      <meta property="og:image" content="<%= cdn_file_url(video.preview_image) %>">
-      <meta property="og:image:alt" content="<%= video.description %>">
-      <meta property="og:image:type" content="<%= video.preview_image.content_type %>">
-      <meta property="og:image:width" content="<%= video.preview_image.metadata[:width] %>">
-      <meta property="og:image:height" content="<%= video.preview_image.metadata[:height] %>">
-    <% end %>
+    <meta property="og:image" content="<%= cdn_file_url(file) %>">
+    <meta property="og:image:alt" content="<%= media.description %>">
+    <meta property="og:image:type" content="<%= file.content_type %>">
+    <meta property="og:image:width" content="<%= file.metadata[:width] %>">
+    <meta property="og:image:height" content="<%= file.metadata[:height] %>">
   <% end %>
 <% end %>
 
@@ -82,6 +72,7 @@
   <% end %>
 <% end %>
 
+<% content_for(:twitter_card, "summary_large_image") %>
 <% content_for(:twitter_image) do %>
   <% if (image = @note.media_attachments.first(&:image?)) %>
     <meta property="twitter:image" content="<%= cdn_file_url(image) %>">

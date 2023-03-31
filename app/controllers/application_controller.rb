@@ -9,9 +9,4 @@ class ApplicationController < ActionController::Base
   def require_authentication
     redirect_to root_path unless authenticated?
   end
-
-  def link_preview_requested?
-    request.env["HTTP_USER_AGENT"].match?(%r{facebookexternalhit/1.1 Facebot Twitterbot/1.0\z})
-  end
-  helper_method :link_preview_requested?
 end
