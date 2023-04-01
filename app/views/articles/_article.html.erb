@@ -4,10 +4,6 @@
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <div class="flex flex-col items-start">
           <h2 id="article-<%= article.id %>-title" class="mt-2 text-lg font-bold text-slate-900">
-            <span class="select-none md:absolute md:-ml-6" title="Article">
-              📝
-            </span>
-
             <%= link_to article.title, polymorphic_path(article), class: "p-name link-primary" %>
           </h2>
 
@@ -17,6 +13,9 @@
 
           <div class="mt-4 flex items-center gap-4">
             <%= link_to polymorphic_path(article), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
+              <span class="select-none md:absolute md:-ml-6 mr-2" title="Article">
+                📝
+              </span>
               <%= timestamp(article.created_at, classes: ["dt-published"]) %>
             <% end %>
 
