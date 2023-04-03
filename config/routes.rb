@@ -64,7 +64,7 @@ Rails.application.routes.draw do
   get "/posts/the-current-state-of-rails-inflections", to: redirect("/articles/the-state-of-rails-inflections/")
   get "/posts/edge-rails-a-multilingual-inflector", to: redirect("/articles/internationalization-and-the-rails-inflector/")
   get "/posts/stop-validating-email-addresses-with-regex", to: redirect("/articles/stop-validating-email-addresses-with-regex/")
-  get "/posts/the-story-of-my-redis-database", to: redirect("/articles/from-1-5-gb-to-50-mb-the-story-of-my-redis-database/")
+  get "/posts/the-story-of-my-redis-database", to: redirect("/articles/from-1-5-gb-to-50-mb-debugging-memory-usage-in-redis/")
   get "/posts/deploying-discourse-with-capistrano", to: redirect("/articles/deploying-discourse-with-capistrano/")
   get "/posts/distance-constraints-with-postgresql-and-postgis", to: redirect("/articles/distance-constraints-with-postgresql-and-postgis/")
   get "/posts/publish-your-site-to-s3", to: redirect("/articles/easily-publish-your-site-to-s3-and-cloudfront/")
