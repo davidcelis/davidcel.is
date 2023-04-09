@@ -119,7 +119,7 @@ module MediaGalleryHelper
 
       description = tag.div(class: "hidden flex flex-col gap-4 p-4 max-w-prose", data: {"tooltip-target" => "content"}) do
         header = tag.div(class: "flex justify-between") do
-          tag.h2("Description", class: "text-xl font-bold text-slate-900") + tag.button("Dismiss", class: "text-sm py-0 px-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary", data: {"action" => "click->tooltip#ignore:prevent"})
+          tag.h2("Description", class: "text-xl font-bold text-slate-900") + tag.button("Dismiss", class: "text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary", data: {"action" => "click->tooltip#ignore:prevent"})
         end
 
         header + tag.p(media_attachment.description, class: "whitespace-pre-wrap text-base text-slate-700")
