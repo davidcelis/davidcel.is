@@ -31,7 +31,7 @@ class CreatePostWithMediaJob < ApplicationJob
         # independently of the HTML, it's re-rotated and looks wrong. To avoid
         # this, we'll just manually rotate the image to the correct orientation
         # and then strip the orientation EXIF data.
-        rotate_image(media_attachment) if media_attachment.image?
+        rotate_image(media_attachment) if media_attachment.file.image?
       end
 
       post.save!
@@ -81,8 +81,9 @@ class CreatePostWithMediaJob < ApplicationJob
 
   def rotate_image(media_attachment)
     filename = File.basename(media_attachment.file.blob.filename.to_s, ".*")
+    extension = Rack::Mime::MIME_TYPES.invert[media_attachment.content_type]
 
-    Tempfile.open([filename, ".jpg"], binmode: true) do |tempfile|
+    Tempfile.open([filename, extension], binmode: true) do |tempfile|
       media_attachment.file.blob.open do |file|
         image = Vips::Image.new_from_file(file.path)
         image = image.autorot
@@ -91,9 +92,9 @@ class CreatePostWithMediaJob < ApplicationJob
       end
 
       blob = ActiveStorage::Blob.create_and_upload!(
-        key: "blog/#{media_attachment.id}.jpg",
+        key: "blog/#{media_attachment.id}#{extension}",
         io: tempfile.to_io,
-        filename: "#{filename}.jpg"
+        filename: "#{filename}#{extension}"
       )
 
       media_attachment.file.attach(blob)
