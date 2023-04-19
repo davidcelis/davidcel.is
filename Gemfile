@@ -57,10 +57,8 @@ gem "faraday"
 gem "faraday-retry"
 gem "faraday-multipart"
 
-# Report errors to Sentry
-gem "sentry-ruby"
-gem "sentry-rails"
-gem "sentry-sidekiq"
+# Use New Relic to monitor performance and report errors
+gem "newrelic_rpm"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false

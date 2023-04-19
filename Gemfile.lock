@@ -188,6 +188,7 @@ GEM
       timeout
     net-smtp (0.3.3)
       net-protocol
+    newrelic_rpm (9.2.0)
     nio4r (2.5.8)
     nokogiri (1.14.2-arm64-darwin)
       racc (~> 1.4)
@@ -291,14 +292,6 @@ GEM
     ruby2_keywords (0.0.5)
     rufus-scheduler (3.8.2)
       fugit (~> 1.1, >= 1.1.6)
-    sentry-rails (5.8.0)
-      railties (>= 5.0)
-      sentry-ruby (~> 5.8.0)
-    sentry-ruby (5.8.0)
-      concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-sidekiq (5.8.0)
-      sentry-ruby (~> 5.8.0)
-      sidekiq (>= 3.0)
     sidekiq (7.0.3)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
@@ -365,6 +358,7 @@ DEPENDENCIES
   image_processing (>= 1.12)
   importmap-rails
   microformats!
+  newrelic_rpm
   pagy (~> 5.10)
   pg (~> 1.1)
   propshaft
@@ -375,9 +369,6 @@ DEPENDENCIES
   redis (~> 4.0)
   rspec-rails (~> 6)
   ruby-vips
-  sentry-rails
-  sentry-ruby
-  sentry-sidekiq
   sidekiq (~> 7.0)
   sidekiq-scheduler (~> 5.0)
   standardrb
