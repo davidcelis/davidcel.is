@@ -60,6 +60,9 @@ gem "faraday-multipart"
 # Use New Relic to monitor performance and report errors
 gem "newrelic_rpm"
 
+# Tame Rails' logging
+gem "lograge"
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
