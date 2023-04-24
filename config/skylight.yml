@@ -1,2 +1,4 @@
 authentication: <%= Rails.application.credentials.dig(:skylight, :token) %>
 enable_sidekiq: true
+deploy:
+  git_sha: <%= ENV["GIT_REV"] %>

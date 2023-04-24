@@ -27,3 +27,12 @@ jobs:
           branch: main
           git_remote_url: 'ssh://dokku@apps.davidcel.is:22/blog'
           ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
+
+      - name: Publish release to Sentry
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: davidcelis
+          SENTRY_PROJECT: blog
+        with:
+          environment: production
