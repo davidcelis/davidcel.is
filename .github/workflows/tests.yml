@@ -1,10 +1,12 @@
 name: Tests
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_call:
+    secrets:
+      RAILS_MASTER_KEY:
+        required: true
 
 jobs:
   run-tests:
