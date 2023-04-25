@@ -19,7 +19,7 @@ class PostsController < ApplicationController
     # of the media attachments without hogging a web worker and also ensures
     # we can wait to create the Post object until the media is done processing.
     if media_attachments_params.any?
-      CreatePostWithMediaJob.perform_async(post_params.to_h, media_attachments_params.map(&:to_h))
+      CreatePostWithMediaJob.perform_async(post_params.to_hash, media_attachments_params.map(&:to_hash))
 
       redirect_to root_path, notice: "Your post's media is being processed and will be available shortly."
     else
