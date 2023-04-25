@@ -122,7 +122,11 @@ module MediaGalleryHelper
           tag.h2("Description", class: "text-xl font-bold text-slate-900") + tag.button("Dismiss", class: "text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary", data: {"action" => "click->tooltip#ignore:prevent"})
         end
 
-        header + tag.p(media_attachment.description, class: "whitespace-pre-wrap text-base text-slate-700")
+        paragraphs = media_attachment.description.split(/(?:\r\n|\r|\n){2}/).map do |paragraph|
+          tag.p(paragraph, class: "whitespace-pre-wrap text-base text-slate-700")
+        end
+
+        header + paragraphs.join.html_safe
       end
 
       button + description
