@@ -42,17 +42,18 @@ skills:
 
 work:
   - name: FireHydrant
-    position: Staff Software Engineer
+    position: Principal Software Engineer
     url: https://firehydrant.com/
     startDate: 2021-07-12
     summary: |
-      I’m the lead engineer of FireHydrant’s Incident Management team, which is
-      responsible for incidents and all parts of their lifecycle: declaration,
-      automation, resolution, retrospectives, and our Slack application that
-      enables robust incident response from the comfort of a powerful chatops
-      tool. As team lead, I have a highly collaborative relationship and
-      partnership with our manager and head of product to guide the team’s
-      roadmap, architecture, and overall process/health.
+      For most of my time at FireHydrant, I was lead engineer for their Incident
+      Management team, responsible for incidents and all parts of their lifecycle:
+      declaration, automation, resolution, retrospectives, and our Slack application
+      that enables robust incident response from the comfort of a powerful chatops
+      tool. As team lead, I have a highly collaborative relationship and partnership
+      with our manager and head of product to guide the team’s roadmap, architecture,
+      and overall process/health. These days, I have similar responsibilities across
+      our entire engineering organization.
   - name: Stripe
     position: Staff Software Engineer
     url: https://stripe.com
