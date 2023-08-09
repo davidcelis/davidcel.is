@@ -4,57 +4,60 @@ class SyndicateToBlueskyJob < ApplicationJob
   def perform(post_id)
     post = Post.find(post_id)
 
-    text = case post
-    when Note
-      if post.content && post.content.length > 300
-        url = note_url(post)
-
-        # Truncate the content so that it, an ellipsis, and the URL fit within
-        # the 300 character limit
-        content = post.content[0...(300 - url.length - 2)]
-        "#{content}… #{url}"
-      else
-        post.content
-      end
-    when Article
-      "“#{post.title}”\n\n#{article_url(post)}"
+    # If the post is an Article, we'll just syndicate the title and URL.
+    if post.is_a?(Article)
+      text, facets = client.extract_facets("“#{post.title}”\n\n#{article_url(post)}")
+      response = client.create_post(text: text, created_at: post.created_at, facets: facets)
+      return create_syndication_link(post, response)
     end
 
-    images = []
-    if post.is_a?(Note) && post.media_attachments.any?(&:image?)
-      # Wait if any of the media attachments are still waiting to be analyzed.
-      unless post.media_attachments.all?(&:analyzed)
-        logger.info("Media attachments are still being analyzed; trying again in 5 seconds...")
-        SyndicateToBlueskyJob.perform_in(5.seconds, post_id)
-        return
-      end
-
-      post.media_attachments.select(&:image?).each do |media_attachment|
-        result = client.upload_blob(media_attachment, content_type: media_attachment.content_type)
-        images << {image: result["blob"], alt: media_attachment.description}
-      end
+    images = post.media_attachments.select(&:image?)
+    unless images.all?(&:analyzed)
+      logger.info("Media attachments are still being analyzed; trying again in 5 seconds...")
+      SyndicateToBlueskyJob.perform_in(5.seconds, post_id)
+      return
     end
 
-    response = client.create_post(text: text, created_at: post.created_at, images: images)
+    text = post.content
+    if text.length > 300
+      url = note_url(post)
 
-    # Once posted, the response will contain an at:// URI that can be used to
-    # link to the post in Bluesky. For example:
-    #
-    # at://did:plc:4why37npqk7bbahxfer6ma47/app.bsky.feed.post/3k4i2hxxjki2a
-    #
-    # Thankfully, that last fragment is all we really need to construct a
-    # link to the post in Bluesky:
-    #
-    # https://bsky.app/profile/davidcelis.bsky.social/post/3k4i2hxxjki2a
-    bluesky_id = response.body["uri"].split("/").last
-    url = "https://bsky.app/profile/#{client.session.handle}/post/#{bluesky_id}"
+      # Truncate the content so that it, an ellipsis, and the URL fit within
+      # the 300 character limit
+      truncated_text = text[0...(300 - url.length - 2)]
+      text = "#{truncated_text}… #{url}"
+    end
 
-    post.syndication_links.create!(platform: "bluesky", url: url)
+    text, facets = client.extract_facets(text)
+
+    blobs = images.map do |media_attachment|
+      result = client.upload_blob(media_attachment, content_type: media_attachment.content_type)
+      {image: result["blob"], alt: media_attachment.description}
+    end
+
+    response = client.create_post(text: text, created_at: post.created_at, facets: facets, images: blobs)
+    create_syndication_link(post, response)
   ensure
     client.sign_out!
   end
 
   private
+
+  # Once posted, the response will contain an at:// URI that can be used to
+  # link to the post in Bluesky. For example:
+  #
+  # at://did:plc:4why37npqk7bbahxfer6ma47/app.bsky.feed.post/3k4i2hxxjki2a
+  #
+  # Thankfully, that last fragment is all we really need to construct a
+  # link to the post in Bluesky:
+  #
+  # https://bsky.app/profile/davidcelis.bsky.social/post/3k4i2hxxjki2a
+  def create_syndication_link(post, response)
+    bluesky_id = response.body["uri"].split("/").last
+    url = "https://bsky.app/profile/#{client.session.handle}/post/#{bluesky_id}"
+
+    post.syndication_links.create!(platform: "bluesky", url: url)
+  end
 
   def client
     @client ||= ATProto::Client.new(

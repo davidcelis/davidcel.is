@@ -18,17 +18,16 @@ module ATProto
     #
     # @param text [String] The text of the post.
     # @param created_at [Time] The time the post was created.
+    # @param facets [Array] An Array of rich text facets to attach to the post, each as a Hash.
     # @param images [Array] An Array of images to attach to the post, each as a Hash.
-    # @option images [Hash] :image The image object to attach, as returned by upload_blob.
-    # @option images [String] :alt The alt text for the image.
-    def create_post(text:, created_at:, images: [])
+    def create_post(text:, created_at:, facets: [], images: [])
       params = {
         "collection" => "app.bsky.feed.post",
         "repo" => @session.did,
         "record" => {
           "$type" => "app.bsky.feed.post",
           "text" => text,
-          "facets" => parse_facets(text),
+          "facets" => facets,
           "createdAt" => created_at.utc.iso8601(3)
         }
       }
@@ -72,21 +71,28 @@ module ATProto
       @session.destroy!
     end
 
-    private
-
     def resolve_handle(handle)
       connection.get("#{IDENTITY_PATH}.resolveHandle", {handle: handle}).body["did"]
     end
 
-    def parse_facets(text)
+    def extract_facets(text)
       facets = []
 
-      # First, we'll look for any URLs in the post's text and create an unfurl.
-      # To do this, we need to find not only the URLs themselves, but also the
-      # start and end indices of each URL in the text.
+      # First, we'll look for any URLs in the post's text and create a link.
+      # Doing this is a bit complicated and requires a few steps for each link:
+      #
+      # 1. Shorten the URL to 22 characters (excluding the scheme) followed by
+      #    an ellipsis, to match the same look/feel as a Twitter/Mastodon link.
+      # 2. Replace the URL in the text with the shortened version.
+      # 3. Pull the start and end indices of the shortened link in the text.
+      #
+      # Then, all of this info is used to create a facet for the link.
       URI::DEFAULT_PARSER.extract(text, %w[http https]).each do |url|
-        start_index = text.index(url)
-        end_index = start_index + url.length
+        shortened_url = url.gsub(%r{^https?://}, "")[0..21] + "\u2026"
+        text.sub!(url, shortened_url)
+
+        start_index = text.byteindex(shortened_url)
+        end_index = start_index + shortened_url.bytesize
 
         facets << {
           "$type" => "app.bsky.richtext.facet",
@@ -106,8 +112,8 @@ module ATProto
       # just @somebodys.domain. We're essentially looking for valid domain
       # names prepended by an @ symbol.
       text.scan(Post::BLUESKY_MENTION_REGEX).each do |(handle)|
-        start_index = text.index(handle) - 1 # 1 for the @ symbol.
-        end_index = start_index + handle.length + 1 # 1 for the @ symbol.
+        start_index = text.byteindex(handle) - 1 # 1 for the @ symbol.
+        end_index = start_index + handle.bytesize + 1 # 1 for the @ symbol.
 
         # We do, however, have to resolve the handle to a DID.
         did = resolve_handle(handle)
@@ -125,8 +131,10 @@ module ATProto
         }
       end
 
-      facets
+      [text, facets]
     end
+
+    private
 
     def connection
       @connection ||= Faraday.new(ATProto::BASE_URL) do |f|
