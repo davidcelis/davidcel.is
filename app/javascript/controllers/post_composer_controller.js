@@ -18,6 +18,7 @@ export default class extends Controller {
   ];
 
   static values = {
+    characterWarning: { type: Number, default: 300 },
     characterLimit: { type: Number, default: 500 },
     fileLimit: { type: Number, default: 4 },
     directUploadUrl: String,
@@ -248,11 +249,19 @@ export default class extends Controller {
     if (remaining < 0) {
       this.titleTarget.classList.remove('hidden');
       this.characterCounterTarget.classList.remove('text-slate-500');
+      this.characterCounterTarget.classList.remove('text-amber-500');
       this.characterCounterTarget.classList.add('text-pink-500');
       this.typeTarget.value = 'Article';
+    } else if (content.length > this.characterWarningValue) {
+      this.titleTarget.classList.add('hidden');
+      this.characterCounterTarget.classList.remove('text-pink-500');
+      this.characterCounterTarget.classList.remove('text-slate-500');
+      this.characterCounterTarget.classList.add('text-amber-500');
+      this.typeTarget.value = 'Note';
     } else {
       this.titleTarget.classList.add('hidden');
       this.characterCounterTarget.classList.remove('text-pink-500');
+      this.characterCounterTarget.classList.remove('text-amber-500');
       this.characterCounterTarget.classList.add('text-slate-500');
       this.typeTarget.value = 'Note';
     }

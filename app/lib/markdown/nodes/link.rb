@@ -27,9 +27,21 @@ module Markdown
       end
 
       def self.from_mention(username, domain)
+        url = "https://#{domain}"
+        url += if domain == "bsky.app"
+          "/profile/#{username}"
+        elsif domain != "instagram.com"
+          "/@#{username}"
+        else
+          "/#{username}"
+        end
+
+        title = "@#{username}"
+        title += "@#{domain}" unless domain.in?(["bsky.app", "instagram.com"])
+
         new(:link).tap do |node|
-          node.url = "https://#{domain}/#{"@" unless domain == "instagram.com"}#{username}"
-          node.title = "#{username}@#{domain}"
+          node.url = url
+          node.title = title
 
           node.append_child(CommonMarker::Node.new(:text).tap { |n| n.string_content = "@#{username}" })
         end
