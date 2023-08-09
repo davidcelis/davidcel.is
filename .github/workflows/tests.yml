@@ -50,6 +50,9 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Update apt-get cache
+        run: sudo apt-get update -y
+
       - name: Install Vips
         run: sudo apt-get install -y libvips-dev
 
