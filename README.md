@@ -4,8 +4,18 @@ This is the code for my personal website and blog, which you can visit at [david
 
 For myself, there's an admin to manage my posts and photos, although I don't sync edits to Mastodon or Bluesky yet. I also set up a post composer for myself using [ink-mde](https://github.com/davidmyersdev/ink-mde) so I can just pull out my phone, type up my short thoughts, and hit "Send", just like I would have on Twitter (RIP). Both the admin and the post composer are locked behind an OAuth handshake with GitHub.
 
-The design is a modified version of [Tailwind's Transmit UI template](https://tailwindui.com/templates/transmit), but the code was written by me, and it was largely written _for_ me. There's a lot of hard-coded personal text, and there's currently no theming to make it easy to customize its appearance. You're free to use this code to develop your own website, but you'll want to do proper personalization to make it yours!
+As mentioned before, I hope to continue actively maintaining this website and adding to it. For example, some things I'd love to implement are:
+
+- [x] A post composer so I have a nicer writing experience
+- [x] An admin interface to manage posts and photos
+- [ ] Drafts (especially for articles) so I can start writing something and finish later
+- [ ] More types of posts!
+  - [ ] Check-ins, ideally synced with a third-party service so I don't have to maintain my own location dataset. I used Swarm for years, but gave up on it during lockdown. I've been trying Gowalla instead since it's re-release, but their future is uncertain. I might just go back to Swarm and consider the Gowalla check-ins lost 😅
+  - [ ] Reposts
+  - [ ] Replies
 
 ## License
 
-This code, my website, and all of the content therein are licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). What does this mean in practice? As long as you provide the proper attribution to me, you're free to fork this repository and modify it to develop your own website, and you're free to share or even adapt the articles or other posts that I've written, even for commercial purposes. Just give me appropriate credit, provide a link to my license, and indicate whether or not you made changes. Thank you!
+This code, my website, and all of the content therein are licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). What does this mean in practice? As long as you provide the proper attribution to me, you're free to fork this repository and modify it to develop your own website, and you're free to share or even adapt the articles or other posts that I've written, even for commercial purposes. Just give me appropriate credit, provide a link to my license, and indicate whether or not you made changes.
+
+The design is a modified version of [Tailwind's Transmit UI template](https://tailwindui.com/templates/transmit), but the code was written by me, and it was largely written _for_ me. There's a lot of hard-coded personal text, and there's currently no theming to make it easy to customize its appearance. You're free to use this code to develop your own website, but you'll want to do proper personalization to make it yours!
