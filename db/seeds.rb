@@ -9,28 +9,46 @@
 ActiveRecord::Base.record_timestamps = false
 
 CDN_URL = "https://davidcelis-test.sfo3.cdn.digitaloceanspaces.com".freeze
-FFMPEG = ActiveStorage::Previewer::VideoPreviewer.ffmpeg_path
 
-instagram_posts = HTTParty.get("#{CDN_URL}/instagram_posts.json")
-instagram_posts.each do |post|
+PLACES = {}
+
+check_ins = HTTParty.get("#{CDN_URL}/check_ins.json")
+check_ins.each do |data|
   ActiveRecord::Base.transaction do
-    note = Note.new(content: post["title"] || post.dig("media", 0, "title"))
-    note.created_at = note.updated_at = Time.at(post.dig("media", 0, "creation_timestamp"))
-    note.id = ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id('#{note.created_at}')")
+    # First, create the place
+    place_id = data.dig("venue", "id")
+    place = PLACES[place_id] ||= begin
+      venue = data["venue"]
+      place = Place.new(
+        name: venue["name"],
+        coordinates: [venue.dig("location", "lng"), venue.dig("location", "lat")]
+      )
 
-    begin
-      note.save(validate: false)
-    rescue ActiveRecord::RecordNotUnique
-      puts "Skipping duplicate post: #{note.content}"
+      place.created_at = place.updated_at = Time.at(venue["createdAt"])
+      place.tap(&:save!)
+    end
+
+    check_in = CheckIn.new(
+      content: data.fetch("shout", ""),
+      place: place
+    )
+
+    check_in.created_at = check_in.updated_at = Time.at(data["createdAt"])
+    check_in.id = ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id('#{check_in.created_at}')")
+
+    if check_in.save
+      puts "Saved check-in #{data["id"]} at #{place.name}"
+    else
+      puts "Error saving check-in #{data["id"]}: #{check_in.errors.full_messages.to_sentence}"
       next
     end
 
-    post["media"].each do |media|
-      media_attachment = note.media_attachments.new
-      media_attachment.created_at = media_attachment.updated_at = note.created_at
-      media_attachment.id = ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id('#{note.created_at}')")
+    data.dig("photos", "items").each do |photo|
+      media_attachment = check_in.media_attachments.new
+      media_attachment.created_at = media_attachment.updated_at = check_in.created_at
+      media_attachment.id = ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id('#{check_in.created_at}')")
 
-      file_url = media["uri"].sub("media/posts", "#{CDN_URL}/instagram_posts")
+      file_url = [photo["prefix"], photo["width"], "x", photo["height"], photo["suffix"]].join
       response = HTTParty.get(file_url)
       raise "Error downloading #{file_url}: #{response.code}" if response.code >= 400
 
@@ -46,26 +64,6 @@ instagram_posts.each do |post|
           io: File.open(file.path),
           filename: filename
         )
-
-        if media_attachment.file.video?
-          file.rewind
-
-          filename = media_attachment.file.blob.filename.to_s
-
-          Tempfile.open([filename, ".jpg"], binmode: true) do |tempfile|
-            system(FFMPEG, "-y", "-i", file.path, "-vf", "thumbnail", "-frames:v", "1", tempfile.path, exception: true)
-            tempfile.rewind
-
-            filename = "#{media_attachment.id}.jpg"
-            blob = ActiveStorage::Blob.create_and_upload!(
-              key: "blog/previews/#{filename}",
-              io: File.open(tempfile.path),
-              filename: filename
-            )
-
-            media_attachment.preview_image.attach(blob)
-          end
-        end
 
         media_attachment.save!
       end

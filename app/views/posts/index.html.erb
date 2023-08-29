@@ -4,7 +4,14 @@
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <h1 class="p-name text-2xl font-bold leading-7 text-slate-900">
           <%= link_to request.path, class: "u-url" do %>
-            <%= params[:controller] == "posts" ? "All Posts" : params[:controller].titleize %>
+            <% case params[:controller] %>
+            <% when "posts" %>
+              All Posts
+            <% when "check_ins" %>
+              Check-Ins
+            <% else %>
+              <%= params[:controller].titleize %>%
+            <% end %>
           <% end %>
         </h1>
       </div>

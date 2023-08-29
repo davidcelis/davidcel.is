@@ -10,6 +10,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
 -- Name: webmention_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -179,6 +186,21 @@ CREATE TABLE public.media_attachments (
 
 
 --
+-- Name: places; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.places (
+    id bigint DEFAULT public.snowflake_id() NOT NULL,
+    name character varying NOT NULL,
+    category character varying,
+    coordinates point NOT NULL,
+    apple_maps_id character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: posts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -190,7 +212,8 @@ CREATE TABLE public.posts (
     content text NOT NULL,
     html text NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    place_id bigint
 );
 
 
@@ -309,6 +332,14 @@ ALTER TABLE ONLY public.media_attachments
 
 
 --
+-- Name: places places_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.places
+    ADD CONSTRAINT places_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: posts posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -373,6 +404,20 @@ CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.ac
 --
 
 CREATE INDEX index_media_attachments_on_post_id ON public.media_attachments USING btree (post_id);
+
+
+--
+-- Name: index_places_on_coordinates; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_places_on_coordinates ON public.places USING gist (coordinates);
+
+
+--
+-- Name: index_posts_on_place_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_posts_on_place_id ON public.posts USING btree (place_id);
 
 
 --
@@ -472,6 +517,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230214012129'),
 ('20230215164722'),
 ('20230218162820'),
-('20230225013704');
+('20230225013704'),
+('20230828044721');
 
 

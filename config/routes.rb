@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   resources :posts, only: [:index, :create]
   resources :articles, only: [:index, :show]
+  resources :check_ins, only: [:index, :show]
   resources :notes, only: [:index, :show]
   resources :photos, only: [:index]
 

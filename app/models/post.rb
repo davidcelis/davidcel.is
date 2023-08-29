@@ -1,5 +1,6 @@
 class Post < ApplicationRecord
   DEFAULT_INCLUDES = [
+    :place,
     :syndication_links,
     {
       media_attachments: {
@@ -23,10 +24,11 @@ class Post < ApplicationRecord
   MASTODON_MENTION_REGEX = /(?<=^|[^\/\w])@(?:([a-z0-9_]+)@((?:[\w.-]+\w+)?))/i
   BLUESKY_MENTION_REGEX = /(?<=^|[^\/\w])@(([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,})/i
 
+  belongs_to :place, optional: true
   has_many :media_attachments, dependent: :destroy
   has_many :syndication_links, dependent: :destroy
 
-  validates :content, presence: true, unless: -> { media_attachments.any? }
+  validates :content, presence: true, unless: -> { type == "CheckIn" || media_attachments.any? }
 
   before_create :generate_slug
   before_save :update_html, if: :content_changed?
