@@ -10,22 +10,30 @@ ActiveRecord::Base.record_timestamps = false
 
 CDN_URL = "https://davidcelis-test.sfo3.cdn.digitaloceanspaces.com".freeze
 
-PLACES = {}
-
 check_ins = HTTParty.get("#{CDN_URL}/check_ins.json")
 check_ins.each do |data|
+  # Skip check-ins that have already been imported. I mark this by creating a
+  # bogus syndication URL.
+  next if SyndicationLink.where(platform: "foursquare", url: "https://www.swarmapp.com/c/#{data["id"]}").exists?
+
   ActiveRecord::Base.transaction do
     # First, create the place
-    place_id = data.dig("venue", "id")
-    place = PLACES[place_id] ||= begin
+    place = Place.find_or_initialize_by(foursquare_id: data.dig("venue", "id"))
+
+    if place.new_record?
       venue = data["venue"]
-      place = Place.new(
-        name: venue["name"],
-        coordinates: [venue.dig("location", "lng"), venue.dig("location", "lat")]
-      )
+
+      place.name = venue["name"]
+      place.street = venue.dig("location", "address")
+      place.city = venue.dig("location", "city")
+      place.state = venue.dig("location", "state")
+      place.postal_code = venue.dig("location", "postalCode")
+      place.country = venue.dig("location", "country")
+      place.country_code = venue.dig("location", "cc")
+      place.coordinates = [venue.dig("location", "lng"), venue.dig("location", "lat")]
 
       place.created_at = place.updated_at = Time.at(venue["createdAt"])
-      place.tap(&:save!)
+      place.save!
     end
 
     check_in = CheckIn.new(
@@ -37,7 +45,7 @@ check_ins.each do |data|
     check_in.id = ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id('#{check_in.created_at}')")
 
     if check_in.save
-      puts "Saved check-in #{data["id"]} at #{place.name}"
+      puts "Checked in at #{place.name} in #{place.city}, #{place.state}, #{place.country} (#{data["id"]})"
     else
       puts "Error saving check-in #{data["id"]}: #{check_in.errors.full_messages.to_sentence}"
       next
@@ -68,6 +76,13 @@ check_ins.each do |data|
         media_attachment.save!
       end
     end
+
+    check_in.syndication_links.create!(
+      platform: "foursquare",
+      url: "https://www.swarmapp.com/c/#{data["id"]}",
+      created_at: check_in.created_at,
+      updated_at: check_in.updated_at
+    )
   end
 end
 

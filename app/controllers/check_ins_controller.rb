@@ -6,6 +6,6 @@ class CheckInsController < ApplicationController
   end
 
   def show
-    @check_in = CheckIn.find_by!(slug: params[:slug])
+    @check_in = CheckIn.find_by!(slug: params[:id])
   end
 end

@@ -161,6 +161,7 @@ GEM
       nokogiri (>= 1.6)
     jmespath (1.6.2)
     json (2.6.3)
+    jwt (2.7.1)
     language_server-protocol (3.17.0.3)
     lint_roller (1.1.0)
     lograge (0.13.0)
@@ -388,6 +389,7 @@ DEPENDENCIES
   faraday-retry
   image_processing (>= 1.12)
   importmap-rails
+  jwt
   lograge
   microformats!
   pagy (~> 5.10)

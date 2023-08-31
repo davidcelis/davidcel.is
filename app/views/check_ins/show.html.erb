@@ -6,10 +6,10 @@
           <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
             <div class="flex flex-col items-start">
               <div class="p-summary prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
-                Checked in at <%= @check_in.place.name %>
+                📍 Checked in at <%= link_to @check_in.place.name, @check_in.place.apple_maps_url, target: "_blank", rel: "nofollow noopener noreferrer" %>
               </div>
 
-              <% if @check_in.content.present? %>
+              <% if @check_in.html.present? %>
                 <div class="e-content prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
                   <%= @check_in.html.html_safe %>
                 </div>
@@ -18,6 +18,12 @@
               <% if @check_in.media_attachments.any? %>
                 <%= media_gallery_tag(@check_in.media_attachments.includes(file_attachment: :blob, preview_image_attachment: :blob)) %>
               <% end %>
+
+              <div class="mt-4">
+                <%= link_to @check_in.place.apple_maps_url do %>
+                  <%= image_tag cdn_file_url(@check_in.snapshot), class: "rounded-lg" %>
+                <% end %>
+              </div>
 
               <div class="pt-4 text-sm text-slate-500">
                 <%= link_to polymorphic_path(@check_in), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
@@ -48,17 +54,23 @@
   </div>
 </article>
 
-<% content_for(:og_description, strip_tags(@note.html).strip.presence || polymorphic_url(@note)) %>
+<% content_for(:og_description, strip_tags(@check_in.html).strip.presence || polymorphic_url(@check_in)) %>
 <% content_for(:og_type, "article") %>
-<% content_for(:og_title, "david celis") %>
-<% content_for(:og_url, post_url(@note.id)) %>
+<% content_for(:og_title, "David Celis checked in at #{@check_in.place.name}") %>
+<% content_for(:og_url, post_url(@check_in.id)) %>
 <% content_for(:head) do %>
   <meta property="og:site_name" content="david celis" data-rh="true">
-  <link href="<%= polymorphic_url(@note) %>" rel="alternate" type="application/activity+json" data-rh="true">
+  <link href="<%= polymorphic_url(@check_in) %>" rel="alternate" type="application/activity+json" data-rh="true">
 <% end %>
 
 <% content_for(:og_image) do %>
-  <% @note.media_attachments.each do |media| %>
+  <meta property="og:image" content="<%= cdn_file_url(@check_in.snapshot) %>">
+  <meta property="og:image:alt" content="A map with a pin showing the location of <%= @check_in.place.name %>.">
+  <meta property="og:image:type" content="<%= @check_in.snapshot.content_type %>">
+  <meta property="og:image:width" content="<%= @check_in.snapshot.metadata[:width] %>">
+  <meta property="og:image:height" content="<%= @check_in.snapshot.metadata[:height] %>">
+
+  <% @check_in.media_attachments.each do |media| %>
     <% file = media.preview_image.attached? ? media.preview_image : media.file %>
 
     <meta property="og:image" content="<%= cdn_file_url(file) %>">
@@ -69,23 +81,8 @@
   <% end %>
 <% end %>
 
-<% content_for(:og_video) do %>
-  <% @note.media_attachments.select(&:video_or_gif?).each do |video| %>
-    <meta property="og:video" content="<%= cdn_file_url(video) %>">
-    <meta property="og:video:alt" content="<%= video.description %>">
-    <meta property="og:video:type" content="<%= video.content_type %>">
-    <meta property="og:video:width" content="<%= video.width %>">
-    <meta property="og:video:height" content="<%= video.height %>">
-  <% end %>
-<% end %>
-
 <% content_for(:twitter_card, "summary_large_image") %>
 <% content_for(:twitter_image) do %>
-  <% if (image = @note.media_attachments.first(&:image?)) %>
-    <meta property="twitter:image" content="<%= cdn_file_url(image) %>">
-    <meta property="twitter:image:alt" content="<%= image.description %>">
-  <% elsif (video = @note.media_attachments.find(&:video_or_gif?)) %>
-    <meta property="twitter:image" content="<%= cdn_file_url(video.preview_image) %>">
-    <meta property="twitter:image:alt" content="<%= video.description %>">
-  <% end %>
+  <meta property="twitter:image" content="<%= cdn_file_url(@check_in.snapshot) %>">
+  <meta property="twitter:image:alt" content="A map with a pin showing the location of <%= @check_in.place.name %>.">
 <% end %>

@@ -52,6 +52,9 @@ gem "ruby-vips"
 # Upload ActiveStorage files to DigitalOcean Spaces
 gem "aws-sdk-s3"
 
+# Construct and sign JWTs for use with Apple MapKit JS
+gem "jwt"
+
 # Use Faraday for external HTTP/API requests and clients
 gem "faraday"
 gem "faraday-retry"

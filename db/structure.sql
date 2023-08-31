@@ -193,8 +193,17 @@ CREATE TABLE public.places (
     id bigint DEFAULT public.snowflake_id() NOT NULL,
     name character varying NOT NULL,
     category character varying,
+    street character varying,
+    city character varying,
+    state character varying,
+    state_code character varying,
+    postal_code character varying,
+    country character varying,
+    country_code character varying,
     coordinates point NOT NULL,
     apple_maps_id character varying,
+    apple_maps_url character varying,
+    foursquare_id character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
