@@ -18,7 +18,7 @@ class PostsController < ApplicationController
     # post creation into a background job. This lets us handle the processing
     # of the media attachments without hogging a web worker and also ensures
     # we can wait to create the Post object until the media is done processing.
-    if media_attachments_params.any?
+    if media_attachments_params.any? || place_params.present?
       CreatePostWithMediaJob.perform_async(post_params.to_hash, media_attachments_params.map(&:to_hash), place_params.to_hash)
 
       redirect_to root_path, notice: "Your post's media is being processed and will be available shortly."
@@ -27,19 +27,7 @@ class PostsController < ApplicationController
 
     @post = Post.new(post_params)
 
-    ActiveRecord::Base.transaction do
-      if place_params.any?
-        place = Place.find_or_initialize_by(apple_maps_id: place_params[:apple_maps_id])
-        place.update!(place_params)
-
-        @post.type = "CheckIn"
-        @post.place = place
-      end
-
-      @post.save!
-    end
-
-    if @post.persisted?
+    if @post.save
       redirect_to polymorphic_path(@post)
     else
       render :index, alert: @post.errors.full_messages.to_sentence

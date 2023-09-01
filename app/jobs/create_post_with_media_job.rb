@@ -1,7 +1,41 @@
 class CreatePostWithMediaJob < ApplicationJob
   def perform(post_params, media_attachments_params, place_params)
+    post_params = post_params.with_indifferent_access
+    place_params = place_params.with_indifferent_access
+
+    post_params[:type] = "CheckIn" if place_params.any?
+
     ActiveRecord::Base.transaction do
-      post = Post.new(post_params.with_indifferent_access)
+      post = Post.new(post_params)
+
+      if place_params.any?
+        # We'll find or create the place based on the UUID from Apple Maps.
+        place = Place.find_or_initialize_by(apple_maps_id: place_params[:apple_maps_id])
+        place.coordinates = [place_params.delete(:longitude), place_params.delete(:latitude)]
+        place.update!(place_params)
+
+        post.place = place
+
+        # Then, for the check-in itself, we'll generate a snapshot of the map
+        # as it was at the time of the check-in. If the place moves later, the
+        # snapshot keeps the historical context of where I actually was.
+        snapshot = Apple::MapKit::Snapshot.new(point: [place.latitude, place.longitude].join(","))
+        response = HTTParty.get(snapshot.url)
+
+        file_extension = Rack::Mime::MIME_TYPES.invert["image/png"]
+        filename = "#{post.id}#{file_extension}"
+
+        Tempfile.open([filename, file_extension], binmode: true) do |file|
+          file.write(response.body)
+          file.rewind
+
+          post.snapshot.attach(
+            key: "blog/#{filename}",
+            io: File.open(file.path),
+            filename: filename
+          )
+        end
+      end
 
       # Skip the content validation; posts with media can be blank.
       post.save(validate: false)
@@ -32,15 +66,6 @@ class CreatePostWithMediaJob < ApplicationJob
         # this, we'll just manually rotate the image to the correct orientation
         # and then strip the orientation EXIF data.
         rotate_image(media_attachment) if media_attachment.file.image?
-      end
-
-      place_params = place_params.with_indifferent_access
-      if place_params.any?
-        place = Place.find_or_initialize_by(apple_maps_id: place_params[:apple_maps_id])
-        place.update!(place_params)
-
-        post.type = "CheckIn"
-        post.place = place
       end
 
       post.save!
