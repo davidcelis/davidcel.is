@@ -1,5 +1,5 @@
 class CreatePostWithMediaJob < ApplicationJob
-  def perform(post_params, media_attachments_params)
+  def perform(post_params, media_attachments_params, place_params)
     ActiveRecord::Base.transaction do
       post = Post.new(post_params.with_indifferent_access)
 
@@ -32,6 +32,15 @@ class CreatePostWithMediaJob < ApplicationJob
         # this, we'll just manually rotate the image to the correct orientation
         # and then strip the orientation EXIF data.
         rotate_image(media_attachment) if media_attachment.file.image?
+      end
+
+      place_params = place_params.with_indifferent_access
+      if place_params.any?
+        place = Place.find_or_initialize_by(apple_maps_id: place_params[:apple_maps_id])
+        place.update!(place_params)
+
+        post.type = "CheckIn"
+        post.place = place
       end
 
       post.save!
