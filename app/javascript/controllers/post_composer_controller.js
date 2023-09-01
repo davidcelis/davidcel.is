@@ -130,7 +130,7 @@ export default class extends Controller {
 
             const placeResultName = document.createElement('div');
             placeResultName.classList.add('font-bold', 'text-slate-700');
-            placeResultName.innerHTML = place.name;
+            placeResultName.innerHTML = '📍 ' + place.name;
             placeResult.appendChild(placeResultName);
 
             const placeResultAddress = document.createElement('div');
@@ -139,21 +139,23 @@ export default class extends Controller {
             placeResult.appendChild(placeResultAddress);
 
             placeResult.addEventListener('click', () => {
-              this.placeNameTarget.value = place.name;
-              this.placeCategoryTarget.value = place.pointOfInterestCategory;
-              this.placeStreetTarget.value = place.fullThoroughfare;
-              this.placeCityTarget.value = place.locality;
-              this.placeStateTarget.value = place.administrativeArea;
-              this.placeStateCodeTarget.value = place.administrativeAreaCode;
-              this.placePostalCodeTarget.value = place.postCode;
-              this.placeCountryTarget.value = place.country;
-              this.placeCountryCodeTarget.value = place.countryCode;
-              this.placeLatitudeTarget.value = place.coordinate.latitude;
-              this.placeLongitudeTarget.value = place.coordinate.longitude;
-              this.placeAppleMapsIdTarget.value = place.muid;
-              this.placeAppleMapsUrlTarget.value = place._wpURL;
+              this.placeNameTarget.value = place.name || '';
+              this.placeCategoryTarget.value = place.pointOfInterestCategory || '';
+              this.placeStreetTarget.value = place.fullThoroughfare || '';
+              this.placeCityTarget.value = place.locality || '';
+              this.placeStateTarget.value = place.administrativeArea || '';
+              this.placeStateCodeTarget.value = place.administrativeAreaCode || '';
+              this.placePostalCodeTarget.value = place.postCode || '';
+              this.placeCountryTarget.value = place.country || '';
+              this.placeCountryCodeTarget.value = place.countryCode || '';
+              this.placeLatitudeTarget.value = place.coordinate.latitude || '';
+              this.placeLongitudeTarget.value = place.coordinate.longitude || '';
+              this.placeAppleMapsIdTarget.value = place.muid || '';
+              this.placeAppleMapsUrlTarget.value = place._wpURL || '';
 
               this.locationPreviewTarget.innerText = place.name;
+
+              this.locationSearchInputTarget.value = '';
             });
 
             this.locationResultsTarget.appendChild(placeResult);
