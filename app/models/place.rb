@@ -15,14 +15,14 @@ class Place < ApplicationRecord
   end
 
   def apple_maps_url
-    return @apple_maps_url if defined?(@apple_maps_url)
+    super || begin
+      params = {q: name, ll: [latitude, longitude].join(",")}
+      params[:auid] = apple_maps_id if apple_maps_id.present?
 
-    params = {q: name, ll: [latitude, longitude].join(",")}
-    params[:auid] = apple_maps_id if apple_maps_id.present?
+      uri = URI(APPLE_MAPS_BASE_URL)
+      uri.query = params.to_query
 
-    uri = URI(APPLE_MAPS_BASE_URL)
-    uri.query = params.to_query
-
-    @apple_maps_url = uri.to_s
+      uri.to_s
+    end
   end
 end

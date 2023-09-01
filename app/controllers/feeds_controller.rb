@@ -20,6 +20,16 @@ class FeedsController < ApplicationController
     render :feed, formats: :xml
   end
 
+  def check_ins
+    _, @posts = pagy(CheckIn.includes(Post::DEFAULT_INCLUDES))
+
+    @subtitle = "Check-ins"
+    @self_url = check_ins_feed_url
+    @alternate_url = check_ins_url
+
+    render :feed, formats: :xml
+  end
+
   def notes
     _, @posts = pagy(Note.includes(Post::DEFAULT_INCLUDES))
 

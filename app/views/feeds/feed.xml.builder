@@ -21,7 +21,7 @@ xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
   @posts.each do |post|
     xml.entry do
       xml.id post_url(post.id)
-      xml.title post.title
+      xml.title atom_title_for(post)
 
       xml.content "type" => "html", "xml:lang" => "en" do
         xml.cdata! atom_content_for(post)

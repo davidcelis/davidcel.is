@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   get "/feeds/main", to: "feeds#main", format: :xml, as: :main_feed
   get "/feeds/articles", to: "feeds#articles", format: :xml, as: :articles_feed
+  get "/feeds/check-ins", to: "feeds#check_ins", format: :xml, as: :check_ins_feed
   get "/feeds/notes", to: "feeds#notes", format: :xml, as: :notes_feed
   get "/feed", to: "feeds#main", format: :xml
 

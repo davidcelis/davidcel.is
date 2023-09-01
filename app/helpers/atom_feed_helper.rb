@@ -1,8 +1,21 @@
 module AtomFeedHelper
+  def atom_title_for(post)
+    case post
+    when Article
+      post.title
+    when CheckIn
+      "📍 Checked in at #{post.place.name}"
+    end
+
+    # Default to no title.
+  end
+
   def atom_content_for(post)
     case post
     when Article
       atom_article_content(post)
+    when CheckIn
+      atom_check_in_content(post)
     when Note
       atom_note_content(post)
     end
@@ -15,6 +28,31 @@ module AtomFeedHelper
 
     if (image = article.media_attachments.first(&:image?))
       html = "#{image_tag(cdn_file_url(image), alt: image.description)}#{html}"
+    end
+
+    html
+  end
+
+  def atom_check_in_content(check_in)
+    place_parts = [
+      link_to(check_in.place.name, check_in.place.apple_maps_url.html_safe).html_safe,
+      check_in.place.city,
+      check_in.place.state_code || check_in.place.state
+    ]
+
+    country = check_in.place.country_code || check_in.place.country
+    place_parts << country unless country.in?(["United States", "US"])
+    place_link = place_parts.compact.join(" / ")
+
+    html = content_tag(:p, "I checked in at #{place_link}".html_safe)
+    html += content_tag(:blockquote, check_in.html.html_safe) if check_in.html.present?
+
+    html = check_in.media_attachments.reduce(html) do |html, media_attachment|
+      html + atom_media_tag(media_attachment)
+    end
+
+    if check_in.snapshot&.analyzed?
+      html += image_tag(cdn_file_url(check_in.snapshot), alt: "A map showing the location of #{check_in.place.name}.") if check_in.snapshot.attached?
     end
 
     html

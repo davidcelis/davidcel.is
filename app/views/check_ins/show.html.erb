@@ -21,7 +21,7 @@
 
               <div class="mt-4">
                 <%= link_to @check_in.place.apple_maps_url do %>
-                  <%= image_tag cdn_file_url(@check_in.snapshot), class: "rounded-lg" %>
+                  <%= image_tag cdn_file_url(@check_in.snapshot), class: "rounded-lg", alt: "A map showing the location of #{@check_in.place.name}." %>
                 <% end %>
               </div>
 
