@@ -9,8 +9,26 @@ export default class extends Controller {
     'content',
     'type',
 
+    // Check-in fields
+    'placeName',
+    'placeCategory',
+    'placeStreet',
+    'placeCity',
+    'placeState',
+    'placeStateCode',
+    'placePostalCode',
+    'placeCountry',
+    'placeCountryCode',
+    'placeLatitude',
+    'placeLongitude',
+    'placeAppleMapsId',
+    'placeAppleMapsUrl',
+
     // Utility targets
     'editor',
+    'locationSearchInput',
+    'locationResults',
+    'locationPreview',
     'mediaPreviewZone',
     'mediaPreview',
     'characterCounter',
@@ -22,6 +40,7 @@ export default class extends Controller {
     characterLimit: { type: Number, default: 500 },
     fileLimit: { type: Number, default: 4 },
     directUploadUrl: String,
+    initialMapKitToken: String,
   };
 
   // TODO: Once Safari supports positive look-behinds, we can use these instead:
@@ -32,6 +51,29 @@ export default class extends Controller {
   static urlPlaceholder = 'xxxxxxxxxxxxxxxxxxxxxxx';
 
   connect () {
+    // Load MapKit JS
+    if (this.initialMapKitTokenValue) {
+      window.initMapKit = () => {
+        window.mapkit.init({
+          authorizationCallback: (done) => {
+            fetch('/mapkit/token')
+              .then(response => response.text())
+              .then(done);
+          }
+        });
+      }
+
+      const script = document.createElement('script');
+      script.src = `https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.js`;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.dataset.callback = 'initMapKit';
+      script.dataset.initialToken = this.initialMapKitTokenValue;
+      script.dataset.libraries = 'map,services,user-location';
+      document.head.appendChild(script);
+    }
+
+    // Initialize the editor
     const options = defineOptions({
       placeholder: "What’s happening?",
       interface: {
@@ -56,6 +98,70 @@ export default class extends Controller {
 
     ink(this.editorTarget, options);
   };
+
+  locationSearch(event) {
+    // Prevent the form from submitting
+    event.preventDefault();
+
+    // Grab the query from the input value and execute a search
+    const query = this.locationSearchInputTarget.value.trim();
+    const search = new window.mapkit.Search({ getsUserLocation: true });
+
+    search.search(query, (error, data) => {
+      if (error) {
+        console.error(error);
+      } else {
+        // Populate the locationResults target
+        this.locationResultsTarget.innerHTML = '';
+
+        if (data.places.length === 0) {
+          // If there are no results, show a message
+          const noResults = document.createElement('li');
+          noResults.classList.add('text-center', 'text-slate-500', 'text-sm', 'py-2');
+          noResults.innerHTML = 'No results found';
+          this.locationResultsTarget.appendChild(noResults);
+        } else {
+          // Otherwise, display each result as a list item that, when clicked,
+          // will populate the hidden fields with the result's data.
+          data.places.forEach(place => {
+            const placeResult = document.createElement('li');
+            placeResult.classList.add('py-2', 'px-4', 'hover:bg-slate-100', 'cursor-pointer');
+            placeResult.dataset.action = 'click->tooltip#hide';
+
+            const placeResultName = document.createElement('div');
+            placeResultName.classList.add('font-bold', 'text-slate-700');
+            placeResultName.innerHTML = place.name;
+            placeResult.appendChild(placeResultName);
+
+            const placeResultAddress = document.createElement('div');
+            placeResultAddress.classList.add('text-slate-500', 'text-sm');
+            placeResultAddress.innerHTML = place.formattedAddress;
+            placeResult.appendChild(placeResultAddress);
+
+            placeResult.addEventListener('click', () => {
+              this.placeNameTarget.value = place.name;
+              this.placeCategoryTarget.value = place.pointOfInterestCategory;
+              this.placeStreetTarget.value = place.fullThoroughfare;
+              this.placeCityTarget.value = place.locality;
+              this.placeStateTarget.value = place.administrativeArea;
+              this.placeStateCodeTarget.value = place.administrativeAreaCode;
+              this.placePostalCodeTarget.value = place.postCode;
+              this.placeCountryTarget.value = place.country;
+              this.placeCountryCodeTarget.value = place.countryCode;
+              this.placeLatitudeTarget.value = place.coordinate.latitude;
+              this.placeLongitudeTarget.value = place.coordinate.longitude;
+              this.placeAppleMapsIdTarget.value = place.muid;
+              this.placeAppleMapsUrlTarget.value = place._wpURL;
+
+              this.locationPreviewTarget.innerText = place.name;
+            });
+
+            this.locationResultsTarget.appendChild(placeResult);
+          });
+        }
+      }
+    });
+  }
 
   selectFiles() {
     this.dummyFileFieldTarget.click();

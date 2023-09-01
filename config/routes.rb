@@ -49,6 +49,7 @@ Rails.application.routes.draw do
 
   get :sign_in, to: "sessions#new"
   delete :sign_out, to: "sessions#destroy"
+  get "/mapkit/token", to: "sessions#mapkit_token"
 
   # Finally, ensure old URLs redirect to the new location for existing articles
   get "/blog/2012/02/01/why-i-hate-five-star-ratings", to: redirect("/articles/why-i-hate-five-star-ratings/")

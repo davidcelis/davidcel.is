@@ -3,7 +3,7 @@
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <div class="flex">
-          <%= form_for Post.new, html: {class: "relative grow", data: {"controller" => "post-composer", "post-composer-direct-upload-url-value" => direct_uploads_url}} do |f| %>
+          <%= form_for Post.new, html: {class: "relative grow", data: {"controller" => "post-composer", "post-composer-direct-upload-url-value" => direct_uploads_url, "post-composer-initial-map-kit-token-value" => Apple::MapKit.token}} do |f| %>
             <div class="border border-slate-300 rounded-lg shadow-sm overflow-hidden focus-within:border-pink-500 focus-within:ring-1 focus-within:ring-pink-500">
               <%= hidden_field_tag "post[type]", "Note", data: {"post-composer-target" => "type"} %>
 
@@ -17,12 +17,49 @@
                 <div class="flex flex-wrap px-2 gap-x-2" data-post-composer-target="mediaPreviewZone"></div>
 
                 <div class="border-t border-slate-200 px-2 py-2 flex justify-between items-center space-x-3 sm:px-3">
-                  <div class="flex-shrink-0">
-                    <button type="button" class="group flex items-center" data-action="click->post-composer#selectFiles">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M220.6 121.2L271.1 96 448 96v96H333.2c-21.9-15.1-48.5-24-77.2-24s-55.2 8.9-77.2 24H64V128H192c9.9 0 19.7-2.3 28.6-6.8zM0 128V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H271.1c-9.9 0-19.7 2.3-28.6 6.8L192 64H160V48c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16l0 16C28.7 64 0 92.7 0 128zM168 304a88 88 0 1 1 176 0 88 88 0 1 1 -176 0z"/></svg>
-                      <span class="hidden">Attach media</span>
-                    </button>
-                    <%= file_field_tag :files, multiple: true, hidden: true, accept: "image/*,video/*", data: {"post-composer-target" => "dummyFileField", "action" => "change->post-composer#dummyFileFieldChanged"} %>
+                  <div class="flex-shrink">
+                    <div class="flex justify-between items-center space-x-3">
+                      <button type="button" class="group flex items-center" data-action="click->post-composer#selectFiles">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M220.6 121.2L271.1 96 448 96v96H333.2c-21.9-15.1-48.5-24-77.2-24s-55.2 8.9-77.2 24H64V128H192c9.9 0 19.7-2.3 28.6-6.8zM0 128V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H271.1c-9.9 0-19.7 2.3-28.6 6.8L192 64H160V48c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16l0 16C28.7 64 0 92.7 0 128zM168 304a88 88 0 1 1 176 0 88 88 0 1 1 -176 0z"/></svg>
+                        <span class="hidden">Attach media</span>
+                      </button>
+
+                      <%= file_field_tag :files, multiple: true, hidden: true, accept: "image/*,video/*", data: {"post-composer-target" => "dummyFileField", "action" => "change->post-composer#dummyFileFieldChanged"} %>
+
+                      <div data-controller="tooltip" data-tooltip-append-to-value="parent">
+                        <button type="button" class="group flex items-center" data-action="click->tooltip#ignore:prevent" data-tooltip-target="trigger">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
+                          <span class="hidden">Tag location</span>
+
+                          <span class="text-slate-500 group-hover:text-slate-700" data-post-composer-target="locationPreview"></span>
+                        </button>
+
+                        <div class="hidden flex flex-col gap-4 p-4 max-w-prose min-w-[400px]"  data-tooltip-target="content">
+                          <div class="flex justify-between">
+                            <h2 class="text-xl font-bold text-slate-900">Tag location</h2>
+                            <button data-action="click->tooltip#ignore:prevent" class="text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary">Dismiss</button>
+                          </div>
+
+                          <!-- Add a text input to perform a MapKit JS autocomplete search and list results -->
+                          <input type="text" placeholder="Search for a location" class="border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm" data-action="keydown.enter->post-composer#locationSearch" data-post-composer-target="locationSearchInput">
+                          <ul class="flex flex-col gap-2" data-post-composer-target="locationResults"></ul>
+                        </div>
+                      </div>
+
+                      <%= hidden_field_tag "post[place][name]", "", data: {"post-composer-target" => "placeName"} %>
+                      <%= hidden_field_tag "post[place][category]", "", data: {"post-composer-target" => "placeCategory"} %>
+                      <%= hidden_field_tag "post[place][street]", "", data: {"post-composer-target" => "placeStreet"} %>
+                      <%= hidden_field_tag "post[place][city]", "", data: {"post-composer-target" => "placeCity"} %>
+                      <%= hidden_field_tag "post[place][state]", "", data: {"post-composer-target" => "placeState"} %>
+                      <%= hidden_field_tag "post[place][state_code]", "", data: {"post-composer-target" => "placeStateCode"} %>
+                      <%= hidden_field_tag "post[place][postal_code]", "", data: {"post-composer-target" => "placePostalCode"} %>
+                      <%= hidden_field_tag "post[place][country]", "", data: {"post-composer-target" => "placeCountry"} %>
+                      <%= hidden_field_tag "post[place][country_code]", "", data: {"post-composer-target" => "placeCountryCode"} %>
+                      <%= hidden_field_tag "post[place][latitude]", "", data: {"post-composer-target" => "placeLatitude"} %>
+                      <%= hidden_field_tag "post[place][longitude]", "", data: {"post-composer-target" => "placeLongitude"} %>
+                      <%= hidden_field_tag "post[place][apple_maps_id]", "", data: {"post-composer-target" => "placeAppleMapsId"} %>
+                      <%= hidden_field_tag "post[place][apple_maps_url]", "", data: {"post-composer-target" => "placeAppleMapsUrl"} %>
+                    </div>
                   </div>
                   <div class="flex-shrink-0">
                     <span id="character_counter" class="select-none text-sm text-slate-500 italic px-2" data-post-composer-target="characterCounter">500</span>

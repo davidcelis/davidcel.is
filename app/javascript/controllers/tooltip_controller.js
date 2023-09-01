@@ -5,13 +5,17 @@ import 'tippy.js';
 export default class extends Controller {
   static targets = ['trigger', 'content']
 
+  static values = {
+    appendTo: { type: String },
+  }
+
   connect() {
     const target = this.contentTarget;
     target.classList.remove('hidden');
 
     tippy(this.triggerTarget, {
       content: target,
-      appendTo: () => document.body,
+      appendTo: this.appendToValue || (() => document.body),
       interactive: true,
       offset: [0, 8],
       placement: 'bottom-start',
@@ -27,5 +31,9 @@ export default class extends Controller {
 
   ignore(event) {
     event.stopPropagation();
+  }
+
+  hide() {
+    this.triggerTarget._tippy.hide();
   }
 }

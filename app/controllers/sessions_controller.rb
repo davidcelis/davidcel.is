@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_action :require_authentication, only: [:mapkit_token, :destroy]
+
   def new
     cookies.encrypted[:state] = SecureRandom.urlsafe_base64
 
@@ -12,6 +14,10 @@ class SessionsController < ApplicationController
     }.to_query
 
     redirect_to authorization_url.to_s, allow_other_host: true
+  end
+
+  def mapkit_token
+    render plain: Apple::MapKit.token
   end
 
   def destroy

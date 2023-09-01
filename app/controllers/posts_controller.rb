@@ -22,14 +22,27 @@ class PostsController < ApplicationController
       CreatePostWithMediaJob.perform_async(post_params.to_hash, media_attachments_params.map(&:to_hash))
 
       redirect_to root_path, notice: "Your post's media is being processed and will be available shortly."
-    else
-      @post = Post.new(post_params)
+      return
+    end
 
-      if @post.save
-        redirect_to polymorphic_path(@post)
-      else
-        render :index, alert: @post.errors.full_messages.to_sentence
+    @post = Post.new(post_params)
+
+    ActiveRecord::Base.transaction do
+      if place_params.any?
+        place = Place.find_or_initialize_by(apple_maps_id: place_params[:apple_maps_id])
+        place.update!(place_params)
+
+        @post.type = "CheckIn"
+        @post.place = place
       end
+
+      @post.save!
+    end
+
+    if @post.persisted?
+      redirect_to polymorphic_path(@post)
+    else
+      render :index, alert: @post.errors.full_messages.to_sentence
     end
   end
 
@@ -43,5 +56,23 @@ class PostsController < ApplicationController
 
   def media_attachments_params
     params.require(:post).permit(media_attachments: [:signed_id, :description]).fetch(:media_attachments, [])
+  end
+
+  def place_params
+    params.require(:post).permit(place: %i[
+      name
+      category
+      street
+      city
+      state
+      state_code
+      postal_code
+      country
+      country_code
+      latitude
+      longitude
+      apple_maps_id
+      apple_maps_url
+    ]).fetch(:place, {})
   end
 end
