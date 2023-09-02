@@ -18,4 +18,12 @@
   .height-screen {
     @apply h-screen
   }
+
+  .post-editor-container {
+    @apply focus-within:border-pink-500 focus-within:ring-1 focus-within:ring-pink-500
+  }
+
+  .post-editor-container:has(input#location-search:focus) {
+    @apply border-slate-300 ring-0
+  }
 }

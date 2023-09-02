@@ -4,7 +4,7 @@
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <div class="flex">
           <%= form_for Post.new, html: {class: "relative grow", data: {"controller" => "post-composer", "post-composer-direct-upload-url-value" => direct_uploads_url, "post-composer-initial-map-kit-token-value" => Apple::MapKit.token}} do |f| %>
-            <div class="border border-slate-300 rounded-lg shadow-sm overflow-hidden focus-within:border-pink-500 focus-within:ring-1 focus-within:ring-pink-500">
+            <div class="post-editor-container border border-slate-300 rounded-lg shadow-sm overflow-hidden">
               <%= hidden_field_tag "post[type]", "Note", data: {"post-composer-target" => "type"} %>
 
               <%= f.text_field :title, placeholder: "Title", class: "hidden block w-full border-0 pt-2.5 text-lg font-medium placeholder-slate-500 focus:ring-0", data: {"post-composer-target" => "title"} %>
@@ -27,7 +27,7 @@
                       <%= file_field_tag :files, multiple: true, hidden: true, accept: "image/*,video/*", data: {"post-composer-target" => "dummyFileField", "action" => "change->post-composer#dummyFileFieldChanged"} %>
 
                       <div data-controller="tooltip" data-tooltip-append-to-value="parent">
-                        <button type="button" class="group flex items-center" data-action="click->tooltip#ignore:prevent" data-tooltip-target="trigger">
+                        <button type="button" class="group flex items-center" data-action="click->post-composer#nearbyLocationSearch click->tooltip#ignore:prevent" data-tooltip-target="trigger">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
                           <span class="hidden">Tag location</span>
 
@@ -41,8 +41,10 @@
                           </div>
 
                           <!-- Add a text input to perform a MapKit JS autocomplete search and list results -->
-                          <input type="text" placeholder="Search for a location" class="border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm" data-action="keydown.enter->post-composer#locationSearch" data-post-composer-target="locationSearchInput">
-                          <ul class="flex flex-col gap-2" data-post-composer-target="locationResults"></ul>
+                          <input id="location-search" type="text" placeholder="Search for a location" class="border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm" data-action="keydown.enter->post-composer#locationSearch" data-post-composer-target="locationSearchInput">
+                          <ul class="flex flex-col gap-2" data-post-composer-target="locationResults">
+                            <li class="text-center py-2 px-4">Loading nearby places...</li>
+                          </ul>
                         </div>
                       </div>
 

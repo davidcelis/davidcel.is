@@ -99,6 +99,47 @@ export default class extends Controller {
     ink(this.editorTarget, options);
   };
 
+  nearbyLocationSearch() {
+    // Get the user's current location
+    window.navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      // Search for nearby places
+      const search = new window.mapkit.PointsOfInterestSearch({
+        center: new window.mapkit.Coordinate(latitude, longitude),
+        radius: 500,
+
+        // Exclude certain types of places from the search results that just
+        // clutter things up.
+        pointOfInterestFilter: mapkit.PointOfInterestFilter.excluding([
+          mapkit.PointOfInterestCategory.ATM,
+          mapkit.PointOfInterestCategory.Bank,
+          mapkit.PointOfInterestCategory.EVCharger,
+          mapkit.PointOfInterestCategory.FireStation,
+          mapkit.PointOfInterestCategory.GasStation,
+          mapkit.PointOfInterestCategory.Hospital,
+          mapkit.PointOfInterestCategory.Laundry,
+          mapkit.PointOfInterestCategory.Parking,
+          mapkit.PointOfInterestCategory.Pharmacy,
+          mapkit.PointOfInterestCategory.Police,
+          mapkit.PointOfInterestCategory.PostOffice,
+          mapkit.PointOfInterestCategory.PublicTransport,
+          mapkit.PointOfInterestCategory.Restroom,
+          mapkit.PointOfInterestCategory.School,
+        ])
+      });
+
+      search.search((error, data) => {
+        if (error) {
+          console.error(error);
+        } else {
+          this.handleLocationSearchResults(data.places);
+        }
+      });
+    });
+  }
+
   locationSearch(event) {
     // Prevent the form from submitting
     event.preventDefault();
@@ -111,58 +152,62 @@ export default class extends Controller {
       if (error) {
         console.error(error);
       } else {
-        // Populate the locationResults target
-        this.locationResultsTarget.innerHTML = '';
-
-        if (data.places.length === 0) {
-          // If there are no results, show a message
-          const noResults = document.createElement('li');
-          noResults.classList.add('text-center', 'text-slate-500', 'text-sm', 'py-2');
-          noResults.innerHTML = 'No results found';
-          this.locationResultsTarget.appendChild(noResults);
-        } else {
-          // Otherwise, display each result as a list item that, when clicked,
-          // will populate the hidden fields with the result's data.
-          data.places.forEach(place => {
-            const placeResult = document.createElement('li');
-            placeResult.classList.add('py-2', 'px-4', 'hover:bg-slate-100', 'cursor-pointer');
-            placeResult.dataset.action = 'click->tooltip#hide';
-
-            const placeResultName = document.createElement('div');
-            placeResultName.classList.add('font-bold', 'text-slate-700');
-            placeResultName.innerHTML = '📍 ' + place.name;
-            placeResult.appendChild(placeResultName);
-
-            const placeResultAddress = document.createElement('div');
-            placeResultAddress.classList.add('text-slate-500', 'text-sm');
-            placeResultAddress.innerHTML = place.formattedAddress;
-            placeResult.appendChild(placeResultAddress);
-
-            placeResult.addEventListener('click', () => {
-              this.placeNameTarget.value = place.name || '';
-              this.placeCategoryTarget.value = place.pointOfInterestCategory || '';
-              this.placeStreetTarget.value = place.fullThoroughfare || '';
-              this.placeCityTarget.value = place.locality || '';
-              this.placeStateTarget.value = place.administrativeArea || '';
-              this.placeStateCodeTarget.value = place.administrativeAreaCode || '';
-              this.placePostalCodeTarget.value = place.postCode || '';
-              this.placeCountryTarget.value = place.country || '';
-              this.placeCountryCodeTarget.value = place.countryCode || '';
-              this.placeLatitudeTarget.value = place.coordinate.latitude || '';
-              this.placeLongitudeTarget.value = place.coordinate.longitude || '';
-              this.placeAppleMapsIdTarget.value = place.muid || '';
-              this.placeAppleMapsUrlTarget.value = place._wpURL || '';
-
-              this.locationPreviewTarget.innerText = place.name;
-
-              this.locationSearchInputTarget.value = '';
-            });
-
-            this.locationResultsTarget.appendChild(placeResult);
-          });
-        }
+        this.handleLocationSearchResults(data.places);
       }
     });
+  }
+
+  handleLocationSearchResults(places) {
+    // Populate the locationResults target
+    this.locationResultsTarget.innerHTML = '';
+
+    if (places.length === 0) {
+      // If there are no results, show a message
+      const noResults = document.createElement('li');
+      noResults.classList.add('text-center', 'text-slate-500', 'text-sm', 'py-2');
+      noResults.innerHTML = 'No results found';
+      this.locationResultsTarget.appendChild(noResults);
+    } else {
+      // Otherwise, display each result as a list item that, when clicked,
+      // will populate the hidden fields with the result's data.
+      places.forEach(place => {
+        const placeResult = document.createElement('li');
+        placeResult.classList.add('py-2', 'px-4', 'hover:bg-slate-100', 'cursor-pointer');
+        placeResult.dataset.action = 'click->tooltip#hide';
+
+        const placeResultName = document.createElement('div');
+        placeResultName.classList.add('font-bold', 'text-slate-700');
+        placeResultName.innerHTML = '📍 ' + place.name;
+        placeResult.appendChild(placeResultName);
+
+        const placeResultAddress = document.createElement('div');
+        placeResultAddress.classList.add('text-slate-500', 'text-sm');
+        placeResultAddress.innerHTML = place.formattedAddress;
+        placeResult.appendChild(placeResultAddress);
+
+        placeResult.addEventListener('click', () => {
+          this.placeNameTarget.value = place.name || '';
+          this.placeCategoryTarget.value = place.pointOfInterestCategory || '';
+          this.placeStreetTarget.value = place.fullThoroughfare || '';
+          this.placeCityTarget.value = place.locality || '';
+          this.placeStateTarget.value = place.administrativeArea || '';
+          this.placeStateCodeTarget.value = place.administrativeAreaCode || '';
+          this.placePostalCodeTarget.value = place.postCode || '';
+          this.placeCountryTarget.value = place.country || '';
+          this.placeCountryCodeTarget.value = place.countryCode || '';
+          this.placeLatitudeTarget.value = place.coordinate.latitude || '';
+          this.placeLongitudeTarget.value = place.coordinate.longitude || '';
+          this.placeAppleMapsIdTarget.value = place.muid || '';
+          this.placeAppleMapsUrlTarget.value = place._wpURL || '';
+
+          this.locationPreviewTarget.innerText = place.name;
+
+          this.locationSearchInputTarget.value = '';
+        });
+
+        this.locationResultsTarget.appendChild(placeResult);
+      });
+    }
   }
 
   selectFiles() {
