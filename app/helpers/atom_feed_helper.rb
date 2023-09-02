@@ -36,13 +36,10 @@ module AtomFeedHelper
   def atom_check_in_content(check_in)
     place_parts = [
       link_to(check_in.place.name, check_in.place.apple_maps_url.html_safe).html_safe,
-      check_in.place.city,
-      check_in.place.state_code || check_in.place.state
+      check_in.place.city_state_and_country
     ]
 
-    country = check_in.place.country_code || check_in.place.country
-    place_parts << country unless country.in?(["United States", "US"])
-    place_link = place_parts.compact.join(" / ")
+    place_link = place_parts.join(" / ")
 
     html = content_tag(:p, "I checked in at #{place_link}".html_safe)
     html += content_tag(:blockquote, check_in.html.html_safe) if check_in.html.present?

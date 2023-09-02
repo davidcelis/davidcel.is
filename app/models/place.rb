@@ -14,6 +14,13 @@ class Place < ApplicationRecord
     coordinates.x
   end
 
+  def city_state_and_country(exclude_us: true)
+    parts = [city, state_code || state]
+    parts << (country_code || country) unless exclude_us && country_code == "US" || country == "United States"
+
+    parts.compact.join(" / ")
+  end
+
   def apple_maps_url
     super || begin
       params = {q: name, ll: [latitude, longitude].join(",")}
