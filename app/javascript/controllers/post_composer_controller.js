@@ -41,6 +41,7 @@ export default class extends Controller {
     fileLimit: { type: Number, default: 4 },
     directUploadUrl: String,
     initialMapKitToken: String,
+    prepopulatedNearbyLocations: { type: Boolean, default: false }
   };
 
   // TODO: Once Safari supports positive look-behinds, we can use these instead:
@@ -58,7 +59,8 @@ export default class extends Controller {
           authorizationCallback: (done) => {
             fetch('/mapkit/token')
               .then(response => response.text())
-              .then(done);
+              .then(done)
+              .catch(console.error);
           }
         });
       }
@@ -100,6 +102,10 @@ export default class extends Controller {
   };
 
   nearbyLocationSearch() {
+    if (this.prepopulatedNearbyLocationsValue) {
+      return;
+    }
+
     // Get the user's current location
     window.navigator.geolocation.getCurrentPosition((position) => {
       const latitude = position.coords.latitude;
@@ -134,6 +140,7 @@ export default class extends Controller {
         if (error) {
           console.error(error);
         } else {
+          this.prepopulatedNearbyLocationsValue = true;
           this.handleLocationSearchResults(data.places);
         }
       });
