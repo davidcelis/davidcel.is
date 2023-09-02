@@ -10,80 +10,40 @@ ActiveRecord::Base.record_timestamps = false
 
 CDN_URL = "https://davidcelis-test.sfo3.cdn.digitaloceanspaces.com".freeze
 
-check_ins = HTTParty.get("#{CDN_URL}/check_ins.json")
-check_ins.each do |data|
-  # Skip check-ins that have already been imported. I mark this by creating a
-  # bogus syndication URL.
-  next if SyndicationLink.where(platform: "foursquare", url: "https://www.swarmapp.com/c/#{data["id"]}").exists?
+CheckIn.includes(:place, :snapshot_attachment).find_each do |check_in|
+  if check_in.slug.length > 72
+    check_in.send(:generate_slug)
+    check_in.save(validate: false)
 
-  ActiveRecord::Base.transaction do
-    # First, create the place
-    place = Place.find_or_initialize_by(foursquare_id: data.dig("venue", "id"))
+    puts "Updated slug for #{check_in.slug}"
+  end
 
-    if place.new_record?
-      venue = data["venue"]
+  if check_in.snapshot.attached?
+    puts "Skipping #{check_in.slug} because it already has a snapshot"
+    next
+  end
 
-      place.name = venue["name"]
-      place.street = venue.dig("location", "address")
-      place.city = venue.dig("location", "city")
-      place.state = venue.dig("location", "state")
-      place.postal_code = venue.dig("location", "postalCode")
-      place.country = venue.dig("location", "country")
-      place.country_code = venue.dig("location", "cc")
-      place.coordinates = [venue.dig("location", "lng"), venue.dig("location", "lat")]
+  place = check_in.place
+  snapshot = Apple::MapKit::Snapshot.new(point: [place.latitude, place.longitude].join(","))
+  response = HTTParty.get(snapshot.url)
 
-      place.created_at = place.updated_at = Time.at(venue["createdAt"])
-      place.save!
-    end
+  file_extension = Rack::Mime::MIME_TYPES.invert["image/png"]
+  filename = "#{check_in.id}#{file_extension}"
 
-    check_in = CheckIn.new(
-      content: data.fetch("shout", ""),
-      place: place
-    )
+  Tempfile.open([filename, file_extension], binmode: true) do |file|
+    file.write(response.body)
+    file.rewind
 
-    check_in.created_at = check_in.updated_at = Time.at(data["createdAt"])
-    check_in.id = ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id('#{check_in.created_at}')")
-
-    if check_in.save
-      puts "Checked in at #{place.name} in #{place.city}, #{place.state}, #{place.country} (#{data["id"]})"
-    else
-      puts "Error saving check-in #{data["id"]}: #{check_in.errors.full_messages.to_sentence}"
-      next
-    end
-
-    data.dig("photos", "items").each do |photo|
-      media_attachment = check_in.media_attachments.new
-      media_attachment.created_at = media_attachment.updated_at = check_in.created_at
-      media_attachment.id = ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id('#{check_in.created_at}')")
-
-      file_url = [photo["prefix"], photo["width"], "x", photo["height"], photo["suffix"]].join
-      response = HTTParty.get(file_url)
-      raise "Error downloading #{file_url}: #{response.code}" if response.code >= 400
-
-      file_extension = File.extname(file_url)
-      filename = "#{media_attachment.id}#{file_extension}"
-
-      Tempfile.open([filename, file_extension], binmode: true) do |file|
-        file.write(response.body)
-        file.rewind
-
-        media_attachment.file.attach(
-          key: "blog/#{filename}",
-          io: File.open(file.path),
-          filename: filename
-        )
-
-        media_attachment.save!
-      end
-    end
-
-    check_in.syndication_links.create!(
-      platform: "foursquare",
-      url: "https://www.swarmapp.com/c/#{data["id"]}",
-      created_at: check_in.created_at,
-      updated_at: check_in.updated_at
+    check_in.snapshot.attach(
+      key: "blog/#{filename}",
+      io: File.open(file.path),
+      filename: filename
     )
   end
+
+  check_in.save(validate: false)
+
+  puts "Attached snapshot for #{check_in.slug}"
 end
 
 ActiveRecord::Base.record_timestamps = true

@@ -12,7 +12,7 @@ class CheckIn < Post
   private
 
   def generate_slug
-    self.slug = [id, place.name.tr("'", "").parameterize].join("-")
+    self.slug = [id, place.name].join("-").tr("'", "").first(72).parameterize
   end
 
   def syndicate
