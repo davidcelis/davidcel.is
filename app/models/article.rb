@@ -7,6 +7,7 @@ class Article < Post
   self.markdown_extensions = [:strikethrough, :table, :tasklist]
 
   validates :title, presence: true
+  validates :slug, presence: true, uniqueness: true
 
   def excerpt
     @excerpt ||= if html.include?(EXCERPT_SEPARATOR)

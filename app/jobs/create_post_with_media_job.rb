@@ -8,13 +8,15 @@ class CreatePostWithMediaJob < ApplicationJob
     ActiveRecord::Base.transaction do
       post = Post.new(post_params)
 
-      if place_params.any?
+      if post.is_a?(CheckIn)
         # We'll find or create the place based on the UUID from Apple Maps.
         place = Place.find_or_initialize_by(apple_maps_id: place_params[:apple_maps_id])
         place.coordinates = [place_params.delete(:longitude), place_params.delete(:latitude)]
         place.update!(place_params)
 
+        # Assign the place and save the post so it has an ID that we can use.
         post.place = place
+        post.save(validate: false)
 
         # Then, for the check-in itself, we'll generate a snapshot of the map
         # as it was at the time of the check-in. If the place moves later, the
@@ -37,7 +39,10 @@ class CreatePostWithMediaJob < ApplicationJob
         end
       end
 
-      # Skip the content validation; posts with media can be blank.
+      # One last thing for check-ins: their slug is supposed to contain both
+      # the place's name _and_ the check-in's ID, so we'll need to regenerate
+      # the slug now that we have the ID.
+      post.send(:generate_slug) if post.is_a?(CheckIn)
       post.save(validate: false)
 
       media_attachments_params.each do |blob_params|
