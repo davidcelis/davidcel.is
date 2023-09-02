@@ -56,9 +56,9 @@
   </div>
 </article>
 
-<% content_for(:og_description, strip_tags(@check_in.html).strip.presence || polymorphic_url(@check_in)) %>
+<% content_for(:og_description, strip_tags(@check_in.html).strip.presence) %>
 <% content_for(:og_type, "article") %>
-<% content_for(:og_title, "David Celis checked in at #{@check_in.place.name}") %>
+<% content_for(:og_title, "📍 David Celis checked in at #{@check_in.place.name}") %>
 <% content_for(:og_url, post_url(@check_in.id)) %>
 <% content_for(:head) do %>
   <meta property="og:site_name" content="david celis" data-rh="true">
