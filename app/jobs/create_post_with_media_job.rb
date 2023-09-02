@@ -1,7 +1,7 @@
 class CreatePostWithMediaJob < ApplicationJob
   def perform(post_params, media_attachments_params, place_params)
     post_params = post_params.with_indifferent_access
-    place_params = place_params.with_indifferent_access
+    place_params = place_params.with_indifferent_access.compact_blank
 
     post_params[:type] = "CheckIn" if place_params.any?
 
@@ -16,7 +16,7 @@ class CreatePostWithMediaJob < ApplicationJob
 
         # Assign the place and save the post so it has an ID that we can use.
         post.place = place
-        post.save(validate: false)
+        post.save
 
         # Then, for the check-in itself, we'll generate a snapshot of the map
         # as it was at the time of the check-in. If the place moves later, the
@@ -43,7 +43,7 @@ class CreatePostWithMediaJob < ApplicationJob
       # the place's name _and_ the check-in's ID, so we'll need to regenerate
       # the slug now that we have the ID.
       post.send(:generate_slug) if post.is_a?(CheckIn)
-      post.save(validate: false)
+      post.save
 
       media_attachments_params.each do |blob_params|
         blob_params = blob_params.with_indifferent_access

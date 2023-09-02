@@ -61,6 +61,6 @@ class PostsController < ApplicationController
       longitude
       apple_maps_id
       apple_maps_url
-    ]).fetch(:place, {})
+    ]).fetch(:place, {}).compact_blank
   end
 end
