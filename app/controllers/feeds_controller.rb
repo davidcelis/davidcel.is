@@ -2,9 +2,19 @@ class FeedsController < ApplicationController
   before_action :set_proper_content_type
 
   def main
-    _, @posts = pagy(Post.includes(Post::DEFAULT_INCLUDES))
+    _, @posts = pagy(Post.main.includes(Post::DEFAULT_INCLUDES))
 
     @self_url = main_feed_url
+    @alternate_url = root_url
+
+    render :feed, formats: :xml
+  end
+
+  def all
+    _, @posts = pagy(Post.includes(Post::DEFAULT_INCLUDES))
+
+    @subtitle = "Everything"
+    @self_url = all_feed_url
     @alternate_url = root_url
 
     render :feed, formats: :xml

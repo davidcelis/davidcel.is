@@ -11,10 +11,11 @@ Rails.application.routes.draw do
   resources :notes, only: [:index, :show]
   resources :photos, only: [:index]
 
-  get "/feeds/main", to: "feeds#main", format: :xml, as: :main_feed
+  get "/feeds/all", to: "feeds#all", format: :xml, as: :all_feed
   get "/feeds/articles", to: "feeds#articles", format: :xml, as: :articles_feed
   get "/feeds/check-ins", to: "feeds#check_ins", format: :xml, as: :check_ins_feed
   get "/feeds/notes", to: "feeds#notes", format: :xml, as: :notes_feed
+  get "/feeds/main", to: "feeds#main", format: :xml, as: :main_feed
   get "/feed", to: "feeds#main", format: :xml
 
   # For the generic /posts/:id route (i.e. to route to a post without using
