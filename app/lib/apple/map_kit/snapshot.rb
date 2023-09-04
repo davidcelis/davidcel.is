@@ -1,7 +1,7 @@
 module Apple
   module MapKit
     class Snapshot
-      BASE_URL = "https://snapshot.apple-mapkit.com"
+      BASE_URL = "https://snapshot.apple-mapkit.com".freeze
 
       attr_reader :url
 

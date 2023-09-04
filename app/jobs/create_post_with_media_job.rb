@@ -37,6 +37,14 @@ class CreatePostWithMediaJob < ApplicationJob
             filename: filename
           )
         end
+
+        # Finally, we'll use the WeatherKit API to get the current weather.
+        begin
+          response = Apple::WeatherKit::CurrentWeather.at(latitude: place.latitude, longitude: place.longitude)
+          post.weather = response["currentWeather"]
+        rescue HTTParty::Error
+          # No sweat. We'll just skip the weather if Apple's API is down.
+        end
       end
 
       # One last thing for check-ins: their slug is supposed to contain both
