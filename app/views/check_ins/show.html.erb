@@ -23,8 +23,20 @@
               <% end %>
 
               <div class="mt-4">
-                <%= link_to @check_in.place.apple_maps_url do %>
+                <%= link_to @check_in.place.apple_maps_url, class: "relative" do %>
                   <%= image_tag cdn_file_url(@check_in.snapshot), class: "rounded-lg", alt: "A map showing the location of #{@check_in.place.name}." %>
+
+                  <% if (icon_url = weather_icon_url(@check_in)) %>
+                    <div class="absolute bottom-2 right-2">
+                      <div class="flex flex-shrink-0 bg-white bg-opacity-[.90] px-1 select-none rounded-[.25rem]">
+                        <%= image_tag icon_url, class: "object-scale-down h-8 w-8 mr-2" %>
+
+                        <span class="flex flex-col justify-center items-center">
+                          <%= (@check_in.weather["temperatureApparent"] * 1.8 + 32).round %>°F
+                        </span>
+                      </div>
+                    </div>
+                  <% end %>
                 <% end %>
               </div>
 
@@ -32,21 +44,21 @@
                 <%= link_to polymorphic_path(@check_in), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
                   <%= timestamp(@check_in.created_at, full: true, classes: ["dt-published"]) %>
                 <% end %>
+              </div>
 
-                <div class="hidden">
-                  <div class="u-author h-card">
-                    <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
-                    <%= link_to "David Celis", root_path, class: "p-name u-url" %>
-                  </div>
+              <div class="hidden">
+                <div class="u-author h-card">
+                  <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
+                  <%= link_to "David Celis", root_path, class: "p-name u-url" %>
+                </div>
 
-                  <% if @check_in.updated_at != @check_in.created_at %>
-                    <%= timestamp(@check_in.updated_at, full: true, classes: ["dt-updated"]) %>
-                  <% end %>
+                <% if @check_in.updated_at != @check_in.created_at %>
+                  <%= timestamp(@check_in.updated_at, full: true, classes: ["dt-updated"]) %>
+                <% end %>
 
-                  <div class="p-geo">
-                    <span class="p-latitude"><%= @check_in.place.latitude %></span>
-                    <span class="p-longitude"><%= @check_in.place.longitude %></span>
-                  </div>
+                <div class="p-geo">
+                  <span class="p-latitude"><%= @check_in.place.latitude %></span>
+                  <span class="p-longitude"><%= @check_in.place.longitude %></span>
                 </div>
               </div>
             </div>

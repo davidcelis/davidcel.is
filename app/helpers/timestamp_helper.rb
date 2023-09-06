@@ -9,7 +9,7 @@ module TimestampHelper
       time_ago_in_words(time) + " ago"
     end
 
-    classes += %w[font-mono text-sm leading-7]
+    classes += %w[font-mono text-sm]
     options = {
       title: time.strftime("%-I:%M %p %Z • %b %-d, %Y"),
       class: classes,

@@ -13,32 +13,38 @@
                 <%= media_gallery_tag(@note.media_attachments.includes(file_attachment: :blob, preview_image_attachment: :blob)) %>
               <% end %>
 
-              <div class="pt-4 text-sm text-slate-500">
-                <%= link_to polymorphic_path(@note), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
+              <div class="flex flex-wrap justify-between w-full pt-4 text-sm text-slate-500">
+                <%= link_to polymorphic_path(@note), class: "u-url flex-shrink text-sm font-bold link-primary flex flex-col justify-center items-center" do %>
                   <%= timestamp(@note.created_at, full: true, classes: ["dt-published"]) %>
                 <% end %>
 
-                <div class="hidden">
-                  <div class="u-author h-card">
-                    <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
-                    <%= link_to "David Celis", root_path, class: "p-name u-url" %>
+                <% if (icon_url = weather_icon_url(@note)) %>
+                  <div class="flex flex-shrink-0">
+                    <%= image_tag icon_url, class: "object-scale-down h-8 w-8 mr-2" %>
+
+                    <span class="font-mono flex flex-col justify-center items-center">
+                      <%= (@check_in.weather["temperatureApparent"] * 1.8 + 32).round %>°F
+                    </span>
+
+                    <%# TODO: render a note's neighborhood / city / state (/ country) %>
+                    <%# if @note.place.present? %>
+                      <%# <span class="font-mono flex flex-col justify-center items-center text-slate-500"> %>
+                        <%#= @note.place.name / @note.place.city_state_and_country %>
+                      <%# </span> %>
+                    <%# end %>
                   </div>
+                <% end %>
+              </div>
 
-                  <% if @note.updated_at != @note.created_at %>
-                    <%= timestamp(@note.updated_at, full: true, classes: ["dt-updated"]) %>
-                  <% end %>
-
-                  <% if (place = @note.place) %>
-                    <div class="p-geo">
-                      <span class="p-latitude"><%= place.latitude %></span>
-                      <span class="p-longitude"><%= place.longitude %></span>
-                    </div>
-                  <% end %>
-
-                  <% @note.syndication_links.each do |link| %>
-                    <%= link_to link.platform, link.url, class: "u-syndication" %>
-                  <% end %>
+              <div class="hidden">
+                <div class="u-author h-card">
+                  <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
+                  <%= link_to "David Celis", root_path, class: "p-name u-url" %>
                 </div>
+
+                <% if @note.updated_at != @note.created_at %>
+                  <%= timestamp(@note.updated_at, full: true, classes: ["dt-updated"]) %>
+                <% end %>
               </div>
             </div>
           </div>
