@@ -37,7 +37,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:type, :title, :content).tap do |p|
+    params.require(:post).permit(:type, :title, :content, :latitude, :longitude).tap do |p|
       p.delete(:title) unless p[:type] == "Article"
     end
   end

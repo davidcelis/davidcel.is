@@ -10,8 +10,20 @@ class Place < ApplicationRecord
     coordinates.y
   end
 
+  def latitude=(value)
+    coordinates.y = value
+  end
+
   def longitude
     coordinates.x
+  end
+
+  def longitude=(value)
+    coordinates.x = value
+  end
+
+  def coordinates
+    super || (self.coordinates = ActiveRecord::Point.new)
   end
 
   def city_state_and_country(exclude_us: true)

@@ -8,6 +8,8 @@ export default class extends Controller {
     'title',
     'content',
     'type',
+    'latitude',
+    'longitude',
 
     // Check-in fields
     'placeName',
@@ -75,6 +77,20 @@ export default class extends Controller {
       document.head.appendChild(script);
     }
 
+    // Then, get the user's current location and store the coordinates in the
+    // hidden fields. Because this page might be open for a while, we'll do
+    // this using watchPosition so that the fields stay up to date.
+    window.navigator.geolocation.watchPosition((position) => {
+      this.latitudeTarget.value = position.coords.latitude;
+      this.longitudeTarget.value = position.coords.longitude;
+      this.prepopulatedNearbyLocationsValue = false;
+    }, (error) => {
+      console.error(error);
+    }, {
+      enableHighAccuracy: true,
+      timeout: 10000
+    });
+
     // Initialize the editor
     const options = defineOptions({
       placeholder: "What’s happening?",
@@ -106,44 +122,41 @@ export default class extends Controller {
       return;
     }
 
-    // Get the user's current location
-    window.navigator.geolocation.getCurrentPosition((position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
+    // Search for nearby places using the most recent location data we have.
+    const latitude = parseFloat(this.latitudeTarget.value);
+    const longitude = parseFloat(this.longitudeTarget.value);
 
-      // Search for nearby places
-      const search = new window.mapkit.PointsOfInterestSearch({
-        center: new window.mapkit.Coordinate(latitude, longitude),
-        radius: 500,
+    const search = new window.mapkit.PointsOfInterestSearch({
+      center: new window.mapkit.Coordinate(latitude, longitude),
+      radius: 500,
 
-        // Exclude certain types of places from the search results that just
-        // clutter things up.
-        pointOfInterestFilter: mapkit.PointOfInterestFilter.excluding([
-          mapkit.PointOfInterestCategory.ATM,
-          mapkit.PointOfInterestCategory.Bank,
-          mapkit.PointOfInterestCategory.EVCharger,
-          mapkit.PointOfInterestCategory.FireStation,
-          mapkit.PointOfInterestCategory.GasStation,
-          mapkit.PointOfInterestCategory.Hospital,
-          mapkit.PointOfInterestCategory.Laundry,
-          mapkit.PointOfInterestCategory.Parking,
-          mapkit.PointOfInterestCategory.Pharmacy,
-          mapkit.PointOfInterestCategory.Police,
-          mapkit.PointOfInterestCategory.PostOffice,
-          mapkit.PointOfInterestCategory.PublicTransport,
-          mapkit.PointOfInterestCategory.Restroom,
-          mapkit.PointOfInterestCategory.School,
-        ])
-      });
+      // Exclude certain types of places from the search results that just
+      // clutter things up.
+      pointOfInterestFilter: mapkit.PointOfInterestFilter.excluding([
+        mapkit.PointOfInterestCategory.ATM,
+        mapkit.PointOfInterestCategory.Bank,
+        mapkit.PointOfInterestCategory.EVCharger,
+        mapkit.PointOfInterestCategory.FireStation,
+        mapkit.PointOfInterestCategory.GasStation,
+        mapkit.PointOfInterestCategory.Hospital,
+        mapkit.PointOfInterestCategory.Laundry,
+        mapkit.PointOfInterestCategory.Parking,
+        mapkit.PointOfInterestCategory.Pharmacy,
+        mapkit.PointOfInterestCategory.Police,
+        mapkit.PointOfInterestCategory.PostOffice,
+        mapkit.PointOfInterestCategory.PublicTransport,
+        mapkit.PointOfInterestCategory.Restroom,
+        mapkit.PointOfInterestCategory.School,
+      ])
+    });
 
-      search.search((error, data) => {
-        if (error) {
-          console.error(error);
-        } else {
-          this.prepopulatedNearbyLocationsValue = true;
-          this.handleLocationSearchResults(data.places);
-        }
-      });
+    search.search((error, data) => {
+      if (error) {
+        console.error(error);
+      } else {
+        this.prepopulatedNearbyLocationsValue = true;
+        this.handleLocationSearchResults(data.places);
+      }
     });
   }
 

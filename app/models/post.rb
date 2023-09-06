@@ -32,6 +32,7 @@ class Post < ApplicationRecord
 
   before_create :generate_slug
   before_save :update_html, if: :content_changed?
+  before_save :clear_coordinates, if: -> { latitude.blank? || longitude.blank? }
 
   after_commit :syndicate, on: :create
 
@@ -43,6 +44,26 @@ class Post < ApplicationRecord
     self.html = Markdown::Renderer.new(options: markdown_rendering_options, extensions: markdown_extensions).render(commonmark_doc).strip
   end
 
+  def latitude
+    coordinates.y
+  end
+
+  def latitude=(value)
+    coordinates.y = value.presence
+  end
+
+  def longitude
+    coordinates.x
+  end
+
+  def longitude=(value)
+    coordinates.x = value.presence
+  end
+
+  def coordinates
+    super || (self.coordinates = ActiveRecord::Point.new)
+  end
+
   private
 
   def syndicate
@@ -52,6 +73,10 @@ class Post < ApplicationRecord
 
   def generate_slug
     raise NoMethodError, "Subclasses must implement `generate_slug`"
+  end
+
+  def clear_coordinates
+    self.coordinates = nil
   end
 
   def commonmark_doc

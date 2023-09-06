@@ -12,6 +12,8 @@
               <div data-post-composer-target="editor"></div>
 
               <%= hidden_field_tag "post[content]", "", data: {"post-composer-target" => "content"} %>
+              <%= hidden_field_tag "post[latitude]", "", data: {"post-composer-target" => "latitude"} %>
+              <%= hidden_field_tag "post[longitude]", "", data: {"post-composer-target" => "longitude"} %>
 
               <div aria-hidden="true">
                 <div class="flex flex-wrap px-2 gap-x-2" data-post-composer-target="mediaPreviewZone"></div>

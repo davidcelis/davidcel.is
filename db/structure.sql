@@ -223,7 +223,8 @@ CREATE TABLE public.posts (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     place_id bigint,
-    weather jsonb
+    weather jsonb,
+    coordinates point
 );
 
 
@@ -529,6 +530,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230218162820'),
 ('20230225013704'),
 ('20230828044721'),
-('20230904231250');
+('20230904231250'),
+('20230906013328');
 
 
