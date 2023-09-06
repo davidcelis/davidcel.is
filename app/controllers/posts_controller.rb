@@ -27,6 +27,16 @@ class PostsController < ApplicationController
 
     @post = Post.new(post_params)
 
+    # Use the WeatherKit API to get the weather for the post's location.
+    if @post.latitude && @post.longitude
+      begin
+        response = Apple::WeatherKit::CurrentWeather.at(latitude: @post.latitude, longitude: @post.longitude)
+        @post.weather = response["currentWeather"]
+      rescue HTTParty::Error
+        # No sweat. We'll just skip the weather if Apple's API is down.
+      end
+    end
+
     if @post.save
       redirect_to polymorphic_path(@post)
     else

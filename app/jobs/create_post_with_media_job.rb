@@ -37,10 +37,18 @@ class CreatePostWithMediaJob < ApplicationJob
             filename: filename
           )
         end
+      end
 
-        # Finally, we'll use the WeatherKit API to get the current weather.
+      # If we have coordinates, we'll use the WeatherKit API to get the weather
+      latitude, longitude = if post.place
+        [post.place.latitude, post.place.longitude]
+      else
+        [post.latitude, post.longitude]
+      end
+
+      if latitude.present? && longitude.present?
         begin
-          response = Apple::WeatherKit::CurrentWeather.at(latitude: place.latitude, longitude: place.longitude)
+          response = Apple::WeatherKit::CurrentWeather.at(latitude: latitude, longitude: longitude)
           post.weather = response["currentWeather"]
         rescue HTTParty::Error
           # No sweat. We'll just skip the weather if Apple's API is down.

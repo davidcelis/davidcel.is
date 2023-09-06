@@ -43,7 +43,10 @@ export default class extends Controller {
     fileLimit: { type: Number, default: 4 },
     directUploadUrl: String,
     initialMapKitToken: String,
-    prepopulatedNearbyLocations: { type: Boolean, default: false }
+
+    // Lifecycle-related values
+    prepopulatedNearbyLocations: { type: Boolean, default: false },
+    watchPositionId: Number,
   };
 
   // TODO: Once Safari supports positive look-behinds, we can use these instead:
@@ -55,7 +58,7 @@ export default class extends Controller {
 
   connect () {
     // Load MapKit JS
-    if (this.initialMapKitTokenValue) {
+    if (this.initialMapKitTokenValue && !window.mapkit) {
       window.initMapKit = () => {
         window.mapkit.init({
           authorizationCallback: (done) => {
@@ -77,10 +80,10 @@ export default class extends Controller {
       document.head.appendChild(script);
     }
 
-    // Then, get the user's current location and store the coordinates in the
-    // hidden fields. Because this page might be open for a while, we'll do
-    // this using watchPosition so that the fields stay up to date.
-    window.navigator.geolocation.watchPosition((position) => {
+    // Get my current location and store the coordinates in hidden fields.
+    // Because this page might be open for a while, we'll do this using
+    // watchPosition so that the fields stay up to date.
+    this.watchPositionIdValue = window.navigator.geolocation.watchPosition((position) => {
       this.latitudeTarget.value = position.coords.latitude;
       this.longitudeTarget.value = position.coords.longitude;
       this.prepopulatedNearbyLocationsValue = false;
@@ -116,6 +119,10 @@ export default class extends Controller {
 
     ink(this.editorTarget, options);
   };
+
+  disconnect() {
+    window.navigator.geolocation.clearWatch(this.watchPositionIdValue);
+  }
 
   nearbyLocationSearch() {
     if (this.prepopulatedNearbyLocationsValue) {

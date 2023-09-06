@@ -18,13 +18,14 @@
                   <%= timestamp(@note.created_at, full: true, classes: ["dt-published"]) %>
                 <% end %>
 
-                <% if (icon_url = weather_icon_url(@note)) %>
-                  <div class="flex flex-shrink-0">
-                    <%= image_tag icon_url, class: "object-scale-down h-8 w-8 mr-2" %>
+                <%# TODO: render a note's weather %>
+                <%# if (icon_url = weather_icon_url(@note)) %>
+                  <%# <div class="flex flex-shrink-0"> %>
+                    <%# <%= image_tag icon_url, class: "object-scale-down h-8 w-8 mr-2" %>
 
-                    <span class="font-mono flex flex-col justify-center items-center">
-                      <%= (@check_in.weather["temperatureApparent"] * 1.8 + 32).round %>°F
-                    </span>
+                    <%# <span class="font-mono flex flex-col justify-center items-center"> %>
+                      <%#= (@note.weather["temperatureApparent"] * 1.8 + 32).round °F %>
+                    <%# </span>
 
                     <%# TODO: render a note's neighborhood / city / state (/ country) %>
                     <%# if @note.place.present? %>
@@ -32,8 +33,8 @@
                         <%#= @note.place.name / @note.place.city_state_and_country %>
                       <%# </span> %>
                     <%# end %>
-                  </div>
-                <% end %>
+                  <%# </div> %>
+                <%# end %>
               </div>
 
               <div class="hidden">

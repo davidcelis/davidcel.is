@@ -111,7 +111,12 @@ module MediaGalleryHelper
 
     badge_classes = %w[absolute bottom-2]
     badge_classes << (fully_rounded ? "left-2" : "left-11")
-    tag.div(class: badge_classes, data: {controller: "tooltip"}) do
+
+    # Might seem weird to add aria-hidden to an alt text tooltip, but the tooltip
+    # is really for people who _aren't_ using a screen reader. For screen readers,
+    # the alt text is already available as the alt attribute on the image. So this
+    # is just to prevent screen readers from reading the alt text twice.
+    tag.div(class: badge_classes, data: {"controller" => "tooltip", "aria-hidden" => true}) do
       button_classes = %w[font-bold font-ui-sans bg-black bg-opacity-[.65] text-white hover:bg-black px-1 select-none]
       button_classes << (fully_rounded ? "rounded-[.25rem]" : "rounded-r-[.25rem]")
 
