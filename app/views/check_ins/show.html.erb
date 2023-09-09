@@ -22,14 +22,14 @@
                 <%= media_gallery_tag(@check_in.media_attachments.includes(file_attachment: :blob, preview_image_attachment: :blob)) %>
               <% end %>
 
-              <div class="mt-4">
-                <%= link_to @check_in.place.apple_maps_url, class: "relative" do %>
+              <div class="relative mt-4">
+                <%= link_to @check_in.place.apple_maps_url do %>
                   <%= image_tag cdn_file_url(@check_in.snapshot), class: "rounded-lg", alt: "A map showing the location of #{@check_in.place.name}." %>
 
                   <% if (icon_url = weather_icon_url(@check_in)) %>
                     <div class="absolute bottom-2 right-2">
-                      <div class="flex flex-shrink-0 bg-white bg-opacity-[.90] px-1 select-none rounded-[.25rem]">
-                        <%= image_tag icon_url, class: "object-scale-down h-8 w-8 p-1" %>
+                      <div class="flex flex-shrink-0 space-x-2 bg-white bg-opacity-[.90] py-1 px-2 select-none rounded-[.25rem]">
+                        <%= image_tag icon_url, class: "object-scale-down h-8 w-8" %>
 
                         <span class="flex flex-col justify-center items-center">
                           <%= (@check_in.weather["temperatureApparent"] * 1.8 + 32).round %>°F
