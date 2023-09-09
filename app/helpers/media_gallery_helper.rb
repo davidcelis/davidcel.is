@@ -116,25 +116,11 @@ module MediaGalleryHelper
     # is really for people who _aren't_ using a screen reader. For screen readers,
     # the alt text is already available as the alt attribute on the image. So this
     # is just to prevent screen readers from reading the alt text twice.
-    tag.div(class: badge_classes, data: {"controller" => "tooltip", "aria-hidden" => true}) do
+    tag.div(class: badge_classes, data: {"controller" => "alt-text", "aria-hidden" => true, "alt-text-content-value" => media_attachment.description}) do
       button_classes = %w[font-bold font-ui-sans bg-black bg-opacity-[.65] text-white hover:bg-black px-1 select-none]
       button_classes << (fully_rounded ? "rounded-[.25rem]" : "rounded-r-[.25rem]")
 
-      button = tag.button("ALT", class: button_classes, data: {"action" => "click->tooltip#ignore:prevent", "tooltip-target" => "trigger"})
-
-      description = tag.div(class: "hidden flex flex-col gap-4 p-4 max-w-prose", data: {"tooltip-target" => "content"}) do
-        header = tag.div(class: "flex justify-between") do
-          tag.h2("Description", class: "text-xl font-bold text-slate-900") + tag.button("Dismiss", class: "text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary", data: {"action" => "click->tooltip#ignore:prevent"})
-        end
-
-        paragraphs = media_attachment.description.split(/(?:\r\n|\r|\n){2}/).map do |paragraph|
-          tag.p(paragraph, class: "whitespace-pre-wrap text-base text-slate-700")
-        end
-
-        header + paragraphs.join.html_safe
-      end
-
-      button + description
+      tag.button("ALT", class: button_classes, data: {"action" => "click->alt-text#ignore:prevent", "alt-text-target" => "trigger"})
     end
   end
 

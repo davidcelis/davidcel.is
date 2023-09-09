@@ -1,4 +1,9 @@
-<section class="py-10 sm:py-12">
+<% content_for :head do %>
+  <%# Prevent Turbo from caching the page; it doesn't play nicely with the form. %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
+
+<section id="post-form" class="py-10 sm:py-12">
   <div class="lg:px-8">
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
@@ -39,7 +44,7 @@
                         <div class="hidden flex flex-col gap-4 p-4 max-w-prose min-w-[400px]"  data-tooltip-target="content">
                           <div class="flex justify-between">
                             <h2 class="text-xl font-bold text-slate-900">Tag location</h2>
-                            <button data-action="click->tooltip#ignore:prevent" class="text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary">Dismiss</button>
+                            <button data-action="click->tooltip#ignore:prevent" data-tooltip-target="hide" class="text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary">Dismiss</button>
                           </div>
 
                           <!-- Add a text input to perform a MapKit JS autocomplete search and list results -->
