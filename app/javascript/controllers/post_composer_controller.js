@@ -328,6 +328,7 @@ export default class extends Controller {
     const altTextFormDismissButton = document.createElement('button');
     altTextFormDismissButton.classList.add('text-sm', 'py-0', 'px-2', 'rounded-sm', 'transition', 'active:transition-none', 'bg-slate-100', 'font-medium', 'hover:bg-pink-100', 'active:bg-slate-100', 'active:text-pink-900/60', 'link-primary');
     altTextFormDismissButton.dataset.action = 'click->tooltip#ignore:prevent';
+    altTextFormDismissButton.dataset.tooltipTarget = 'hide';
     altTextFormDismissButton.innerHTML = 'Close';
 
     // ... and a text input for the alt text...
