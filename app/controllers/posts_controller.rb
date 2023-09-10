@@ -28,12 +28,20 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
 
     # Use the WeatherKit API to get the weather for the post's location.
-    if @post.latitude && @post.longitude
-      begin
-        response = Apple::WeatherKit::CurrentWeather.at(latitude: @post.latitude, longitude: @post.longitude)
-        @post.weather = response["currentWeather"]
-      rescue HTTParty::Error
-        # No sweat. We'll just skip the weather if Apple's API is down.
+    Sentry.configure_scope do |scope|
+      scope.set_context("params", params.to_unsafe_h)
+
+      if @post.latitude && @post.longitude
+        begin
+          response = Apple::WeatherKit::CurrentWeather.at(latitude: @post.latitude, longitude: @post.longitude)
+          @post.weather = response["currentWeather"]
+        rescue HTTParty::Error => e
+          # Just skip the weather if we can't get it, but log the error.
+          Sentry.capture_exception(e)
+        end
+      else
+        e = Post::MissingCoordinatesError.new("Post was created without coordinates")
+        Sentry.capture_exception(e)
       end
     end
 
