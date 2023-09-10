@@ -7,6 +7,7 @@ export default class extends Controller {
 
   static values = {
     appendTo: { type: String },
+    flip: { type: Boolean, default: true },
   }
 
   connect() {
@@ -24,6 +25,7 @@ export default class extends Controller {
     tippy(this.triggerTarget, {
       content: content,
       appendTo: this.appendToValue || (() => document.body),
+      flip: this.flipValue,
       interactive: true,
       offset: [0, 8],
       placement: 'bottom-start',

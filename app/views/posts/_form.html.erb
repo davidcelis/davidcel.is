@@ -33,9 +33,9 @@
 
                       <%= file_field_tag :files, multiple: true, hidden: true, accept: "image/*,video/*", data: {"post-composer-target" => "dummyFileField", "action" => "change->post-composer#dummyFileFieldChanged"} %>
 
-                      <div data-controller="tooltip" data-tooltip-append-to-value="parent">
+                      <div data-controller="tooltip" data-tooltip-append-to-value="parent" data-tooltip-flip-value="false">
                         <button type="button" class="group flex items-center" data-action="click->post-composer#nearbyLocationSearch click->tooltip#ignore:prevent" data-tooltip-target="trigger">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
                           <span class="hidden">Tag location</span>
 
                           <span class="text-slate-500 group-hover:text-slate-700" data-post-composer-target="locationPreview"></span>

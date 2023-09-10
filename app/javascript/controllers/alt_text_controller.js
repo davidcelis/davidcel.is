@@ -6,6 +6,7 @@ export default class extends TooltipController {
   static values = {
     appendTo: { type: String },
     content: { type: String },
+    flip: { type: Boolean, default: true },
   }
 
   static template = `
