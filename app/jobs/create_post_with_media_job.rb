@@ -50,12 +50,8 @@ class CreatePostWithMediaJob < ApplicationJob
         scope.set_context("params", {post: post_params.to_h, media_attachments: media_attachments_params.map(&:to_h), place: place_params.to_h})
 
         if latitude.present? && longitude.present?
-          begin
-            response = Apple::WeatherKit::CurrentWeather.at(latitude: latitude, longitude: longitude)
-            post.weather = response["currentWeather"]
-          rescue HTTParty::Error => e
-            Sentry.capture_exception(e)
-          end
+          response = Apple::WeatherKit::CurrentWeather.at(latitude: latitude, longitude: longitude)
+          post.weather = response["currentWeather"]
         else
           e = Post::MissingCoordinatesError.new("Post was created without coordinates")
           Sentry.capture_exception(e)
