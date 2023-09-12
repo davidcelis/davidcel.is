@@ -1,5 +1,4 @@
 class Post < ApplicationRecord
-  MissingCoordinatesError = Class.new(StandardError)
   DEFAULT_INCLUDES = [
     :place,
     :syndication_links,

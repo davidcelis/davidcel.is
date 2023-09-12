@@ -35,8 +35,7 @@ class PostsController < ApplicationController
         response = Apple::WeatherKit::CurrentWeather.at(latitude: @post.latitude, longitude: @post.longitude)
         @post.weather = response["currentWeather"]
       else
-        e = Post::MissingCoordinatesError.new("Post was created without coordinates")
-        Sentry.capture_exception(e)
+        Sentry.capture_message("No coordinates")
       end
     end
 
