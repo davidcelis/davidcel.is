@@ -25,13 +25,22 @@ export default class extends Controller {
     tippy(this.triggerTarget, {
       content: content,
       appendTo: this.appendToValue || (() => document.body),
-      flip: this.flipValue,
       interactive: true,
       offset: [0, 8],
       placement: 'bottom-start',
       trigger: 'click',
       theme: 'light',
       maxWidth: 'none',
+      popperOptions: {
+        modifiers: [
+          {
+            name: 'flip',
+            options: {
+              flipVariations: this.flipValue,
+            }
+          }
+        ]
+      },
     });
   }
 
