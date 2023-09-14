@@ -42,7 +42,7 @@ gem "tailwindcss-rails"
 gem "redis", "~> 4.0"
 
 # Use Sidekiq to perform asynchronous jobs
-gem "sidekiq", "~> 7.0"
+gem "sidekiq", "~> 7.1"
 gem "sidekiq-scheduler", "~> 5.0"
 
 # Use ImageProcessing to handle ActiveStorage variants
