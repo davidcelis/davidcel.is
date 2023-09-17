@@ -42,7 +42,7 @@ export default class extends Controller {
       d += d < 2 ? 24 : 0;
       const emoji = String.fromCharCode(55357, 56655 +( d % 2 ? 23 + d : d) / 2);
 
-      emojiElement.innerText = `${emoji}\u00a0`
+      emojiElement.innerText = `${emoji} `
     }
   }
 }
