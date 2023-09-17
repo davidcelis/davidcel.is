@@ -11,7 +11,7 @@ As mentioned before, I hope to continue actively maintaining this website and ad
 - [ ] Drafts (especially for articles) so I can start writing something and finish later
 - [x] Allowing Notes to have location info without them being considered a "check-in"
   - [x] Showing this for individual notes/posts
-- [ ] Moving the location search and alt-text entry out of tooltips and into modals
+- [x] Moving the location search and alt-text entry out of tooltips and into modals
 - [ ] More types of posts!
   - [x] Check-ins
   - [ ] Reposts

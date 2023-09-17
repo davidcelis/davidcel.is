@@ -44,11 +44,8 @@ class CreatePostWithMediaJob < ApplicationJob
       end
 
       # If we have coordinates, we'll use the WeatherKit API to get the weather
-      latitude, longitude = if post.place
-        [post.place.latitude, post.place.longitude]
-      else
-        [post.latitude, post.longitude]
-      end
+      latitude = post.place&.latitude || post.latitude
+      longitude = post.place&.longitude || post.longitude
 
       Sentry.configure_scope do |scope|
         scope.set_context("params", {post: post_params.to_h, media_attachments: media_attachments_params.map(&:to_h), place: place_params.to_h})
