@@ -67,7 +67,7 @@ class Post < ApplicationRecord
   private
 
   def syndicate
-    return if Rails.env.development?
+    return if Rails.env.development? && !ENV["SYNDICATE_POSTS"]
 
     SyndicateToMastodonJob.perform_async(id)
     SyndicateToBlueskyJob.perform_async(id)
