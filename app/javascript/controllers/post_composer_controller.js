@@ -317,6 +317,8 @@ export default class extends Controller {
       return;
     }
 
+    const imageUrl = URL.createObjectURL(file);
+
     const previewElement = document.createElement('div');
     previewElement.classList.add('relative', 'w-32', 'h-32', 'mb-2');
     previewElement.dataset.postComposerTarget = 'mediaPreview';
@@ -336,7 +338,7 @@ export default class extends Controller {
       mediaPreview = document.createElement('video');
     }
 
-    mediaPreview.src = URL.createObjectURL(file);
+    mediaPreview.src = imageUrl;
     mediaPreview.classList.add('object-cover', 'rounded', 'height-full', 'w-full', 'shadow-md');
     previewElement.appendChild(mediaPreview);
 
@@ -382,6 +384,11 @@ export default class extends Controller {
     altTextFormDismissButton.dataset.action = 'click->reveal#hide:prevent';
     altTextFormDismissButton.innerHTML = 'Close';
 
+    // ... render the image so we can see what we're describing...
+    const altTextFormImagePreview = document.createElement('img');
+    altTextFormImagePreview.classList.add('object-cover', 'rounded', 'w-full', 'shadow-md');
+    altTextFormImagePreview.src = imageUrl;
+
     // ... and a text input for the alt text...
     const altTextInput = document.createElement('textarea');
     altTextInput.classList.add('border', 'border-slate-200', 'rounded', 'p-2', 'text-slate-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-pink-500', 'focus:border-transparent', 'placeholder:italic', 'h-32');
@@ -392,6 +399,7 @@ export default class extends Controller {
     altTextFormHeader.appendChild(altTextFormH2);
     altTextFormHeader.appendChild(altTextFormDismissButton);
     altTextForm.appendChild(altTextFormHeader);
+    altTextForm.appendChild(altTextFormImagePreview);
     altTextForm.appendChild(altTextInput);
     altTextModal.appendChild(altTextForm);
     previewElement.appendChild(altTextModal);
