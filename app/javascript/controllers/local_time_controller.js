@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ['time']
+  static targets = ['time', 'emoji']
 
   timeTargetConnected(element) {
     const date = new Date(element.dateTime)
@@ -26,16 +26,23 @@ export default class extends Controller {
     // more than 24 hours ago. Anything sooner is in a relative format.
     if (date.getTime() < (now - 86400000) || showFullTimestamp) {
       if (showFullTimestamp) {
-        // I stole this from a code golfing exercise 😬 It uses unicode hackery to
-        // generate a clock emoji from a date object.
-        let d = ~~(date.getHours() % 12 * 2 + date.getMinutes() / 30 + .5);
-        d += d < 2 ? 24 : 0;
-        const emoji = String.fromCharCode(55357, 56655 +( d % 2 ? 23 + d : d) / 2);
-
-        dateText = `${emoji} ${dateText} at ${timeText}`
+        dateText = `${dateText} at ${timeText}`
       }
 
       element.innerText = dateText
+    }
+
+    // We'll also change the emoji (if there is one) to match the time of day.
+    // I stole this from a code golfing exercise 😬 It uses unicode hackery to
+    // generate a clock emoji from a date object.
+    const emojiElement = element.parentElement.parentElement.querySelector('[data-local-time-target="emoji"]')
+
+    if (emojiElement) {
+      let d = ~~(date.getHours() % 12 * 2 + date.getMinutes() / 30 + .5);
+      d += d < 2 ? 24 : 0;
+      const emoji = String.fromCharCode(55357, 56655 +( d % 2 ? 23 + d : d) / 2);
+
+      emojiElement.innerText = `${emoji}\u00a0`
     }
   }
 }

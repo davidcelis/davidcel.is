@@ -80,12 +80,7 @@
 <% end %>
 
 <% content_for(:og_image) do %>
-  <meta property="og:image" content="<%= cdn_file_url(@check_in.snapshot) %>">
-  <meta property="og:image:alt" content="A map with a pin showing the location of <%= @check_in.place.name %>.">
-  <meta property="og:image:type" content="<%= @check_in.snapshot.content_type %>">
-  <meta property="og:image:width" content="<%= @check_in.snapshot.metadata[:width] %>">
-  <meta property="og:image:height" content="<%= @check_in.snapshot.metadata[:height] %>">
-
+  <%# List actual media attachments first so they're preferred %>
   <% @check_in.media_attachments.each do |media| %>
     <% file = media.preview_image.attached? ? media.preview_image : media.file %>
 
@@ -95,6 +90,12 @@
     <meta property="og:image:width" content="<%= file.metadata[:width] %>">
     <meta property="og:image:height" content="<%= file.metadata[:height] %>">
   <% end %>
+
+  <meta property="og:image" content="<%= cdn_file_url(@check_in.snapshot) %>">
+  <meta property="og:image:alt" content="A map with a pin showing the location of <%= @check_in.place.name %>.">
+  <meta property="og:image:type" content="<%= @check_in.snapshot.content_type %>">
+  <meta property="og:image:width" content="<%= @check_in.snapshot.metadata[:width] %>">
+  <meta property="og:image:height" content="<%= @check_in.snapshot.metadata[:height] %>">
 <% end %>
 
 <% content_for(:twitter_card, "summary_large_image") %>

@@ -15,14 +15,23 @@
 
               <div class="flex flex-col flex-wrap justify-between space-y-1 w-full pt-4 text-sm text-slate-500">
                 <% if @note.place.present? %>
-                  <span class="font-mono flex text-slate-500">
-                    📍&nbsp;<%= link_to @note.place.name, @note.place.apple_maps_url, class: "link-primary font-bold" %>&nbsp;/ <%= @note.place.city_state_and_country(separator: " / ") %>
-                  </span>
-                <% end %>
+                  <div class="flex flex-wrap justify-between">
+                    <span class="font-mono text-slate-500">
+                      <span class="select-none">📍 </span>
+                      <%= link_to "#{@note.place.name}", @note.place.apple_maps_url, class: "link-primary font-bold" %>
+                      <span>/ <%= @note.place.city_state_and_country(separator: " / ") %></span>
+                    </span>
 
                 <%= link_to polymorphic_path(@note), class: "u-url flex-shrink text-sm font-bold link-primary flex flex-col" do %>
                   <%= timestamp(@note.created_at, full: true, classes: ["dt-published"]) %>
                 <% end %>
+
+                <div class="flex">
+                  <span class="select-none font-mono" data-local-time-target="emoji"><%= clock_emoji(@note.created_at) %>&nbsp;</span>
+                  <%= link_to polymorphic_path(@note), class: "u-url flex-shrink text-sm font-bold link-primary" do %>
+                    <%= timestamp(@note.created_at, full: true, classes: ["dt-published"]) %>
+                  <% end %>
+                </div>
               </div>
 
               <div class="hidden">
