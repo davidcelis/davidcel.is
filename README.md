@@ -12,6 +12,7 @@ As mentioned before, I hope to continue actively maintaining this website and ad
 - [x] Allowing Notes to have location info without them being considered a "check-in"
   - [x] Showing this for individual notes/posts
 - [x] Moving the location search and alt-text entry out of tooltips and into modals
+- [ ] Show my most recent check-in (or location in general) in the sidebar
 - [ ] More types of posts!
   - [x] Check-ins
   - [ ] Reposts

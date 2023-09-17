@@ -3,10 +3,8 @@
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <div class="flex flex-col items-start">
-          <section class="prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
-            <div class="e-content">
-              <%= note.html.html_safe %>
-            </div>
+          <section class="e-content prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
+            <%= note.html.html_safe %>
           </section>
 
           <% if note.media_attachments.any? %>

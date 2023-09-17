@@ -4,14 +4,6 @@ span.ellipsis::after {
   content: "\2026";
 }
 
-/*
-Each note ends up being comprised of a single <p> tag; when listing them,
-don't arbitrarly give each one a top margin.
-*/
-.post-list .note .prose p:first-of-type {
-  margin-top: 0 !important;
-}
-
 .prose .invisible {
   font-size: 0;
   line-height: 0;
