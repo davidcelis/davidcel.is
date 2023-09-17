@@ -33,25 +33,29 @@
 
                       <%= file_field_tag :files, multiple: true, hidden: true, accept: "image/*,video/*", data: {"post-composer-target" => "dummyFileField", "action" => "change->post-composer#dummyFileFieldChanged"} %>
 
-                      <div data-controller="tooltip" data-tooltip-append-to-value="parent" data-tooltip-flip-value="false">
-                        <button type="button" class="group flex items-center" data-action="click->post-composer#nearbyLocationSearch click->tooltip#ignore:prevent" data-tooltip-target="trigger">
+                      <div data-controller="reveal">
+                        <button type="button" data-action="click->reveal#show click->post-composer#nearbyLocationSearch" data-reveal-target="button" class="group flex items-center">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
                           <span class="hidden">Tag location</span>
 
                           <span class="text-slate-500 group-hover:text-slate-700" data-post-composer-target="locationPreview"></span>
                         </button>
 
-                        <div class="hidden flex flex-col gap-4 p-4 max-w-prose min-w-[400px]"  data-tooltip-target="content">
-                          <div class="flex justify-between">
-                            <h2 class="text-xl font-bold text-slate-900">Tag location</h2>
-                            <button data-action="click->tooltip#ignore:prevent" data-tooltip-target="hide" class="text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary">Close</button>
-                          </div>
+                        <div data-reveal-target="item" class="hidden">
+                          <div data-action="click->reveal#hide" class="fixed inset-0 z-[25] height-screen w-screen bg-slate-800/40 backdrop-blur-sm opacity-100" aria-hidden="true"></div>
 
-                          <!-- Add a text input to perform a MapKit JS autocomplete search and list results -->
-                          <input id="location-search" type="text" placeholder="Search for a location" class="border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm" data-action="keydown.enter->post-composer#locationSearch" data-post-composer-target="locationSearchInput">
-                          <ul class="flex flex-col gap-2" data-post-composer-target="locationResults">
-                            <li class="text-center py-2 px-4">Loading nearby places...</li>
-                          </ul>
+                          <div class="fixed top-8 inset-x-1 mx-auto z-[50] origin-top flex flex-col gap-4 p-4 rounded-md max-w-prose min-w-[400px] bg-white opacity-100 scale-100">
+                            <div class="flex justify-between">
+                              <h2 class="text-xl font-bold text-slate-900">Tag location</h2>
+                              <button data-action="click->reveal#hide:prevent" class="text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary">Close</button>
+                            </div>
+
+                            <input id="location-search" type="text" placeholder="Search for a location" class="border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm" data-action="keydown.enter->post-composer#locationSearch" data-post-composer-target="locationSearchInput">
+
+                            <ul class="flex flex-col gap-2" data-post-composer-target="locationResults">
+                              <li class="text-center py-2 px-4">Loading nearby places...</li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
 

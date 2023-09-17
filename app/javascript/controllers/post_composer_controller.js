@@ -250,7 +250,7 @@ export default class extends Controller {
       places.forEach(place => {
         const placeResult = document.createElement('li');
         placeResult.classList.add('py-2', 'px-4', 'hover:bg-slate-100', 'cursor-pointer');
-        placeResult.dataset.action = 'click->tooltip#hide';
+        placeResult.dataset.action = 'click->reveal#hide';
 
         const placeResultName = document.createElement('div');
         placeResultName.classList.add('font-bold', 'text-slate-700');
