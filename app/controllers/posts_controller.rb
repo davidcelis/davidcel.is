@@ -22,7 +22,7 @@ class PostsController < ApplicationController
     if media_attachments_params.any? || place_params.key?(:apple_maps_id)
       CreatePostWithMediaJob.perform_async(post_params.to_hash, media_attachments_params.map(&:to_hash), place_params.to_hash)
 
-      redirect_to root_path, notice: "Your post's media is being processed and will be available shortly."
+      redirect_to root_path, notice: "Your post’s media is being processed and will be available shortly."
       return
     end
 
