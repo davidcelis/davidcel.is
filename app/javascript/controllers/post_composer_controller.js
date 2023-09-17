@@ -27,6 +27,7 @@ export default class extends Controller {
     'placeAppleMapsUrl',
 
     // Utility targets
+    'form',
     'editor',
     'locationSearchInput',
     'locationResults',
@@ -80,19 +81,7 @@ export default class extends Controller {
       document.head.appendChild(script);
     }
 
-    // Get my current location and store the coordinates in hidden fields.
-    // Because this page might be open for a while, we'll do this using
-    // watchPosition so that the fields stay up to date.
-    this.watchPositionIdValue = window.navigator.geolocation.watchPosition((position) => {
-      this.latitudeTarget.value = position.coords.latitude;
-      this.longitudeTarget.value = position.coords.longitude;
-      this.prepopulatedNearbyLocationsValue = false;
-    }, (error) => {
-      console.error(error);
-    }, {
-      enableHighAccuracy: true,
-      timeout: 10000
-    });
+    this.watchPosition();
 
     // Initialize the editor
     const options = defineOptions({
@@ -122,6 +111,67 @@ export default class extends Controller {
 
   disconnect() {
     window.navigator.geolocation.clearWatch(this.watchPositionIdValue);
+  }
+
+  watchPosition() {
+    // Get my current location and store the coordinates in hidden fields.
+    // Because this page might be open for a while, we'll do this using
+    // watchPosition so that the fields stay up to date.
+    this.watchPositionIdValue = window.navigator.geolocation.watchPosition((position) => {
+      // If we're doing an explicit check in and have already selected a
+      // location, return early so we don't overwrite anything.
+      if (this.placeAppleMapsIdTarget.value) {
+        return;
+      }
+
+      this.latitudeTarget.value = position.coords.latitude;
+      this.longitudeTarget.value = position.coords.longitude;
+      this.prepopulatedNearbyLocationsValue = false;
+    }, (error) => {
+      console.error(error);
+    }, {
+      enableHighAccuracy: true,
+      timeout: 10000
+    });
+  }
+
+  reverseGeocode(event) {
+    event.preventDefault();
+
+    const latitude = parseFloat(this.latitudeTarget.value);
+    const longitude = parseFloat(this.longitudeTarget.value);
+
+    // Return early if we already have a location selected for a check-in or if
+    // we haven't been able to get our location or load MapKit JS.
+    if (this.placeAppleMapsIdTarget.value || !latitude || !longitude || !window.mapkit) {
+      this.formTarget.submit();
+      return;
+    };
+
+    // Otherwise, reverse geocode our location to store with the post.
+    const geocoder = new window.mapkit.Geocoder({});
+    const coordinate = new window.mapkit.Coordinate(latitude, longitude);
+    geocoder.reverseLookup(coordinate, (error, data) => {
+      if (error) {
+        console.error(error);
+      } else {
+        const place = data.results[0];
+
+        // For now we're only showing the neighborhood, city, state, and country,
+        // but we'll populate pretty much everything we can just in case. However,
+        // we won't populate the street address (we specifically don't want that
+        // level of granularity), and Apple Maps IDs/URLs (we won't have any).
+        this.placeNameTarget.value = place.subLocality || '';
+        this.placeCityTarget.value = place.locality || '';
+        this.placeStateTarget.value = place.administrativeArea || '';
+        this.placeStateCodeTarget.value = place.administrativeAreaCode || '';
+        this.placePostalCodeTarget.value = place.postCode || '';
+        this.placeCountryTarget.value = place.country || '';
+        this.placeCountryCodeTarget.value = place.countryCode || '';
+      }
+
+      this.formTarget.submit();
+    });
   }
 
   nearbyLocationSearch() {

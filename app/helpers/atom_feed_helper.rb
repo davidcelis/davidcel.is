@@ -36,7 +36,7 @@ module AtomFeedHelper
   def atom_check_in_content(check_in)
     place_parts = [
       link_to(check_in.place.name, check_in.place.apple_maps_url.html_safe).html_safe,
-      check_in.place.city_state_and_country
+      check_in.place.city_state_and_country(separator: " / ")
     ]
 
     place_link = place_parts.join(" / ")

@@ -18,7 +18,8 @@ class PostsController < ApplicationController
     # post creation into a background job. This lets us handle the processing
     # of the media attachments without hogging a web worker and also ensures
     # we can wait to create the Post object until the media is done processing.
-    if media_attachments_params.any? || place_params.present?
+    # This includes _all_ check-ins, since they generate an Apple Maps snapshot.
+    if media_attachments_params.any? || place_params.key?(:apple_maps_id)
       CreatePostWithMediaJob.perform_async(post_params.to_hash, media_attachments_params.map(&:to_hash), place_params.to_hash)
 
       redirect_to root_path, notice: "Your post's media is being processed and will be available shortly."
@@ -38,6 +39,10 @@ class PostsController < ApplicationController
         Sentry.capture_message("No coordinates")
       end
     end
+
+    # If we don't have a check-in, we'll still find or create a generic Place
+    # for the post's location.
+    @post.place = Place.find_or_create_by(place_params) if place_params.present?
 
     if @post.save
       redirect_to polymorphic_path(@post)

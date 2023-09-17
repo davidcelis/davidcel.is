@@ -3,7 +3,7 @@ class CreatePostWithMediaJob < ApplicationJob
     post_params = post_params.with_indifferent_access
     place_params = place_params.with_indifferent_access.compact_blank
 
-    post_params[:type] = "CheckIn" if place_params.any?
+    post_params[:type] = "CheckIn" if place_params.key?(:apple_maps_id)
 
     ActiveRecord::Base.transaction do
       post = Post.new(post_params)
@@ -37,6 +37,10 @@ class CreatePostWithMediaJob < ApplicationJob
             filename: filename
           )
         end
+      else
+        # We should still have place data for non-check-ins, so we'll use that
+        # to find or create a place for the post's location.
+        post.place = Place.find_or_create_by(place_params)
       end
 
       # If we have coordinates, we'll use the WeatherKit API to get the weather

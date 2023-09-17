@@ -4,7 +4,7 @@
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <div class="flex flex-col items-start">
           <section class="prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
-            Checked in at <strong class="text-slate-600"><%= check_in.place.name %></strong><span class="text-slate-500"> / <%= check_in.place.city_state_and_country %></span>
+            Checked in at <strong class="text-slate-600"><%= check_in.place.name %></strong><span class="text-slate-500"> / <%= check_in.place.city_state_and_country(separator: " / ") %></span>
           </section>
 
           <% if check_in.html.present? %>

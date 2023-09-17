@@ -8,7 +8,7 @@
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
         <div class="flex">
-          <%= form_for Post.new, html: {class: "relative grow", data: {"controller" => "post-composer", "post-composer-direct-upload-url-value" => direct_uploads_url, "post-composer-initial-map-kit-token-value" => Apple::MapKit.token}} do |f| %>
+          <%= form_for Post.new, html: {class: "relative grow", data: {"controller" => "post-composer", "action" => "submit->post-composer#reverseGeocode", "post-composer-target" => "form", "post-composer-direct-upload-url-value" => direct_uploads_url, "post-composer-initial-map-kit-token-value" => Apple::MapKit.token}} do |f| %>
             <div class="post-editor-container border border-slate-300 rounded-lg shadow-sm overflow-hidden">
               <%= hidden_field_tag "post[type]", "Note", data: {"post-composer-target" => "type"} %>
 

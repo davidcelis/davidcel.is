@@ -1,41 +1,46 @@
 class Place < ApplicationRecord
-  APPLE_MAPS_BASE_URL = "https://maps.apple.com/place".freeze
+  APPLE_MAPS_BASE_URL = "https://maps.apple.com/".freeze
 
   has_many :check_ins
 
   validates :name, presence: true
-  validates :coordinates, presence: true
+  validates :coordinates, presence: true, if: -> { apple_maps_id.present? }
 
   def latitude
-    coordinates.y
+    coordinates&.y
   end
 
   def latitude=(value)
+    self.coordinates ||= ActiveRecord::Point.new
     coordinates.y = value
   end
 
   def longitude
-    coordinates.x
+    coordinates&.x
   end
 
   def longitude=(value)
+    self.coordinates ||= ActiveRecord::Point.new
     coordinates.x = value
   end
 
-  def coordinates
-    super || (self.coordinates = ActiveRecord::Point.new)
-  end
-
-  def city_state_and_country(exclude_us: true)
+  def city_state_and_country(exclude_us: true, separator: ", ")
     parts = [city, state_code || state]
     parts << (country_code || country) unless exclude_us && country_code == "US" || country == "United States"
 
-    parts.compact.join(" / ")
+    parts.compact.join(separator)
   end
 
   def apple_maps_url
     super || begin
-      params = {q: name, ll: [latitude, longitude].join(",")}
+      params = {q: name}
+
+      if latitude.present? && longitude.present?
+        params[:ll] = [latitude, longitude].join(",")
+      else
+        params[:q] += ", #{city_state_and_country(exclude_us: false)}"
+      end
+
       params[:auid] = apple_maps_id if apple_maps_id.present?
 
       uri = URI(APPLE_MAPS_BASE_URL)

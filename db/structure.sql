@@ -200,12 +200,13 @@ CREATE TABLE public.places (
     postal_code character varying,
     country character varying,
     country_code character varying,
-    coordinates point NOT NULL,
+    coordinates point,
     apple_maps_id character varying,
     apple_maps_url character varying,
     foursquare_id character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT chk_rails_d4c44e2131 CHECK (((coordinates IS NOT NULL) OR (apple_maps_id IS NULL)))
 );
 
 
@@ -531,6 +532,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230225013704'),
 ('20230828044721'),
 ('20230904231250'),
-('20230906013328');
+('20230906013328'),
+('20230917160025');
 
 

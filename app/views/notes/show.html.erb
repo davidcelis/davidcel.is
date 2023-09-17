@@ -13,8 +13,14 @@
                 <%= media_gallery_tag(@note.media_attachments.includes(file_attachment: :blob, preview_image_attachment: :blob)) %>
               <% end %>
 
-              <div class="flex flex-wrap justify-between w-full pt-4 text-sm text-slate-500">
-                <%= link_to polymorphic_path(@note), class: "u-url flex-shrink text-sm font-bold link-primary flex flex-col justify-center items-center" do %>
+              <div class="flex flex-col flex-wrap justify-between space-y-1 w-full pt-4 text-sm text-slate-500">
+                <% if @note.place.present? %>
+                  <span class="font-mono flex text-slate-500">
+                    📍&nbsp;<%= link_to @note.place.name, @note.place.apple_maps_url, class: "link-primary font-bold" %>&nbsp;/ <%= @note.place.city_state_and_country(separator: " / ") %>
+                  </span>
+                <% end %>
+
+                <%= link_to polymorphic_path(@note), class: "u-url flex-shrink text-sm font-bold link-primary flex flex-col" do %>
                   <%= timestamp(@note.created_at, full: true, classes: ["dt-published"]) %>
                 <% end %>
               </div>
