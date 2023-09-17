@@ -65,7 +65,10 @@ class CreatePostWithMediaJob < ApplicationJob
       # the place's name _and_ the check-in's ID, so we'll need to regenerate
       # the slug now that we have the ID.
       post.send(:generate_slug) if post.is_a?(CheckIn)
-      post.save
+
+      # We'll skip validations here because posts with media don't need to have
+      # content, and we'll be validating the post at the end anyway.
+      post.save(validate: false)
 
       media_attachments_params.each do |blob_params|
         blob_params = blob_params.with_indifferent_access

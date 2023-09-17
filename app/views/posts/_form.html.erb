@@ -47,7 +47,7 @@
                           <div class="fixed top-8 inset-x-1 mx-auto z-[50] origin-top flex flex-col gap-4 p-4 rounded-md max-w-prose min-w-[400px] bg-white opacity-100 scale-100">
                             <div class="flex justify-between">
                               <h2 class="text-xl font-bold text-slate-900">Tag location</h2>
-                              <button data-action="click->reveal#hide:prevent" class="text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary">Close</button>
+                              <button type="button" data-action="click->reveal#hide" class="text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary">Close</button>
                             </div>
 
                             <input id="location-search" type="text" placeholder="Search for a location" class="border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm" data-action="keydown.enter->post-composer#locationSearch" data-post-composer-target="locationSearchInput">

@@ -320,7 +320,7 @@ export default class extends Controller {
     const previewElement = document.createElement('div');
     previewElement.classList.add('relative', 'w-32', 'h-32', 'mb-2');
     previewElement.dataset.postComposerTarget = 'mediaPreview';
-    previewElement.dataset.controller = 'tooltip';
+    previewElement.dataset.controller = 'reveal';
 
     // Add the file's metadata to the preview element so we can prevent duplicates
     previewElement.dataset.fileName = file.name;
@@ -346,30 +346,32 @@ export default class extends Controller {
     signedIdHiddenInput.name = 'post[media_attachments][][signed_id]';
     previewElement.appendChild(signedIdHiddenInput);
 
-    // Add a button that'll toggle a small, tooltip-enabled form for alt text.
+    // Add a button that'll toggle a small modal with a form for alt text.
     // This will be hidden at first, and then shown when the upload completes.
     const altTextButton = document.createElement('button');
     altTextButton.classList.add('hidden', 'absolute', 'bottom-1', 'left-1', 'px-1', 'font-bold', 'font-ui-sans', 'rounded-[.25rem]', 'bg-black', 'bg-opacity-[.65]', 'hover:bg-black', 'text-white', 'select-none');
     altTextButton.innerHTML = '+ALT'
-    altTextButton.dataset.action = 'click->tooltip#ignore:prevent'
-    altTextButton.dataset.tooltipTarget = 'trigger';
+    altTextButton.dataset.action = 'click->reveal#show:prevent'
+    altTextButton.dataset.revealTarget = 'button';
     previewElement.appendChild(altTextButton);
 
-    // Add a hidden input that will sync with the form's alt text field. This
-    // is necessary because the form is in a tooltip, which is appended to the
-    // document body, so it's not a child of the form.
-    const altTextHiddenInput = document.createElement('input');
-    altTextHiddenInput.type = 'hidden';
-    altTextHiddenInput.name = 'post[media_attachments][][description]';
-    altTextHiddenInput.value = '';
-    previewElement.appendChild(altTextHiddenInput);
+    // Then, start building the modal itself by creating a wrapper div.
+    const altTextModal = document.createElement('div');
+    altTextModal.classList.add('hidden');
+    altTextModal.dataset.revealTarget = 'item';
 
-    // Then, start building the tooltip form by creating a wrapper div...
+    // Add a background blur that'll dismiss the modal when clicked.
+    const altTextFormBackgroundBlur = document.createElement('div');
+    altTextFormBackgroundBlur.classList.add('fixed', 'inset-0', 'z-[25]', 'height-screen', 'w-screen', 'bg-slate-800/40', 'backdrop-blur-sm', 'opacity-100');
+    altTextFormBackgroundBlur.dataset.action = 'click->reveal#hide:prevent';
+    altTextModal.appendChild(altTextFormBackgroundBlur);
+
+    // Then, start building the form itself.
     const altTextForm = document.createElement('div');
-    altTextForm.classList.add('hidden', 'flex', 'flex-col', 'gap-4', 'p-4', 'max-w-prose')
-    altTextForm.dataset.tooltipTarget = 'content';
+    altTextForm.classList.add('fixed', 'top-8', 'inset-x-1', 'mx-auto', 'z-[50]', 'origin-top', 'flex', 'flex-col', 'gap-4', 'p-4', 'rounded-md', 'max-w-prose', 'min-w-[400px]', 'bg-white', 'opacity-100', 'scale-100');
+    altTextForm.dataset.revealTarget = 'item';
 
-    // ... add a header with a dismiss button...
+    // Add a header with a dismiss button...
     const altTextFormHeader = document.createElement('div');
     altTextFormHeader.classList.add('flex', 'justify-between');
     const altTextFormH2 = document.createElement('h2');
@@ -377,26 +379,22 @@ export default class extends Controller {
     altTextFormH2.innerHTML = 'Description';
     const altTextFormDismissButton = document.createElement('button');
     altTextFormDismissButton.classList.add('text-sm', 'py-0', 'px-2', 'rounded-sm', 'transition', 'active:transition-none', 'bg-slate-100', 'font-medium', 'hover:bg-pink-100', 'active:bg-slate-100', 'active:text-pink-900/60', 'link-primary');
-    altTextFormDismissButton.dataset.action = 'click->tooltip#ignore:prevent';
-    altTextFormDismissButton.dataset.tooltipTarget = 'hide';
+    altTextFormDismissButton.dataset.action = 'click->reveal#hide:prevent';
     altTextFormDismissButton.innerHTML = 'Close';
 
     // ... and a text input for the alt text...
     const altTextInput = document.createElement('textarea');
-    altTextInput.classList.add('border', 'border-slate-200', 'rounded', 'p-2', 'text-slate-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-pink-500', 'focus:border-transparent', 'placeholder:italic', 'h-32', 'w-64', 'sm:w-96', 'md:w-120');
+    altTextInput.classList.add('border', 'border-slate-200', 'rounded', 'p-2', 'text-slate-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-pink-500', 'focus:border-transparent', 'placeholder:italic', 'h-32');
     altTextInput.placeholder = 'Describe the image';
+    altTextInput.name = 'post[media_attachments][][description]';
 
-    // ... and finally, set up an event listener that will sync the alt text
-    // input's value with the hidden input's value.
-    altTextInput.addEventListener('input', (event) => {
-      altTextHiddenInput.value = event.target.value;
-    });
-
+    // ... and finally, assemble the form.
     altTextFormHeader.appendChild(altTextFormH2);
     altTextFormHeader.appendChild(altTextFormDismissButton);
     altTextForm.appendChild(altTextFormHeader);
     altTextForm.appendChild(altTextInput);
-    previewElement.appendChild(altTextForm);
+    altTextModal.appendChild(altTextForm);
+    previewElement.appendChild(altTextModal);
 
     // Add a button to remove the media attachment from the post. Like the alt
     // text button, this will start hidden and be shown when the upload's done.
