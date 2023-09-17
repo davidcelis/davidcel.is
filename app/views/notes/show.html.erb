@@ -17,24 +17,6 @@
                 <%= link_to polymorphic_path(@note), class: "u-url flex-shrink text-sm font-bold link-primary flex flex-col justify-center items-center" do %>
                   <%= timestamp(@note.created_at, full: true, classes: ["dt-published"]) %>
                 <% end %>
-
-                <%# TODO: render a note's weather %>
-                <%# if (icon_url = weather_icon_url(@note)) %>
-                  <%# <div class="flex flex-shrink-0"> %>
-                    <%# <%= image_tag icon_url, class: "object-scale-down h-8 w-8 mr-2" %>
-
-                    <%# <span class="font-mono flex flex-col justify-center items-center"> %>
-                      <%#= (@note.weather["temperatureApparent"] * 1.8 + 32).round °F %>
-                    <%# </span>
-
-                    <%# TODO: render a note's neighborhood / city / state (/ country) %>
-                    <%# if @note.place.present? %>
-                      <%# <span class="font-mono flex flex-col justify-center items-center text-slate-500"> %>
-                        <%#= @note.place.name / @note.place.city_state_and_country %>
-                      <%# </span> %>
-                    <%# end %>
-                  <%# </div> %>
-                <%# end %>
               </div>
 
               <div class="hidden">

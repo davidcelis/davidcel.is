@@ -10,7 +10,7 @@ As mentioned before, I hope to continue actively maintaining this website and ad
 - [x] An admin interface to manage posts and photos
 - [ ] Drafts (especially for articles) so I can start writing something and finish later
 - [x] Allowing Notes to have location info without them being considered a "check-in"
-  - Showing this for individual notes/posts
+  - [ ] Showing this for individual notes/posts
 - [ ] More types of posts!
   - [x] Check-ins
   - [ ] Reposts
