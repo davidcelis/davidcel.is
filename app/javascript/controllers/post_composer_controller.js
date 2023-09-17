@@ -394,6 +394,7 @@ export default class extends Controller {
     altTextInput.classList.add('border', 'border-slate-200', 'rounded', 'p-2', 'text-slate-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-pink-500', 'focus:border-transparent', 'placeholder:italic', 'h-32');
     altTextInput.placeholder = 'Describe the image';
     altTextInput.name = 'post[media_attachments][][description]';
+    altTextInput.dataset.revealTarget = 'focus';
 
     // ... and finally, assemble the form.
     altTextFormHeader.appendChild(altTextFormH2);

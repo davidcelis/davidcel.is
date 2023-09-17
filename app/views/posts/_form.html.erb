@@ -50,7 +50,7 @@
                               <button type="button" data-action="click->reveal#hide" class="text-sm py-0 px-2 ml-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary">Close</button>
                             </div>
 
-                            <input id="location-search" type="text" placeholder="Search for a location" class="border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm" data-action="keydown.enter->post-composer#locationSearch" data-post-composer-target="locationSearchInput">
+                            <input id="location-search" type="text" data-action="keydown.enter->post-composer#locationSearch" data-post-composer-target="locationSearchInput" data-reveal-target="focus" placeholder="Search for a location" class="border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block w-full sm:text-sm">
 
                             <ul class="flex flex-col gap-2" data-post-composer-target="locationResults">
                               <li class="text-center py-2 px-4">Loading nearby places...</li>

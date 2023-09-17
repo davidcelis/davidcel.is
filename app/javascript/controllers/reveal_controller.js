@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus'
 
 export default class extends Controller {
-  static targets = ['button', 'item']
+  static targets = ['button', 'item', 'focus']
 
   toggle() {
     this.itemTargets.forEach(item => {
@@ -21,6 +21,10 @@ export default class extends Controller {
 
     if (this.hasButtonTarget) {
       this.buttonTarget.setAttribute('aria-expanded', true)
+    }
+
+    if (this.hasFocusTarget) {
+      this.focusTarget.focus()
     }
   }
 
