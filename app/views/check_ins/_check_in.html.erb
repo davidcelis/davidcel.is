@@ -21,28 +21,28 @@
             <%= media_gallery_tag(check_in.media_attachments) %>
           <% end %>
 
-          <div class="mt-4 flex items-center gap-4">
+          <div data-controller="local-time" class="mt-4 flex items-center gap-4">
             <%= link_to polymorphic_path(check_in), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
               <span class="select-none md:absolute md:-ml-6 mr-2" title="Check-In">
                 📍
               </span>
               <%= timestamp(check_in.created_at, classes: ["dt-published"]) %>
             <% end %>
+          </div>
 
-            <div class="hidden">
-              <div class="u-author h-card">
-                <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
-                <%= link_to "David Celis", root_path, class: "p-name u-url" %>
-              </div>
+          <div class="hidden">
+            <div class="u-author h-card">
+              <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
+              <%= link_to "David Celis", root_path, class: "p-name u-url" %>
+            </div>
 
-              <% if check_in.updated_at != check_in.created_at %>
-                <%= timestamp(check_in.updated_at, classes: ["dt-updated"]) %>
-              <% end %>
+            <% if check_in.updated_at != check_in.created_at %>
+              <%= timestamp(check_in.updated_at, classes: ["dt-updated"]) %>
+            <% end %>
 
-              <div class="p-geo">
-                <span class="p-latitude"><%= check_in.place.latitude %></span>
-                <span class="p-longitude"><%= check_in.place.longitude %></span>
-              </div>
+            <div class="p-geo">
+              <span class="p-latitude"><%= check_in.place.latitude %></span>
+              <span class="p-longitude"><%= check_in.place.longitude %></span>
             </div>
           </div>
         </div>

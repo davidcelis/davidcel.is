@@ -11,28 +11,28 @@
             <%= article.excerpt.html_safe %>
           </section>
 
-          <div class="mt-4 flex items-center gap-4">
+          <div data-controller="local-time" class="mt-4 flex items-center gap-4">
             <%= link_to polymorphic_path(article), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
               <span class="select-none md:absolute md:-ml-6 mr-2" title="Article">
                 📝
               </span>
               <%= timestamp(article.created_at, classes: ["dt-published"]) %>
             <% end %>
+          </div>
 
-            <div class="hidden">
-              <div class="u-author h-card">
-                <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
-                <%= link_to "David Celis", root_path, class: "p-name u-url" %>
-              </div>
-
-              <% if article.updated_at != article.created_at %>
-                <%= timestamp(article.updated_at, classes: ["dt-updated"]) %>
-              <% end %>
-
-              <% article.syndication_links.each do |link| %>
-                <%= link_to link.platform, link.url, class: "u-syndication" %>
-              <% end %>
+          <div class="hidden">
+            <div class="u-author h-card">
+              <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
+              <%= link_to "David Celis", root_path, class: "p-name u-url" %>
             </div>
+
+            <% if article.updated_at != article.created_at %>
+              <%= timestamp(article.updated_at, classes: ["dt-updated"]) %>
+            <% end %>
+
+            <% article.syndication_links.each do |link| %>
+              <%= link_to link.platform, link.url, class: "u-syndication" %>
+            <% end %>
           </div>
         </div>
       </div>

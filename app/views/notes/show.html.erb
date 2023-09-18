@@ -29,9 +29,9 @@
                   <% end %>
                 <% end %>
 
-                <span class="font-mono">
+                <span data-controller="local-time" data-local-time-full-value class="font-mono">
                   <span class="font-sans select-none" data-local-time-target="emoji"><%= clock_emoji(@note.created_at) %> </span>
-                  <%= link_to polymorphic_path(@note), class: "u-url flex-shrink text-sm font-bold link-primary" do %>
+                  <%= link_to polymorphic_path(@note), class: "u-url text-sm font-bold leading-6 link-primary" do %>
                     <%= timestamp(@note.created_at, full: true, classes: ["dt-published"]) %>
                   <% end %>
                 </span>

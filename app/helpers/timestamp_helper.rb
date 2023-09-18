@@ -1,6 +1,8 @@
 module TimestampHelper
   def timestamp(time, full: false, classes: [])
-    text = if full || time < 1.day.ago
+    text = if full
+      time.strftime("%b %-d, %Y at %-I:%M %p %Z")
+    elsif time < 1.day.ago
       format = "%b %-d"
       format += ", %Y" if time.year < Time.now.year
 
@@ -15,8 +17,6 @@ module TimestampHelper
       class: classes,
       data: {"local-time-target" => "time"}
     }
-
-    options[:data]["local-time-full"] = true if full
 
     time_tag(time, text, options)
   end
