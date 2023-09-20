@@ -3,16 +3,6 @@ import { Controller } from '@hotwired/stimulus'
 export default class extends Controller {
   static targets = ['button', 'item', 'focus']
 
-  toggle() {
-    this.itemTargets.forEach(item => {
-      item.classList.toggle('hidden')
-    })
-
-    if (this.hasButtonTarget) {
-      const expanded = this.buttonTarget.getAttribute('aria-expanded') === 'true'
-      this.buttonTarget.setAttribute('aria-expanded', !expanded)
-    }
-  }
 
   show() {
     this.itemTargets.forEach(item => {
@@ -26,6 +16,9 @@ export default class extends Controller {
     if (this.hasFocusTarget) {
       this.focusTarget.focus()
     }
+
+    // Prevent scrolling outside of the modal
+    document.body.classList.add('overflow-hidden')
   }
 
   hide() {
@@ -36,5 +29,8 @@ export default class extends Controller {
     if (this.hasButtonTarget) {
       this.buttonTarget.setAttribute('aria-expanded', false)
     }
+
+    // Allow scrolling outside of the modal
+    document.body.classList.remove('overflow-hidden')
   }
 }
