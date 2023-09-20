@@ -71,7 +71,7 @@
 </article>
 
 
-<% content_for(:og_title, "📍 #{@check_in.place.name} / #{@check_in.place.city_state_and_country}") %>
+<% content_for(:og_title, "📍 #{@check_in.place.name} / #{@check_in.place.city_state_and_country(separator: " / ")}") %>
 <% content_for(:og_description, strip_tags(@check_in.html).strip.presence || "David Celis checked in at #{@check_in.place.name}") %>
 <% content_for(:og_type, "article") %>
 <% content_for(:og_url, post_url(@check_in.id)) %>
