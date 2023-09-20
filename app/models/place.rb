@@ -24,9 +24,9 @@ class Place < ApplicationRecord
     coordinates.x = value
   end
 
-  def city_state_and_country(exclude_us: true, separator: ", ")
+  def city_state_and_country(separator: ", ")
     parts = [city, state_code || state]
-    parts << (country_code || country) unless exclude_us && country_code == "US" || country == "United States"
+    parts << (country_code || country) unless country_code == "US" || country == "United States"
 
     parts.compact.join(separator)
   end
@@ -38,7 +38,7 @@ class Place < ApplicationRecord
       if latitude.present? && longitude.present?
         params[:ll] = [latitude, longitude].join(",")
       else
-        params[:q] += ", #{city_state_and_country(exclude_us: false)}"
+        params[:q] += ", #{city_state_and_country}, #{country_code || country}"
       end
 
       params[:auid] = apple_maps_id if apple_maps_id.present?
