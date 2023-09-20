@@ -101,6 +101,11 @@
 
 <% content_for(:twitter_card, "summary_large_image") %>
 <% content_for(:twitter_image) do %>
-  <meta property="twitter:image" content="<%= cdn_file_url(@check_in.snapshot) %>">
-  <meta property="twitter:image:alt" content="A map with a pin showing the location of <%= @check_in.place.name %>.">
+  <% if media_attachment = @check_in.media_attachments.first %>
+    <meta property="twitter:image" content="<%= cdn_file_url(media_attachment.file) %>">
+    <meta property="twitter:image:alt" content="<%= media_attachment.description %>">
+  <% else %>
+    <meta property="twitter:image" content="<%= cdn_file_url(@check_in.snapshot) %>">
+    <meta property="twitter:image:alt" content="A map with a pin showing the location of <%= @check_in.place.name %>.">
+  <% end %>
 <% end %>
