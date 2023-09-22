@@ -1,7 +1,7 @@
 class NotesController < ApplicationController
   def index
     notes = Note.includes(Post::DEFAULT_INCLUDES)
-    notes = notes.search(params[:q]) if params[:q].present?
+    notes = notes.unscope(:order).search(params[:q]) if params[:q].present?
 
     @pagy, @posts = pagy(notes)
 

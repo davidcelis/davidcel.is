@@ -3,7 +3,7 @@ class PostsController < ApplicationController
 
   def index
     posts = Post.includes(Post::DEFAULT_INCLUDES)
-    posts = posts.search(params[:q]) if params[:q].present?
+    posts = posts.unscope(:order).search(params[:q]) if params[:q].present?
     @pagy, @posts = pagy(posts)
   end
 
