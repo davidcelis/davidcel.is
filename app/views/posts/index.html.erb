@@ -1,8 +1,8 @@
 <div class="h-feed py-12 sm:py-8">
   <div class="lg:px-8">
     <div class="lg:max-w-4xl">
-      <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
-        <h1 class="p-name text-2xl font-bold leading-7 text-slate-900">
+      <div class="flex justify-between mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+        <h1 class="p-name text-2xl font-bold leading-7 text-slate-900 lg:pt-2">
           <%= link_to request.path, class: "u-url" do %>
             <% case params[:controller] %>
             <% when "posts" %>
@@ -14,6 +14,22 @@
             <% end %>
           <% end %>
         </h1>
+
+        <% search_url = posts_url unless params[:controller].in?(["posts", "articles", "notes", "check_ins"]) %>
+        <% placeholder = "Search my #{params[:controller].in?(["posts", "articles", "notes", "check_ins"]) ? params[:controller].dasherize : "posts"}!" %>
+
+        <form id="search" class="hidden lg:block relative w-64" data-controller="search" data-search-url-value="<%= search_url %>" data-action="search#submit:prevent">
+          <input type="text" data-action="input->search#toggleClear" data-search-target="query" value="<%= params[:q] %>" class="w-full border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block sm:text-sm" placeholder="<%= placeholder %>" aria-label="Search" />
+
+          <div class="absolute inset-y-0 right-0 flex items-center">
+            <button type="button" data-search-target="clear" data-action="search#clear" class="h-8 w-8<%= " hidden" unless params[:q] %>" aria-label="Clear search" title="Clear search">
+              <%# <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 fill-slate-700" viewBox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg> %>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-slate-600" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/></svg>
+            </button>
+          </div>
+
+          <input type="submit" class="hidden" />
+        </form>
       </div>
     </div>
   </div>

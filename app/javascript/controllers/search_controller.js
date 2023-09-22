@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus'
 import { Turbo } from '@hotwired/turbo-rails'
 
 export default class extends Controller {
-  static targets = ['query']
+  static targets = ['query', 'clear']
   static values = { url: String }
 
   submit() {
@@ -30,6 +30,13 @@ export default class extends Controller {
       Turbo.visit(newUrl);
     } else {
       this.queryTarget.value = query;
+      this.clearTarget.classList.toggle('hidden', this.queryTarget.value.length == 0);
     }
+  }
+
+  toggleClear() {
+    const url = new URL(window.location.href);
+
+    this.clearTarget.classList.toggle('hidden', this.queryTarget.value.length == 0);
   }
 }
