@@ -209,6 +209,9 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.4)
+    pg_search (2.3.6)
+      activerecord (>= 5.2)
+      activesupport (>= 5.2)
     propshaft (0.7.0)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
@@ -395,6 +398,7 @@ DEPENDENCIES
   microformats!
   pagy (~> 5.10)
   pg (~> 1.1)
+  pg_search (~> 2.3)
   propshaft
   pry-byebug
   pry-rails

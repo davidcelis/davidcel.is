@@ -1,6 +1,9 @@
 class CheckInsController < ApplicationController
   def index
-    @pagy, @posts = pagy(CheckIn.includes(Post::DEFAULT_INCLUDES))
+    check_ins = CheckIn.includes(Post::DEFAULT_INCLUDES)
+    check_ins = check_ins.search(params[:q]) if params[:q].present?
+
+    @pagy, @posts = pagy(check_ins)
 
     render "posts/index"
   end

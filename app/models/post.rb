@@ -40,6 +40,12 @@ class Post < ApplicationRecord
 
   scope :main, -> { where(type: %w[Article Note]) }
 
+  include PgSearch::Model
+  pg_search_scope :search,
+    against: [:title, :content],
+    associated_against: {place: :name},
+    using: {tsearch: {prefix: true, dictionary: "english"}}
+
   def update_html
     self.html = Markdown::Renderer.new(options: markdown_rendering_options, extensions: markdown_extensions).render(commonmark_doc).strip
   end

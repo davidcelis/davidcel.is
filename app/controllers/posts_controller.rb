@@ -2,7 +2,9 @@ class PostsController < ApplicationController
   before_action :require_authentication, only: [:create]
 
   def index
-    @pagy, @posts = pagy(Post.includes(Post::DEFAULT_INCLUDES))
+    posts = Post.includes(Post::DEFAULT_INCLUDES)
+    posts = posts.search(params[:q]) if params[:q].present?
+    @pagy, @posts = pagy(posts)
   end
 
   def show

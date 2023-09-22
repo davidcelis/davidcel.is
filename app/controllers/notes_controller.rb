@@ -1,6 +1,9 @@
 class NotesController < ApplicationController
   def index
-    @pagy, @posts = pagy(Note.includes(Post::DEFAULT_INCLUDES))
+    notes = Note.includes(Post::DEFAULT_INCLUDES)
+    notes = notes.search(params[:q]) if params[:q].present?
+
+    @pagy, @posts = pagy(notes)
 
     render "posts/index"
   end

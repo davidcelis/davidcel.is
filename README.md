@@ -6,15 +6,10 @@ For myself, there's an admin to manage my posts and photos, although I don't syn
 
 As mentioned before, I hope to continue actively maintaining this website and adding to it. For example, some things I'd love to implement are:
 
-- [x] A post composer so I have a nicer writing experience
-- [x] An admin interface to manage posts and photos
+- [ ] Full text search
 - [ ] Drafts (especially for articles) so I can start writing something and finish later
-- [x] Allowing Notes to have location info without them being considered a "check-in"
-  - [x] Showing this for individual notes/posts
-- [x] Moving the location search and alt-text entry out of tooltips and into modals
 - [ ] Show my most recent check-in (or location in general) in the sidebar
 - [ ] More types of posts!
-  - [x] Check-ins
   - [ ] Reposts
   - [ ] Replies
 - [ ] Syncing check-ins to a third party service. I used Swarm for years, but gave up on it during lockdown. I've been trying Gowalla instead since it was re-released, but their future is uncertain. I might just go back to Swarm and consider the Gowalla check-ins lost 😅
