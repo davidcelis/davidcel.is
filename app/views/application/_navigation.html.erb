@@ -34,12 +34,16 @@
                     <% end %>
 
                     <li>
-                      <form id="search" class="mt-2 relative w-64" data-controller="search" data-action="search#submit:prevent">
-                        <input type="text" data-action="input->search#toggleClear" data-search-target="query" value="<%= params[:q] %>" class="w-full border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block sm:text-sm" placeholder="Search my posts!" aria-label="Search" />
+                      <form id="search" class="mt-2 relative max-w-sm" data-controller="search" data-action="search#submit:prevent">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                          🔎
+                        </div>
+
+                        <input type="text" data-action="input->search#toggleClear" data-search-target="query" value="<%= params[:q] %>" class="w-full pl-8 pr-7 border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block sm:text-sm" placeholder="Search my posts!" aria-label="Search" />
 
                         <div class="absolute inset-y-0 right-0 flex items-center">
-                          <button type="button" data-search-target="clear" data-action="search#clear" class="hidden h-8 w-8" title="Clear search" aria-label="Clear search">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-slate-600" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/></svg>
+                          <button type="button" data-search-target="clear" data-action="search#clear" class="h-6 w-6 mr-1<%= " hidden" unless params[:q] %>" title="Clear search" aria-label="Clear search">
+                            ❌
                           </button>
                         </div>
 
