@@ -8,6 +8,11 @@ class Article < Post
 
   validates :title, presence: true
 
+  # Allow searching Articles by title and content.
+  pg_search_scope :search,
+    against: [:title, :content],
+    using: {tsearch: {prefix: true, dictionary: "english"}}
+
   def excerpt
     @excerpt ||= if html.include?(EXCERPT_SEPARATOR)
       html.split(EXCERPT_SEPARATOR).first.strip

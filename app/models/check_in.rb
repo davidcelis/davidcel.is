@@ -5,6 +5,12 @@ class CheckIn < Post
 
   has_one_attached :snapshot
 
+  # Allow searching Check-ins by content and location.
+  pg_search_scope :search,
+    against: :content,
+    associated_against: {place: [:name, :city, :state, :state_code, :country, :country_code]},
+    using: {tsearch: {prefix: true, dictionary: "english"}}
+
   def to_param
     slug
   end
