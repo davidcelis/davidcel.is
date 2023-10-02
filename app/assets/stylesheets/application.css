@@ -11,3 +11,7 @@ span.ellipsis::after {
   width: 0;
   height: 0;
 }
+
+.scrolling-touch {
+  -webkit-overflow-scrolling: touch;
+}
