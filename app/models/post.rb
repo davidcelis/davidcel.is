@@ -42,6 +42,15 @@ class Post < ApplicationRecord
 
   scope :main, -> { where(type: %w[Article Note]) }
 
+  # Allow searching Posts by content and the name of wherever they were posted.
+  # I could allow more specificity for searching against the associated Place,
+  # but I think it's better to just switch to a Check-in search for that.
+  pg_search_scope :search,
+    against: [:title, :content],
+    associated_against: {place: :name},
+    using: {tsearch: {prefix: true, dictionary: "english"}},
+    order_within_rank: "posts.created_at DESC"
+
   def update_html
     self.html = Markdown::Renderer.new(options: markdown_rendering_options, extensions: markdown_extensions).render(commonmark_doc).strip
   end

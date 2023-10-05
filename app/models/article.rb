@@ -11,7 +11,8 @@ class Article < Post
   # Allow searching Articles by title and content.
   pg_search_scope :search,
     against: [:title, :content],
-    using: {tsearch: {prefix: true, dictionary: "english"}}
+    using: {tsearch: {prefix: true, dictionary: "english"}},
+    order_within_rank: "posts.created_at DESC"
 
   def excerpt
     @excerpt ||= if html.include?(EXCERPT_SEPARATOR)
