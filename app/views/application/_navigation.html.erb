@@ -22,21 +22,49 @@
 
                 <nav class="mt-6">
                   <ul class="-my-2 divide-y divide-slate-100 text-base text-slate-800">
-                    <li><%= link_to "🧑‍💻 About", about_path, class: "block py-2 transition link-primary font-bold" %></li>
-                    <li><%= link_to "🗃️ All Posts", posts_path, class: "block py-2 transition link-primary font-bold" %></li>
-                    <li><%= link_to "📝 Articles", articles_path, class: "block py-2 transition link-primary font-bold" %></li>
-                    <li><%= link_to "📍 Check-Ins", check_ins_path, class: "block py-2 transition link-primary font-bold" %></li>
-                    <li><%= link_to "✏️ Notes", notes_path, class: "block py-2 transition link-primary font-bold" %></li>
-                    <li><%= link_to "📷 Photos", photos_path, class: "block py-2 transition link-primary font-bold" %></li>
+                    <li>
+                      <%= link_to about_path, class: "block py-2 transition link-primary font-bold" do %>
+                        <span aria-hidden="true" class="select-none">🧑‍💻 </span>About
+                      <% end %>
+                    </li>
+                    <li>
+                      <%= link_to posts_path, class: "block py-2 transition link-primary font-bold" do %>
+                        <span aria-hidden="true" class="select-none">🗃️ </span>All Posts
+                      <% end %>
+                    </li>
+                    <li>
+                      <%= link_to articles_path, class: "block py-2 transition link-primary font-bold" do %>
+                        <span aria-hidden="true" class="select-none">📝 </span>Articles
+                      <% end %>
+                    </li>
+                    <li>
+                      <%= link_to check_ins_path, class: "block py-2 transition link-primary font-bold" do %>
+                        <span aria-hidden="true" class="select-none">📍 </span>Check-Ins
+                      <% end %>
+                    </li>
+                    <li>
+                      <%= link_to notes_path, class: "block py-2 transition link-primary font-bold" do %>
+                        <span aria-hidden="true" class="select-none">✏️ </span>Notes
+                      <% end %>
+                    </li>
+                    <li>
+                      <%= link_to photos_path, class: "block py-2 transition link-primary font-bold" do %>
+                        <span aria-hidden="true">📷 Photos
+                      <% end %>
+                    </li>
 
                     <% if authenticated? %>
-                      <li><%= link_to "⚙️ Admin", avo_path, class: "block py-2 transition link-primary font-bold" %></li>
+                      <li>
+                        <%= link_to avo_path, class: "block py-2 transition link-primary font-bold" do %>
+                          <span aria-hidden="true" class="select-none">⚙️ </span>Admin
+                        <% end %>
+                      </li>
                     <% end %>
 
                     <li>
                       <form id="search" class="mt-2 relative max-w-sm" data-controller="search" data-action="search#submit:prevent">
                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center">
-                          <span class="text-center h-6 w-6 ml-1 pl-1">🔎</span>
+                          <span aria-hidden="true" class="text-center h-6 w-6 ml-1 pl-1">🔎</span>
                         </div>
 
                         <input type="text" data-action="input->search#toggleClear" data-search-target="query" value="<%= params[:q] %>" class="w-full pl-8 pr-7 border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block sm:text-sm" placeholder="Search my posts!" aria-label="Search" />

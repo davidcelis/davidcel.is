@@ -13,7 +13,7 @@
 
           <div data-controller="local-time" class="mt-4 flex items-center gap-4">
             <%= link_to polymorphic_path(note), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
-              <span class="select-none md:absolute md:-ml-6 mr-2" title="Note">
+              <span class="select-none md:absolute md:-ml-6 mr-2" title="Note" aria-hidden="true">
                 ✏️
               </span>
               <%= timestamp(note.created_at, classes: ["dt-published"]) %>

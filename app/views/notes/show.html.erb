@@ -16,21 +16,21 @@
               <div class="flex flex-col flex-wrap justify-between space-y-1 w-full pt-4 text-sm text-slate-500">
                 <% if @note.place.present? %>
                   <span class="font-mono text-slate-500">
-                    <span class="font-sans select-none">📍 </span>
+                    <span class="font-sans select-none" aria-hidden="true">📍 </span>
                     <%= link_to "#{@note.place.name}", @note.place.apple_maps_url, class: "link-primary font-bold" %>
                     <span>/ <%= @note.place.city_state_and_country(separator: " / ") %></span>
                   </span>
 
                   <% if @note.weather.present? %>
                     <span class="font-mono text-slate-500">
-                      <span class="font-sans select-none"><%= weather_emoji(@note) %> </span>
+                      <span class="font-sans select-none" aria-hidden="true"><%= weather_emoji(@note) %> </span>
                       <span><%= (@note.weather["temperatureApparent"] * 1.8 + 32).round %>°F <%= weather_conditions(@note) %></span>
                     </span>
                   <% end %>
                 <% end %>
 
                 <span data-controller="local-time" data-local-time-full-value class="font-mono">
-                  <span class="font-sans select-none" data-local-time-target="emoji"><%= clock_emoji(@note.created_at) %> </span>
+                  <span class="font-sans select-none" data-local-time-target="emoji" aria-hidden="true"><%= clock_emoji(@note.created_at) %> </span>
                   <%= link_to polymorphic_path(@note), class: "u-url text-sm font-bold leading-6 link-primary" do %>
                     <%= timestamp(@note.created_at, full: true, classes: ["dt-published"]) %>
                   <% end %>
