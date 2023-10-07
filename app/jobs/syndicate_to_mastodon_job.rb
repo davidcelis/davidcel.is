@@ -9,10 +9,18 @@ class SyndicateToMastodonJob < ApplicationJob
       post.content
     when Article
       "“#{post.title}”\n\n#{article_url(post)}"
+    when CheckIn
+      text = post.content.presence
+
+      pin = text ? "📍 At " : "📍 I checked in at "
+      pin << "#{post.place.name} / #{post.place.city_state_and_country(separator: " / ")}"
+      candidate = [text, pin].compact.join("\n\n")
+
+      (candidate.length > 500) ? content : candidate
     end
 
     media_ids = []
-    if post.is_a?(Note) && post.media_attachments.any?
+    if post.media_attachments.any? && !post.is_a?(Article)
       # Wait if any of the media attachments are still waiting to be analyzed.
       unless post.media_attachments.all?(&:analyzed)
         logger.info("Media attachments are still being analyzed; trying again in 5 seconds...")

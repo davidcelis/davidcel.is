@@ -18,9 +18,21 @@ class SyndicateToBlueskyJob < ApplicationJob
       return
     end
 
-    text = post.content
+    text = case post
+    when Note
+      post.content
+    when CheckIn
+      content = post.content.presence
+
+      pin = content ? "📍 At " : "📍 I checked in at "
+      pin << "#{post.place.name} / #{post.place.city_state_and_country(separator: " / ")}"
+      candidate = [content, pin].compact.join("\n\n")
+
+      (candidate.length > 300) ? content : candidate
+    end
+
     if text.length > 300
-      url = note_url(post)
+      url = polymorphic_url(post)
 
       # Truncate the content so that it, an ellipsis, and the URL fit within
       # the 300 character limit

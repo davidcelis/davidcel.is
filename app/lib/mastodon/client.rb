@@ -6,9 +6,10 @@ module Mastodon
   class Client
     BASE_URL = Rails.application.credentials.dig(:mastodon, :url)
 
-    IMAGE_SIZE_LIMIT = 8.megabytes
-    VIDEO_SIZE_LIMIT = 40
-    VIDEO_PIXEL_LIMIT = 2_304_000
+    IMAGE_SIZE_LIMIT = 16.megabytes
+    IMAGE_PIXEL_LIMIT = 33_177_600 # 7680x4320px
+    VIDEO_SIZE_LIMIT = 99
+    VIDEO_PIXEL_LIMIT = 8_294_400 # 3840x2160px
 
     def initialize(access_token: Rails.application.credentials.dig(:mastodon, :access_token))
       @access_token = access_token
@@ -26,7 +27,7 @@ module Mastodon
         tmpfile = blob
 
         if media_attachment.image?
-          tmpfile = ImageProcessor.process(tmpfile, size_limit: IMAGE_SIZE_LIMIT)
+          tmpfile = ImageProcessor.process(tmpfile, size_limit: IMAGE_SIZE_LIMIT, pixel_limit: IMAGE_PIXEL_LIMIT)
         elsif media_attachment.video?
           metadata = media_attachment.file.metadata.slice(:width, :height, :duration, :audio).symbolize_keys
           tmpfile = VideoProcessor.process(tmpfile, size_limit: VIDEO_SIZE_LIMIT, pixel_limit: VIDEO_PIXEL_LIMIT, **metadata)

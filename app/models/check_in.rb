@@ -23,6 +23,9 @@ class CheckIn < Post
   end
 
   def syndicate
-    # Don't bother syndicating check-ins.
+    # Don't bother with check-ins that weren't important enough to have pics or commentary.
+    return unless content.present? || media_attachments.any?
+
+    super
   end
 end

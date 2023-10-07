@@ -1,9 +1,24 @@
 class ImageProcessor
-  def self.process(blob, size_limit: nil)
+  def self.process(blob, size_limit: nil, pixel_limit: nil)
     result = blob
-    return result unless size_limit.present?
+    return result unless size_limit.present? || pixel_limit.present?
 
-    result = blob
+    # First, resize the image if it exceeds the given pixel limit; we'll
+    # calculate the ratio of the image's width to height and then resize it to
+    # fit the total pixel limit.
+    image = Vips::Image.new_from_file(result.path)
+
+    width, height = [image.width, image.height]
+    if pixel_limit.present? && (width * height) > pixel_limit
+      ratio = Math.sqrt(pixel_limit / (width * height).to_f)
+      new_width, new_height = [width, height].map(&ratio.method(:*))
+
+      result = ImageProcessing::Vips
+        .source(result.path)
+        .resize_to_limit(new_width, new_height)
+        .call
+    end
+
     quality = 100
 
     while File.size(result.path) > size_limit
