@@ -1,0 +1,24 @@
+<ol class="mt-6 space-y-4">
+  <% Resume::Job.first(4).each do |job| %>
+    <li class="flex gap-4">
+      <div class="select-none relative flex h-10 w-10 flex-none items-center justify-center rounded-full shadow-md shadow-slate-800/5 ring-1 ring-slate-900/5">
+        <%= image_tag job.image, width: 28, height: 28, class: "h-7 w-7", loading: "lazy", style: "color: transparent;", decoding: "async", data: {nimg: 1} %>
+      </div>
+
+      <dl class="flex flex-auto flex-wrap gap-x-2">
+        <dt class="sr-only select-none">Company</dt>
+        <dd class="w-full flex-none text-sm font-medium text-slate-900"><%= job.name %></dd>
+        <dt class="sr-only select-none">Role</dt>
+        <dd class="text-xs text-slate-500"><%= job.position %></dd>
+        <dt class="sr-only select-none">Date</dt>
+        <dd class="ml-auto text-xs text-slate-400" aria-label="July 2021 until Now">
+          <time datetime="<%= job.start_date.strftime("%Y-%m-%d") %>"><%= job.start_date.year %></time> <span aria-hidden="true">—</span> <time datetime="<%= (job.end_date || Date.today).strftime("%Y-%m-%d") %>"><%= job.end_date&.year || "Now" %></time>
+        </dd>
+      </dl>
+    </li>
+  <% end %>
+</ol>
+
+<%= link_to asset_path("cv.pdf", skip_pipeline: true), class: "inline-flex items-center gap-2 justify-center rounded-md py-2 px-3 text-sm outline-offset-2 transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary group mt-6 w-full" do %>
+  Download CV<svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-4 w-4 stroke-pink-500 group-hover:stroke-pink-700 transition group-active:stroke-pink-900"><path d="M4.75 8.75 8 12.25m0 0 3.25-3.5M8 12.25v-8.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<% end %>

@@ -1,4 +1,4 @@
-<article class="h-entry note py-10 sm:py-12">
+<article class="h-entry py-10 sm:py-12">
   <div class="lg:px-8">
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
@@ -20,27 +20,7 @@
             <% end %>
           </div>
 
-          <div class="hidden">
-            <div class="u-author h-card">
-              <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
-              <%= link_to "David Celis", root_path, class: "p-name u-url" %>
-            </div>
-
-            <% if note.updated_at != note.created_at %>
-              <%= timestamp(note.updated_at, classes: ["dt-updated"]) %>
-            <% end %>
-
-            <% if (place = note.place) %>
-              <div class="p-geo">
-                <span class="p-latitude"><%= place.latitude %></span>
-                <span class="p-longitude"><%= place.longitude %></span>
-              </div>
-            <% end %>
-
-            <% note.syndication_links.each do |link| %>
-              <%= link_to link.platform, link.url, class: "u-syndication" %>
-            <% end %>
-          </div>
+          <%= render partial: "posts/meta", locals: { post: note } %>
         </div>
       </div>
     </div>

@@ -43,9 +43,7 @@
     <% end %>
 
     <section class="divide-y divide-slate-100">
-      <% @posts.each do |post| %>
-        <%= render post %>
-      <% end %>
+      <%= render @posts %>
 
       <% if @posts.empty? %>
         <div class="py-10 sm:py-12">

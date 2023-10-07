@@ -47,21 +47,7 @@
                 <% end %>
               </div>
 
-              <div class="hidden">
-                <div class="u-author h-card">
-                  <%= image_tag "me.jpg", alt: "A photo of me on a horse looking quite dapper.", class: "u-photo" %>
-                  <%= link_to "David Celis", root_path, class: "p-name u-url" %>
-                </div>
-
-                <% if @check_in.updated_at != @check_in.created_at %>
-                  <%= timestamp(@check_in.updated_at, full: true, classes: ["dt-updated"]) %>
-                <% end %>
-
-                <div class="p-geo">
-                  <span class="p-latitude"><%= @check_in.place.latitude %></span>
-                  <span class="p-longitude"><%= @check_in.place.longitude %></span>
-                </div>
-              </div>
+              <%= render partial: "posts/meta", locals: { post: @check_in } %>
             </div>
           </div>
         </div>
