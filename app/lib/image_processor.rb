@@ -29,7 +29,7 @@ class ImageProcessor
       quality -= 1
 
       result = ImageProcessing::Vips
-        .source(blob.path)
+        .source(result.path)
         .saver(Q: quality, optimize_coding: true, trellis_quant: true)
         .call
     end

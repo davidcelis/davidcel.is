@@ -6,7 +6,7 @@ For myself, there's an admin to manage my posts and photos, although I don't syn
 
 As mentioned before, I hope to continue actively maintaining this website and adding to it. For example, some things I'd love to implement are:
 
-- [ ] Serving WebP images to browsers that support it (while still storing the originals)
+- [x] Serving WebP images to browsers that support it (while still storing the originals)
   - [ ] WebP images should be what's used to syndicate to external services, especially since Bluesky has such a small file size limit
 - [ ] Drafts (especially for articles) so I can start writing something and finish later
 - [ ] Show my most recent check-in (or location in general) in the sidebar
