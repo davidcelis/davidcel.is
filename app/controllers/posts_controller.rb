@@ -8,7 +8,7 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.find(params[:id])
+    @post = Post.includes(Post::DEFAULT_INCLUDES).find(params[:id])
 
     instance_variable_set("@#{@post.type.underscore}", @post)
 

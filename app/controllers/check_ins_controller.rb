@@ -9,6 +9,6 @@ class CheckInsController < ApplicationController
   end
 
   def show
-    @check_in = CheckIn.find_by!(slug: params[:id])
+    @check_in = CheckIn.includes(Post::DEFAULT_INCLUDES).find_by!(slug: params[:id])
   end
 end

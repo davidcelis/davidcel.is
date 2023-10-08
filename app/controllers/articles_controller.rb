@@ -8,6 +8,6 @@ class ArticlesController < ApplicationController
   end
 
   def show
-    @article = Article.find_by!(slug: params[:id])
+    @article = Article.includes(Post::DEFAULT_INCLUDES).find_by!(slug: params[:id])
   end
 end

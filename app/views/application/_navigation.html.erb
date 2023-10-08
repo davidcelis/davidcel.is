@@ -55,7 +55,7 @@
 
                     <% if authenticated? %>
                       <li>
-                        <%= link_to avo_path, class: "block py-2 transition link-primary font-bold" do %>
+                        <%= link_to avo_path, target: "_blank", class: "block py-2 transition link-primary font-bold" do %>
                           <span aria-hidden="true" class="select-none">⚙️ </span>Admin
                         <% end %>
                       </li>
@@ -93,7 +93,7 @@
               <li><%= link_to "Notes", notes_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
               <li><%= link_to "Photos", photos_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
               <% if authenticated? %>
-                <li><%= link_to "Admin", avo_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
+                <li><%= link_to "Admin", avo_path, target: "_blank", class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
               <% end %>
             </ul>
           </nav>

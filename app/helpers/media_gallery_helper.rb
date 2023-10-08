@@ -1,6 +1,7 @@
 module MediaGalleryHelper
   def media_gallery_tag(media_attachments)
     gallery_length = media_attachments.length
+    return if gallery_length == 0
 
     classes = %w[grid gap-x-1 gap-y-1 mt-4 overflow-hidden]
     classes << "grid-cols-2" if gallery_length >= 2

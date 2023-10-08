@@ -22,7 +22,7 @@ module TimestampHelper
   end
 
   # I stole this from a code golfing exercise 😬 It uses unicode hackery to
-  # generate a clock emoji from a date object.
+  # generate a clock emoji from a Time object.
   def clock_emoji(time)
     d = ((time.to_i + time.gmtoff) / 900 - 3) / 2 % 24
 

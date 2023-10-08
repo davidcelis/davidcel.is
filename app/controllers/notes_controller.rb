@@ -9,6 +9,6 @@ class NotesController < ApplicationController
   end
 
   def show
-    @note = Note.find(params[:id])
+    @note = Note.includes(Post::DEFAULT_INCLUDES).find(params[:id])
   end
 end
