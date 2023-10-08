@@ -11,6 +11,7 @@
 # end
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym "AQI"
   inflect.acronym "AT"
   inflect.acronym "GitHub"
   inflect.acronym "OAuth"

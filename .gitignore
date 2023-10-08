@@ -27,3 +27,7 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+/config/credentials/production.key
+
+/config/credentials/master.key

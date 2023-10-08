@@ -33,12 +33,24 @@
 
                   <% if (icon_url = weather_icon_url(@check_in)) %>
                     <div class="absolute bottom-2 right-2">
-                      <div class="flex flex-shrink-0 space-x-2 bg-white bg-opacity-[.90] py-1 px-2 select-none rounded-[.25rem]">
-                        <%= image_tag icon_url, class: "object-scale-down h-8 w-8" %>
+                      <div class="flex flex-col space-y-1 py-1 px-2 bg-white bg-opacity-[.90] select-none rounded-[.25rem]">
+                        <div class="flex flex-shrink-0 space-x-2">
+                          <%= image_tag icon_url, class: "object-scale-down h-8 w-8" %>
 
-                        <span class="flex flex-col justify-center items-center">
-                          <%= (@check_in.weather["temperatureApparent"] * 1.8 + 32).round %>°F
-                        </span>
+                          <span class="flex flex-col justify-center items-center">
+                            <%= (@check_in.weather["temperatureApparent"] * 1.8 + 32).round %>°F
+                          </span>
+                        </div>
+
+                        <div class="flex justify-center items-center">
+                          <% if (aqi = @check_in.weather["airQualityIndex"]) %>
+                            <span class="text-xs">
+                              AQI <%= aqi %>
+                            </span>
+                            <%# Make a colored dot based on the AQI %>
+                            <span class="h-2 w-2 rounded-full <%= aqi_bg_color(aqi) %> ml-1"></span>
+                          <% end %>
+                        </div>
                       </div>
                     </div>
                   <% end %>

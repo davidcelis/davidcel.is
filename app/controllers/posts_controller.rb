@@ -37,6 +37,9 @@ class PostsController < ApplicationController
       if @post.latitude && @post.longitude
         response = Apple::WeatherKit::CurrentWeather.at(latitude: @post.latitude, longitude: @post.longitude)
         @post.weather = response["currentWeather"]
+
+        aqi = AQI.at(latitude: @post.latitude, longitude: @post.longitude)
+        @post.weather["airQualityIndex"] = aqi
       else
         Sentry.capture_message("No coordinates")
       end

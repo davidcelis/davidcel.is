@@ -4,7 +4,10 @@ module WeatherHelper
   # `daylight` property to determine which icon to use.
   CONDITIONS = {
     # Visibility conditions
-    "BlowingDust" => Hash.new("sun.dust"),
+    "BlowingDust" => {
+      true => "sun.dust",
+      false => "moon.dust"
+    },
     "Clear" => {
       true => "sun.max",
       false => "moon.stars"
@@ -19,10 +22,7 @@ module WeatherHelper
       true => "sun.min",
       false => "moon"
     },
-    "MostlyCloudy" => {
-      true => "cloud",
-      false => "cloud"
-    },
+    "MostlyCloudy" => Hash.new("cloud"),
     "PartlyCloudy" => {
       true => "cloud.sun",
       false => "cloud.moon"
@@ -35,7 +35,7 @@ module WeatherHelper
 
     # Precipitation conditions
     "SunShowers" => {
-      true => "cloud.sun.rain",
+      true => "sun.rain",
       false => "cloud.moon.rain"
     },
     "Drizzle" => Hash.new("cloud.drizzle"),
@@ -58,7 +58,7 @@ module WeatherHelper
     "Flurries" => Hash.new("cloud.snow"),
     "Sleet" => Hash.new("cloud.sleet"),
     "Snow" => Hash.new("snowflake"),
-    "SunFlurries" => Hash.new("cloud.snow"),
+    "SunFlurries" => Hash.new("sun.snow"),
     "WintryMix" => Hash.new("cloud.sleet"),
 
     # Hazardous winter conditions
@@ -189,5 +189,22 @@ module WeatherHelper
     return unless post.weather.present?
 
     FRIENDLY_CONDITIONS[post.weather["conditionCode"]]
+  end
+
+  def aqi_bg_color(aqi)
+    case aqi
+    when 0..50
+      "bg-lime-500"
+    when 51..100
+      "bg-yellow-300"
+    when 101..150
+      "bg-orange-500"
+    when 151..200
+      "bg-red-600"
+    when 201..300
+      "bg-purple-600"
+    else
+      "bg-rose-900"
+    end
   end
 end
