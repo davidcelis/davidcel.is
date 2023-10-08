@@ -68,8 +68,8 @@ class CreatePostWithMediaJob < ApplicationJob
           response = Apple::WeatherKit::CurrentWeather.at(latitude: latitude, longitude: longitude)
           post.weather = response["currentWeather"]
 
-          aqi = AQI.at(latitude: @post.latitude, longitude: @post.longitude)
-          @post.weather["airQualityIndex"] = aqi
+          aqi = AQI.at(latitude: latitude, longitude: longitude)
+          post.weather["airQualityIndex"] = aqi
         else
           Sentry.capture_message("No coordinates")
         end
