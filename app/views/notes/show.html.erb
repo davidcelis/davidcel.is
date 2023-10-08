@@ -25,7 +25,7 @@
                       <span><%= (@note.weather["temperatureApparent"] * 1.8 + 32).round %>°F <%= weather_conditions(@note) %></span>
                       <% if (aqi = @note.weather["airQualityIndex"]) %>
                         <span>&nbsp;(AQI <%= aqi %></span>
-                        <span class="flex flex-col justify-center items-center ml-1"><span class="h-2 w-2 rounded-full <%= aqi_bg_color(aqi) %>"></span></span>
+                        <span class="flex flex-col justify-center items-center ml-2 select-none"><span class="h-2 w-2 rounded-full <%= aqi_bg_color(aqi) %>"></span></span>
                         <span>)</span>
                       <% end %>
                     </span>
