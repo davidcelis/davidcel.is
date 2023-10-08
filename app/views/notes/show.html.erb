@@ -20,9 +20,14 @@
                   </span>
 
                   <% if @note.weather.present? %>
-                    <span class="font-mono text-slate-500">
-                      <span class="font-sans select-none" aria-hidden="true"><%= weather_emoji(@note) %> </span>
+                    <span class="font-mono text-slate-500 flex">
+                      <span class="font-sans select-none" aria-hidden="true"><%= weather_emoji(@note) %>&nbsp;</span>
                       <span><%= (@note.weather["temperatureApparent"] * 1.8 + 32).round %>°F <%= weather_conditions(@note) %></span>
+                      <% if (aqi = @note.weather["airQualityIndex"]) %>
+                        <span>&nbsp;(AQI <%= aqi %></span>
+                        <span class="flex flex-col justify-center items-center ml-1"><span class="h-2 w-2 rounded-full <%= aqi_bg_color(aqi) %>"></span></span>
+                        <span>)</span>
+                      <% end %>
                     </span>
                   <% end %>
                 <% end %>
