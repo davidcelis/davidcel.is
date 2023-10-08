@@ -34,13 +34,29 @@ module MediaGalleryHelper
     classes = ["relative"]
     classes << "row-span-2" if i == 0 && total == 3
 
-    link_to cdn_file_url(media_attachment), class: classes do
+    picture_link = if media_attachment.webp_variant.attached?
+      cdn_file_url(media_attachment.webp_variant)
+    else
+      cdn_file_url(media_attachment.file)
+    end
+
+    link_to picture_link, class: classes do
       image_classes = %w[u-photo object-cover height-full w-full]
       image_classes += additional_classes_for(file: media_attachment, i: i, total: total)
 
-      image_element = image_tag(cdn_file_url(media_attachment), loading: "lazy", alt: media_attachment.description, class: image_classes)
+      picture_element = picture_tag do
+        webp_source_element = if media_attachment.webp_variant.attached?
+          tag.source(srcset: cdn_file_url(media_attachment.webp_variant))
+        else
+          "".html_safe
+        end
+        original_source_element = tag.source(srcset: cdn_file_url(media_attachment.file))
+        image_element = image_tag(cdn_file_url(media_attachment), loading: "lazy", alt: media_attachment.description, class: image_classes)
 
-      image_element + alt_text_badge(media_attachment)
+        webp_source_element + original_source_element + image_element
+      end
+
+      picture_element + alt_text_badge(media_attachment)
     end
   end
 

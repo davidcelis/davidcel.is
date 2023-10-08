@@ -7,6 +7,7 @@ class Post < ApplicationRecord
     {
       media_attachments: {
         file_attachment: :blob,
+        webp_variant_attachment: :blob,
         preview_image_attachment: :blob
       }
     }

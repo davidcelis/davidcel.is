@@ -9,6 +9,10 @@ class CheckInsController < ApplicationController
   end
 
   def show
-    @check_in = CheckIn.includes(Post::DEFAULT_INCLUDES).find_by!(slug: params[:id])
+    @check_in = CheckIn.includes([
+      {snapshot_attachment: :blob},
+      {webp_snapshot_attachment: :blob},
+      *Post::DEFAULT_INCLUDES
+    ]).find_by!(slug: params[:id])
   end
 end

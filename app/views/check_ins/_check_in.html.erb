@@ -17,9 +17,7 @@
             </section>
           <% end %>
 
-          <% if check_in.media_attachments.any? %>
-            <%= media_gallery_tag(check_in.media_attachments) %>
-          <% end %>
+          <%= media_gallery_tag(check_in.media_attachments) %>
 
           <div data-controller="local-time" class="mt-4 flex items-center gap-4">
             <%= link_to polymorphic_path(check_in), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>

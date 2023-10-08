@@ -4,6 +4,7 @@ class CheckIn < Post
   validates :title, absence: true
 
   has_one_attached :snapshot
+  has_one_attached :webp_snapshot
 
   # Allow searching Check-ins by content and location.
   pg_search_scope :search,

@@ -32,9 +32,23 @@ class CreatePostWithMediaJob < ApplicationJob
           file.rewind
 
           post.snapshot.attach(
-            key: "blog/#{filename}",
+            key: "blog/snapshots/#{filename}",
             io: File.open(file.path),
             filename: filename
+          )
+
+          # Generate a WebP variant of the snapshot to save on bandwidth.
+          # We'll use the same filename as the original, but with a different
+          # extension.
+          webp = ImageProcessing::Vips
+            .source(file)
+            .convert("webp")
+            .call
+
+          post.webp_snapshot.attach(
+            key: "blog/snapshots/#{post.id}.webp",
+            io: File.open(webp.path),
+            filename: "#{post.id}.webp"
           )
         end
       else
@@ -93,6 +107,9 @@ class CreatePostWithMediaJob < ApplicationJob
         # this, we'll just manually rotate the image to the correct orientation
         # and then strip the orientation EXIF data.
         rotate_image(media_attachment) if media_attachment.file.image?
+
+        # Finally, if we have an image, we'll generate a WebP variant of it too.
+        generate_webp_variant(media_attachment) if media_attachment.file.image?
       end
 
       post.save!
@@ -137,6 +154,23 @@ class CreatePostWithMediaJob < ApplicationJob
       )
 
       media_attachment.preview_image.attach(blob)
+    end
+  end
+
+  def generate_webp_variant(media_attachment)
+    filename = File.basename(media_attachment.file.blob.filename.to_s, ".*")
+
+    media_attachment.file.blob.open do |file|
+      webp = ImageProcessing::Vips
+        .source(file)
+        .convert("webp")
+        .call
+
+      media_attachment.webp_variant.attach(
+        key: "blog/#{media_attachment.id}.webp",
+        io: File.open(webp.path),
+        filename: "#{filename}.webp"
+      )
     end
   end
 

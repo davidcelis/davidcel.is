@@ -13,6 +13,7 @@ class MediaAttachment < ApplicationRecord
   # To keep things simple for now, I'm only generating preview images for videos, but
   # I may eventually use it to store smaller thumbnails for regular images as well.
   has_one_attached :preview_image
+  has_one_attached :webp_variant
 
   default_scope { order(id: :asc) }
 

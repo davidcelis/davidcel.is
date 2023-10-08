@@ -18,11 +18,18 @@
                 </div>
               <% end %>
 
-              <%= media_gallery_tag(@check_in.media_attachments.includes(file_attachment: :blob, preview_image_attachment: :blob)) %>
+              <%= media_gallery_tag(@check_in.media_attachments) %>
 
               <div class="relative mt-4">
                 <%= link_to @check_in.place.apple_maps_url do %>
-                  <%= image_tag cdn_file_url(@check_in.snapshot), class: "rounded-lg", alt: "A map showing the location of #{@check_in.place.name}." %>
+                  <%= picture_tag do %>
+                    <% if @check_in.webp_snapshot.attached? %>
+                      <%= tag(:source, srcset: cdn_file_url(@check_in.webp_snapshot)) %>
+                    <% end %>
+
+                    <%= tag(:source, srcset: cdn_file_url(@check_in.snapshot)) %>
+                    <%= image_tag cdn_file_url(@check_in.snapshot), class: "rounded-lg", alt: "A map showing the location of #{@check_in.place.name}." %>
+                  <% end %>
 
                   <% if (icon_url = weather_icon_url(@check_in)) %>
                     <div class="absolute bottom-2 right-2">

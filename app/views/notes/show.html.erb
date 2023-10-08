@@ -9,7 +9,7 @@
                 <%= @note.html.html_safe %>
               </div>
 
-              <%= media_gallery_tag(@note.media_attachments.includes(file_attachment: :blob, preview_image_attachment: :blob)) %>
+              <%= media_gallery_tag(@note.media_attachments) %>
 
               <div class="flex flex-col flex-wrap justify-between space-y-1 w-full pt-4 text-sm text-slate-500">
                 <% if @note.place.present? %>
