@@ -100,6 +100,10 @@ class CreatePostWithMediaJob < ApplicationJob
         # If the file is a video, generate and immediately attach a preview image.
         generate_preview_image(media_attachment) if media_attachment.file.video?
 
+        # If the file is an image that was uploaded from an iPhone, it's probably
+        # in HEIC format, so we'll convert it to JPEG.
+        convert_image(media_attachment) if media_attachment.content_type == "image/heic"
+
         # I've noticed really funky stuff happening with images that have EXIF
         # orientation data. Uploaded images have been appearing normal in almost
         # every location, but in very specific circumstances, the rotation seems
@@ -160,19 +164,19 @@ class CreatePostWithMediaJob < ApplicationJob
     end
   end
 
-  def generate_webp_variant(media_attachment)
+  def convert_image(media_attachment)
     filename = File.basename(media_attachment.file.blob.filename.to_s, ".*")
 
     media_attachment.file.blob.open do |file|
-      webp = ImageProcessing::Vips
+      jpeg = ImageProcessing::Vips
         .source(file)
-        .convert("webp")
+        .convert("jpeg")
         .call
 
-      media_attachment.webp_variant.attach(
-        key: "blog/#{media_attachment.id}.webp",
-        io: File.open(webp.path),
-        filename: "#{filename}.webp"
+      media_attachment.file.attach(
+        key: "blog/#{media_attachment.id}.jpeg",
+        io: File.open(jpeg.path),
+        filename: "#{filename}.jpeg"
       )
     end
   end
@@ -196,6 +200,23 @@ class CreatePostWithMediaJob < ApplicationJob
       )
 
       media_attachment.file.attach(blob)
+    end
+  end
+
+  def generate_webp_variant(media_attachment)
+    filename = File.basename(media_attachment.file.blob.filename.to_s, ".*")
+
+    media_attachment.file.blob.open do |file|
+      webp = ImageProcessing::Vips
+        .source(file)
+        .convert("webp")
+        .call
+
+      media_attachment.webp_variant.attach(
+        key: "blog/#{media_attachment.id}.webp",
+        io: File.open(webp.path),
+        filename: "#{filename}.webp"
+      )
     end
   end
 
