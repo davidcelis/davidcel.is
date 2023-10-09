@@ -370,7 +370,7 @@ export default class extends Controller {
 
     // Then, start building the form itself.
     const altTextForm = document.createElement('div');
-    altTextForm.classList.add('fixed', 'inset-y-8', 'inset-x-8', 'mx-auto', 'z-[50]', 'origin-top', 'flex', 'flex-col', 'gap-4', 'p-4', 'rounded-md', 'max-w-prose', 'min-w-[400px]', 'bg-white', 'opacity-100', 'scale-100', 'overflow-y-auto');
+    altTextForm.classList.add('fixed', 'top-8', 'max-h-[92vh]', 'inset-x-4', 'mx-auto', 'z-[50]', 'origin-top', 'flex', 'flex-col', 'gap-4', 'p-4', 'rounded-md', 'max-w-prose', 'bg-white', 'opacity-100', 'scale-100', 'overflow-y-auto');
     altTextForm.dataset.revealTarget = 'item';
 
     // Add a header with a dismiss button...
