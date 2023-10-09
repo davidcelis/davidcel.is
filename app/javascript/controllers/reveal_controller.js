@@ -18,8 +18,7 @@ export default class extends Controller {
     }
 
     // Prevent scrolling outside of the modal
-    document.body.classList.add('overflow-y-hidden')
-    document.body.classList.add('scrolling-touch')
+    document.body.classList.add('overflow-hidden')
   }
 
   hide() {
@@ -32,7 +31,6 @@ export default class extends Controller {
     }
 
     // Allow scrolling outside of the modal
-    document.body.classList.remove('overflow-y-hidden')
-    document.body.classList.remove('scrolling-touch')
+    document.body.classList.remove('overflow-hidden')
   }
 }

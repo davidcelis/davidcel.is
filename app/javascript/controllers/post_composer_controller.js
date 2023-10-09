@@ -370,7 +370,7 @@ export default class extends Controller {
 
     // Then, start building the form itself.
     const altTextForm = document.createElement('div');
-    altTextForm.classList.add('fixed', 'top-8', 'inset-x-1', 'mx-auto', 'z-[50]', 'origin-top', 'flex', 'flex-col', 'gap-4', 'p-4', 'rounded-md', 'max-w-prose', 'min-w-[400px]', 'bg-white', 'opacity-100', 'scale-100');
+    altTextForm.classList.add('fixed', 'inset-y-8', 'inset-x-8', 'mx-auto', 'z-[50]', 'origin-top', 'flex', 'flex-col', 'gap-4', 'p-4', 'rounded-md', 'max-w-prose', 'min-w-[400px]', 'bg-white', 'opacity-100', 'scale-100', 'overflow-y-auto');
     altTextForm.dataset.revealTarget = 'item';
 
     // Add a header with a dismiss button...
@@ -391,7 +391,7 @@ export default class extends Controller {
 
     // ... and a text input for the alt text...
     const altTextInput = document.createElement('textarea');
-    altTextInput.classList.add('border', 'border-slate-200', 'rounded', 'p-2', 'text-slate-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-pink-500', 'focus:border-transparent', 'placeholder:italic', 'h-32');
+    altTextInput.classList.add('border', 'border-slate-200', 'rounded', 'p-2', 'text-slate-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-pink-500', 'focus:border-transparent', 'placeholder:italic', 'min-h-[100px]', 'resize-none');
     altTextInput.placeholder = 'Describe the image';
     altTextInput.name = 'post[media_attachments][][description]';
     altTextInput.dataset.revealTarget = 'focus';
