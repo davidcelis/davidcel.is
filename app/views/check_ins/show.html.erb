@@ -23,7 +23,7 @@
               <div class="relative mt-4">
                 <%= link_to @check_in.place.apple_maps_url do %>
                   <%= picture_tag do %>
-                    <% if @check_in.webp_snapshot.attached? %>
+                    <% if @check_in.webp_snapshot.analyzed? %>
                       <%= tag(:source, srcset: cdn_file_url(@check_in.webp_snapshot)) %>
                     <% end %>
 

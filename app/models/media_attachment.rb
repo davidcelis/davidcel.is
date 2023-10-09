@@ -1,5 +1,13 @@
 class MediaAttachment < ApplicationRecord
-  DEFAULT_INCLUDES = [:post, {file_attachment: :blob, preview_image_attachment: :blob}].freeze
+  DEFAULT_INCLUDES = [
+    :post,
+    {
+      file_attachment: :blob,
+      webp_variant_attachment: :blob,
+      preview_image_attachment: :blob
+    }
+  ].freeze
+
   belongs_to :post
 
   has_one_attached :file

@@ -18,7 +18,14 @@
               <% file = media_attachment.video? ? media_attachment.preview_image : media_attachment.file %>
 
               <%= link_to polymorphic_path(media_attachment.post) do %>
-                <%= image_tag cdn_file_url(file), loading: "lazy", alt: media_attachment.description, class: "height-full w-full aspect-[1/1] object-cover rounded-md" %>
+                <%= picture_tag do %>
+                  <% if media_attachment.webp_variant.analyzed? %>
+                    <%= tag(:source, srcset: cdn_file_url(media_attachment.webp_variant)) %>
+                  <% end %>
+
+                  <%= tag(:source, srcset: cdn_file_url(media_attachment)) %>
+                  <%= image_tag cdn_file_url(file), loading: "lazy", alt: media_attachment.description, class: "height-full w-full aspect-[1/1] object-cover rounded-md" %>
+                <% end%>
               <% end %>
             <% end %>
           </section>

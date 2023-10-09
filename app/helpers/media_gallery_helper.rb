@@ -34,7 +34,7 @@ module MediaGalleryHelper
     classes = ["relative"]
     classes << "row-span-2" if i == 0 && total == 3
 
-    picture_link = if media_attachment.webp_variant.attached?
+    picture_link = if media_attachment.webp_variant.analyzed?
       cdn_file_url(media_attachment.webp_variant)
     else
       cdn_file_url(media_attachment.file)
@@ -45,7 +45,7 @@ module MediaGalleryHelper
       image_classes += additional_classes_for(file: media_attachment, i: i, total: total)
 
       picture_element = picture_tag do
-        webp_source_element = if media_attachment.webp_variant.attached?
+        webp_source_element = if media_attachment.webp_variant.analyzed?
           tag.source(srcset: cdn_file_url(media_attachment.webp_variant))
         else
           "".html_safe
