@@ -12,7 +12,7 @@ class SyndicateToBlueskyJob < ApplicationJob
     end
 
     images = post.media_attachments.select(&:image?)
-    unless images.all?(&:analyzed)
+    unless images.all? { |image| image.webp_variant_attachment.analyzed? }
       logger.info("Media attachments are still being analyzed; trying again in 5 seconds...")
       SyndicateToBlueskyJob.perform_in(5.seconds, post_id)
       return
@@ -43,7 +43,7 @@ class SyndicateToBlueskyJob < ApplicationJob
     text, facets = client.extract_facets(text)
 
     blobs = images.map do |media_attachment|
-      result = client.upload_blob(media_attachment, content_type: media_attachment.content_type)
+      result = client.upload_blob(media_attachment)
       {image: result["blob"], alt: media_attachment.description}
     end
 

@@ -55,13 +55,13 @@ module ATProto
     #     "size": 343459
     #   }
     # }
-    def upload_blob(media_attachment, content_type:)
+    def upload_blob(media_attachment)
       response = nil
 
-      media_attachment.open do |blob|
+      media_attachment.webp_variant_attachment.blob.open do |blob|
         tmpfile = ImageProcessor.process(blob, size_limit: IMAGE_SIZE_LIMIT)
 
-        response = blob_upload_connection.post("#{BASE_PATH}.uploadBlob", tmpfile, "Content-Type" => content_type, "Content-Length" => tmpfile.size.to_s)
+        response = blob_upload_connection.post("#{BASE_PATH}.uploadBlob", tmpfile, "Content-Type" => media_attachment.webp_variant_attachment.content_type, "Content-Length" => tmpfile.size.to_s)
       end
 
       response.body
