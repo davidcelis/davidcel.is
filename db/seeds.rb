@@ -8,6 +8,7 @@
 
 MediaAttachment.includes(file_attachment: :blob, webp_variant_attachment: :blob).find_each do |media_attachment|
   next if media_attachment.webp_variant.attached?
+  next unless media_attachment.image?
 
   filename = File.basename(media_attachment.file.blob.filename.to_s, ".*")
 
