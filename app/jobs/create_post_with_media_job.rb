@@ -31,11 +31,14 @@ class CreatePostWithMediaJob < ApplicationJob
           file.write(response.body)
           file.rewind
 
-          post.snapshot.attach(
+          blob = ActiveStorage::Blob.create_and_upload!(
             key: "blog/snapshots/#{filename}",
             io: File.open(file.path),
             filename: filename
           )
+
+          blob.analyze
+          post.snapshot.attach(blob)
 
           # Generate a WebP variant of the snapshot to save on bandwidth.
           # We'll use the same filename as the original, but with a different
@@ -45,11 +48,14 @@ class CreatePostWithMediaJob < ApplicationJob
             .convert("webp")
             .call
 
-          post.webp_snapshot.attach(
+          webp_blob = ActiveStorage::Blob.create_and_upload!(
             key: "blog/snapshots/#{post.id}.webp",
             io: File.open(webp.path),
             filename: "#{post.id}.webp"
           )
+
+          webp_blob.analyze
+          post.webp_snapshot.attach(webp_blob)
         end
       else
         # We should still have place data for non-check-ins, so we'll use that
@@ -141,6 +147,7 @@ class CreatePostWithMediaJob < ApplicationJob
         metadata: {custom: {original_content_type: original_content_type}}
       )
 
+      blob.analyze
       media_attachment.file.attach(blob)
     end
   end
@@ -160,6 +167,7 @@ class CreatePostWithMediaJob < ApplicationJob
         filename: "#{filename}.jpg"
       )
 
+      blob.analyze
       media_attachment.preview_image.attach(blob)
     end
   end
@@ -173,11 +181,14 @@ class CreatePostWithMediaJob < ApplicationJob
         .convert("jpeg")
         .call
 
-      media_attachment.file.attach(
+      blob = ActiveStorage::Blob.create_and_upload!(
         key: "blog/#{media_attachment.id}.jpeg",
         io: File.open(jpeg.path),
         filename: "#{filename}.jpeg"
       )
+
+      blob.analyze
+      media_attachment.file.attach(blob)
     end
   end
 
@@ -199,6 +210,7 @@ class CreatePostWithMediaJob < ApplicationJob
         filename: "#{filename}#{extension}"
       )
 
+      blob.analyze
       media_attachment.file.attach(blob)
     end
   end
@@ -212,11 +224,14 @@ class CreatePostWithMediaJob < ApplicationJob
         .convert("webp")
         .call
 
-      media_attachment.webp_variant.attach(
+      blob = ActiveStorage::Blob.create_and_upload!(
         key: "blog/#{media_attachment.id}.webp",
-        io: File.open(webp.path),
+        io: webp.to_io,
         filename: "#{filename}.webp"
       )
+
+      blob.analyze
+      media_attachment.webp_variant.attach(blob)
     end
   end
 
