@@ -7,6 +7,7 @@ module ATProto
     BASE_PATH = "/xrpc/com.atproto.repo".freeze
     IDENTITY_PATH = "/xrpc/com.atproto.identity".freeze
     IMAGE_SIZE_LIMIT = 976.56.kilobytes
+    IMAGE_PIXEL_LIMIT = 16_200_000
 
     attr_reader :session
 
@@ -59,7 +60,7 @@ module ATProto
       response = nil
 
       media_attachment.webp_variant_attachment.blob.open do |blob|
-        tmpfile = ImageProcessor.process(blob, size_limit: IMAGE_SIZE_LIMIT)
+        tmpfile = ImageProcessor.process(blob, size_limit: IMAGE_SIZE_LIMIT, pixel_limit: IMAGE_PIXEL_LIMIT)
 
         response = blob_upload_connection.post("#{BASE_PATH}.uploadBlob", tmpfile, "Content-Type" => media_attachment.webp_variant_attachment.content_type, "Content-Length" => tmpfile.size.to_s)
       end
