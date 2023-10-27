@@ -7,7 +7,10 @@ class ErrorsController < ApplicationController
   def show
     Sentry.capture_exception(exception) if status_code >= 500
 
-    render view_for_code(status_code), status: status_code
+    respond_to do |format|
+      format.html { render view_for_code(status_code), status: status_code }
+      format.all { head status_code }
+    end
   end
 
   private
