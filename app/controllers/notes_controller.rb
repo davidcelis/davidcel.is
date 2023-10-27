@@ -5,10 +5,12 @@ class NotesController < ApplicationController
 
     @pagy, @posts = pagy(notes)
 
-    render "posts/index"
+    render "posts/index", formats: [:html]
   end
 
   def show
     @note = Note.includes(Post::DEFAULT_INCLUDES).find(params[:id])
+
+    respond_to :html
   end
 end

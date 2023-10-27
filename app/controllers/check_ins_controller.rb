@@ -5,7 +5,7 @@ class CheckInsController < ApplicationController
 
     @pagy, @posts = pagy(check_ins)
 
-    render "posts/index"
+    render "posts/index", formats: [:html]
   end
 
   def show
@@ -14,5 +14,7 @@ class CheckInsController < ApplicationController
       {webp_snapshot_attachment: :blob},
       *Post::DEFAULT_INCLUDES
     ]).find_by!(slug: params[:id])
+
+    respond_to :html
   end
 end

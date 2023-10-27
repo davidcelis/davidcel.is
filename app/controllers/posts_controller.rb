@@ -5,6 +5,8 @@ class PostsController < ApplicationController
     posts = Post.includes(Post::DEFAULT_INCLUDES)
     posts = posts.unscope(:order).search(params[:q]) if params[:q].present?
     @pagy, @posts = pagy(posts)
+
+    respond_to :html
   end
 
   def show
@@ -12,7 +14,7 @@ class PostsController < ApplicationController
 
     instance_variable_set("@#{@post.type.underscore}", @post)
 
-    render "#{@post.type.tableize}/show"
+    render "#{@post.type.tableize}/show", formats: [:html]
   end
 
   def create
