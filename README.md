@@ -8,6 +8,8 @@ As mentioned before, I hope to continue actively maintaining this website and ad
 
 - [x] Serving WebP images to browsers that support it (while still storing the originals)
   - [ ] WebP images should be what's used to syndicate to external services, especially since Bluesky has such a small file size limit
+- [ ] Show webmentions on posts
+- [ ] Allow commenting on posts via email (using ActionMailbox)
 - [ ] Drafts (especially for articles) so I can start writing something and finish later
 - [ ] Show my most recent check-in (or location in general) in the sidebar
 - [ ] More types of posts!

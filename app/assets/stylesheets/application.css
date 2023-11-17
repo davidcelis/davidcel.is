@@ -4,6 +4,10 @@ span.ellipsis::after {
   content: "\2026";
 }
 
+.e-content {
+  width: -webkit-fill-available;
+}
+
 .prose .invisible {
   font-size: 0;
   line-height: 0;
