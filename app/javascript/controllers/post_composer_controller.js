@@ -29,6 +29,10 @@ export default class extends Controller {
     // Utility targets
     'form',
     'editor',
+    'linkData',
+    'linkInput',
+    'linkPreview',
+    'linkUrlPreview',
     'locationSearchInput',
     'locationResults',
     'locationPreview',
@@ -43,6 +47,10 @@ export default class extends Controller {
     characterLimit: { type: Number, default: 500 },
     fileLimit: { type: Number, default: 4 },
     directUploadUrl: String,
+
+    iframelyKey: String,
+    linkData: Object,
+
     initialMapKitToken: String,
 
     // Lifecycle-related values
@@ -287,6 +295,48 @@ export default class extends Controller {
     }
   }
 
+  async fetchLink(event) {
+    // Prevent the form from submitting
+    event.preventDefault();
+
+    // Grab the URL from the input value and fetch the link's metadata via Iframely
+    const url = this.linkInputTarget.value.trim();
+    const response = await fetch(`https://iframe.ly/api/iframely?url=${encodeURIComponent(url)}&key=${this.iframelyKeyValue}`);
+    const data = await response.json();
+
+    // Keep track of the metadata so we can populate the right fields if we
+    // confirm the link.
+    this.linkDataValue = data;
+
+    // Then, show Iframely's preview of the link so we can confirm it's right
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `//cdn.iframe.ly/embed.js?key=${this.iframelyKeyValue}`;
+    this.linkPreviewTarget.innerHTML = data.html;
+    this.linkPreviewTarget.appendChild(script);
+
+    // Finally, add a button that, when clicked, will confirm the link and
+    // populate the right fields.
+    const confirmButton = document.createElement('button');
+    confirmButton.classList.add('p-2', 'mt-2', 'w-full', 'rounded-sm', 'transition', 'active:transition-none', 'bg-slate-100', 'font-medium', 'hover:bg-pink-100', 'active:bg-slate-100', 'active:text-pink-900/60', 'link-primary');
+    confirmButton.innerHTML = 'Confirm';
+    confirmButton.dataset.action = 'click->reveal#hide click->post-composer#confirmLink';
+    this.linkPreviewTarget.appendChild(confirmButton);
+  }
+
+  confirmLink(event) {
+    // Prevent the form from submitting
+    event.preventDefault();
+
+    // Store the final link URL in the hidden field, show the URL preview and
+    // auto-detected title, and set the post type to "Link".
+    this.linkDataTarget.value = JSON.stringify(this.linkDataValue);
+    this.linkUrlPreviewTarget.innerHTML = this.linkDataValue.url;
+    this.titleTarget.value = this.linkDataValue.meta.title;
+    this.titleTarget.classList.remove('hidden');
+    this.typeTarget.value = 'Link';
+  }
+
   selectFiles() {
     this.dummyFileFieldTarget.click();
   }
@@ -489,19 +539,28 @@ export default class extends Controller {
       this.characterCounterTarget.classList.remove('text-slate-500');
       this.characterCounterTarget.classList.remove('text-amber-500');
       this.characterCounterTarget.classList.add('text-pink-500');
-      this.typeTarget.value = 'Article';
+
+      if (this.typeTarget.value === 'Note') {
+        this.typeTarget.value = 'Article';
+      }
     } else if (content.length > this.characterWarningValue) {
-      this.titleTarget.classList.add('hidden');
       this.characterCounterTarget.classList.remove('text-pink-500');
       this.characterCounterTarget.classList.remove('text-slate-500');
       this.characterCounterTarget.classList.add('text-amber-500');
-      this.typeTarget.value = 'Note';
+
+      if (this.typeTarget.value === 'Article') {
+        this.titleTarget.classList.add('hidden');
+        this.typeTarget.value = 'Note';
+      }
     } else {
-      this.titleTarget.classList.add('hidden');
       this.characterCounterTarget.classList.remove('text-pink-500');
       this.characterCounterTarget.classList.remove('text-amber-500');
       this.characterCounterTarget.classList.add('text-slate-500');
-      this.typeTarget.value = 'Note';
+
+      if (this.typeTarget.value === 'Article') {
+        this.titleTarget.classList.add('hidden');
+        this.typeTarget.value = 'Note';
+      }
     }
   };
 }

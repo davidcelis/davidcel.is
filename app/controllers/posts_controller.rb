@@ -61,8 +61,10 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:type, :title, :content, :latitude, :longitude).tap do |p|
-      p.delete(:title) unless p[:type] == "Article"
+    params.require(:post).permit(:type, :title, :content, :latitude, :longitude, :link_data).tap do |p|
+      p.delete(:title) unless %(Article Link).include?(p[:type])
+
+      p[:link_data] = JSON.parse(p[:link_data]) if p[:type] == "Link"
     end
   end
 
