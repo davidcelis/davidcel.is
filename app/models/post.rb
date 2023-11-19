@@ -42,7 +42,7 @@ class Post < ApplicationRecord
 
   default_scope { order(id: :desc) }
 
-  scope :main, -> { where(type: %w[Article Note]) }
+  scope :main, -> { where(type: %w[Article Link Note]) }
 
   # Allow searching Posts by content and the name of wherever they were posted.
   # I could allow more specificity for searching against the associated Place,
