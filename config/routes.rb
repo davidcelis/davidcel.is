@@ -8,12 +8,14 @@ Rails.application.routes.draw do
   resources :posts, only: [:index, :create]
   resources :articles, only: [:index, :show]
   resources :check_ins, only: [:index, :show], path: "check-ins"
+  resources :links, only: [:index, :show]
   resources :notes, only: [:index, :show]
   resources :photos, only: [:index]
 
   get "/feeds/all", to: "feeds#all", format: :xml, as: :all_feed
   get "/feeds/articles", to: "feeds#articles", format: :xml, as: :articles_feed
   get "/feeds/check-ins", to: "feeds#check_ins", format: :xml, as: :check_ins_feed
+  get "/feeds/links", to: "feeds#links", format: :xml, as: :links_feed
   get "/feeds/notes", to: "feeds#notes", format: :xml, as: :notes_feed
   get "/feeds/main", to: "feeds#main", format: :xml, as: :main_feed
   get "/feed", to: "feeds#main", format: :xml

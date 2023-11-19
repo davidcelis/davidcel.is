@@ -1,0 +1,27 @@
+<div class="relative w-full mt-4 overflow-hidden bg-slate-50 rounded-md shadow ring-1 ring-slate-200">
+  <div class="flex flex-col space-y-2">
+    <% if link.preview_image.attached? %>
+      <%= link_to link.link_data["url"], class: "w-full", target: "_blank", rel: "nofollow noopener noreferrer" do %>
+        <%= image_tag cdn_file_url(link.preview_image), class: "object-cover w-full h-64" %>
+      <% end %>
+    <% end %>
+
+    <div class="flex flex-col p-3 space-y-1">
+      <p><%= link_to link.title, link.link_data["url"], class: "m-0 text-lg sm:text-xl leading-tight link-primary", target: "_blank", rel: "nofollow noopener noreferrer" %></p>
+
+      <% if (description = link.link_data.dig("meta", "description")) %>
+        <p class="text-sm"><%= description %></p>
+      <% end %>
+
+      <p class="flex">
+        <%= link_to link.base_url, class: "flex shrink text-slate-500", target: "_blank", rel: "nofollow noopener noreferrer" do %>
+          <% if link.favicon.attached? %>
+            <%= image_tag cdn_file_url(link.favicon), class: "w-4 h-4 mr-1 self-center" %>
+          <% end%>
+
+          <span><%= link.domain %></span>
+        <% end %>
+      </p>
+    </div>
+  </div>
+</div>

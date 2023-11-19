@@ -30,7 +30,12 @@ xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
       xml.published post.created_at.iso8601
       xml.updated post.updated_at.iso8601
 
-      xml.link rel: "alternate", type: "text/html", href: polymorphic_url(post)
+      if post.is_a?(Link)
+        xml.link rel: "alternate", type: "text/html", href: post.link_data["url"]
+        xml.link rel: "related", type: "text/html", href: polymorphic_url(post)
+      else
+        xml.link rel: "alternate", type: "text/html", href: polymorphic_url(post)
+      end
     end
   end
 end

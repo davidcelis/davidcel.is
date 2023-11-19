@@ -1,0 +1,30 @@
+<article class="h-entry py-10 sm:py-12" aria-labelledby="link-<%= link.id %>-title" >
+  <div class="lg:px-8">
+    <div class="lg:max-w-4xl">
+      <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+        <div class="flex flex-col items-start">
+          <h2 id="link-<%= link.id %>-title" class="mt-2 text-lg font-bold text-slate-900">
+            <%= link_to link.title, polymorphic_path(link), class: "p-name link-primary" %>
+          </h2>
+
+          <section class="p-summary prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
+            <%= link.excerpt.html_safe %>
+          </section>
+
+          <%= render partial: "links/preview", locals: { link: link } %>
+
+          <div data-controller="local-time" class="mt-4 flex items-center gap-4">
+            <%= link_to polymorphic_path(link), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
+              <span class="select-none md:absolute md:-ml-6 mr-2" title="Link" aria-hidden="true">
+                🔗
+              </span>
+              <%= timestamp(link.created_at, classes: ["dt-published"]) %>
+            <% end %>
+          </div>
+
+          <%= render partial: "posts/meta", locals: { post: link } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>

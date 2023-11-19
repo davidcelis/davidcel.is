@@ -1,7 +1,7 @@
 module AtomFeedHelper
   def atom_title_for(post)
     case post
-    when Article
+    when Article, Link
       post.title
     when CheckIn
       "📍 Checked in at #{post.place.name}"
@@ -16,7 +16,7 @@ module AtomFeedHelper
       atom_article_content(post)
     when CheckIn
       atom_check_in_content(post)
-    when Note
+    when Link, Note
       atom_note_content(post)
     end
   end

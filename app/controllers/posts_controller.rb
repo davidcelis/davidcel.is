@@ -6,6 +6,12 @@ class PostsController < ApplicationController
     posts = posts.unscope(:order).search(params[:q]) if params[:q].present?
     @pagy, @posts = pagy(posts)
 
+    # To show link previews, we'll preload their favicons and preview images.
+    ActiveRecord::Associations::Preloader.new(
+      records: @posts.select { |p| p.is_a?(Link) },
+      associations: Link::DEFAULT_INCLUDES
+    ).call
+
     respond_to :html
   end
 
@@ -22,8 +28,10 @@ class PostsController < ApplicationController
     # post creation into a background job. This lets us handle the processing
     # of the media attachments without hogging a web worker and also ensures
     # we can wait to create the Post object until the media is done processing.
-    # This includes _all_ check-ins, since they generate an Apple Maps snapshot.
-    if media_attachments_params.any? || place_params.key?(:apple_maps_id)
+    # This includes check-ins (they generate an Apple Maps snapshot) as well as
+    # links (they store cached versions of the link's relevant images like open
+    # graph images and a favicons).
+    if media_attachments_params.any? || place_params.key?(:apple_maps_id) || post_params[:type] == "Link"
       CreatePostWithMediaJob.perform_async(post_params.to_hash, media_attachments_params.map(&:to_hash), place_params.to_hash)
 
       redirect_to root_path, notice: "Your post’s media is being processed and will be available shortly."

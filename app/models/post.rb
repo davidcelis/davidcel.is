@@ -1,6 +1,7 @@
 class Post < ApplicationRecord
   include PgSearch::Model
 
+  EXCERPT_SEPARATOR = "<!--more-->".freeze
   DEFAULT_INCLUDES = [
     :place,
     :syndication_links,

@@ -40,6 +40,16 @@ class FeedsController < ApplicationController
     render :feed, formats: :xml
   end
 
+  def links
+    _, @posts = pagy(Link.includes(Post::DEFAULT_INCLUDES + Link::DEFAULT_INCLUDES))
+
+    @subtitle = "Links"
+    @self_url = links_feed_url
+    @alternate_url = links_url
+
+    render :feed, formats: :xml
+  end
+
   def notes
     _, @posts = pagy(Note.includes(Post::DEFAULT_INCLUDES))
 

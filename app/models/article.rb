@@ -1,6 +1,4 @@
 class Article < Post
-  EXCERPT_SEPARATOR = "<!--more-->".freeze
-
   # Allow Articles to have footnotes, tables, and task lists.
   self.markdown_parsing_options = [:UNSAFE, :SMART, :FOOTNOTES]
   self.markdown_rendering_options = [:UNSAFE, :SMART, :FOOTNOTES]
@@ -15,8 +13,8 @@ class Article < Post
     order_within_rank: "posts.created_at DESC"
 
   def excerpt
-    @excerpt ||= if html.include?(EXCERPT_SEPARATOR)
-      html.split(EXCERPT_SEPARATOR).first.strip
+    @excerpt ||= if html.include?(Post::EXCERPT_SEPARATOR)
+      html.split(Post::EXCERPT_SEPARATOR).first.strip
     else
       html.split(/(?<=<\/p>)/).first.strip
     end
