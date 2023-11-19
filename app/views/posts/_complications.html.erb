@@ -1,0 +1,28 @@
+<div class="flex flex-col flex-wrap justify-between space-y-1 w-full pt-4 text-sm text-slate-500">
+  <% if post.place.present? %>
+    <span class="font-mono text-slate-500">
+      <span class="font-sans select-none" aria-hidden="true">📍 </span>
+      <%= link_to "#{post.place.name}", post.place.apple_maps_url, class: "link-primary font-bold" %>
+      <span>/ <%= post.place.city_state_and_country(separator: " / ") %></span>
+    </span>
+
+    <% if post.weather.present? %>
+      <span class="font-mono text-slate-500 flex">
+        <span class="font-sans select-none" aria-hidden="true"><%= weather_emoji(post) %>&nbsp;</span>
+        <span><%= (post.weather["temperatureApparent"] * 1.8 + 32).round %>°F <%= weather_conditions(post) %></span>
+        <% if (aqi = post.weather["airQualityIndex"]) %>
+          <span>&nbsp;(AQI <%= aqi %></span>
+          <span class="flex flex-col justify-center items-center ml-2 select-none"><span class="h-2 w-2 rounded-full <%= aqi_bg_color(aqi) %>"></span></span>
+          <span>)</span>
+        <% end %>
+      </span>
+    <% end %>
+  <% end %>
+
+  <span data-controller="local-time" data-local-time-full-value class="font-mono">
+    <span class="font-sans select-none" data-local-time-target="emoji" aria-hidden="true"><%= clock_emoji(post.created_at) %> </span>
+    <%= link_to polymorphic_path(post), class: "u-url text-sm font-bold leading-6 link-primary" do %>
+      <%= timestamp(post.created_at, full: true, classes: ["dt-published"]) %>
+    <% end %>
+  </span>
+</div>
