@@ -530,7 +530,12 @@ export default class extends Controller {
       return match.replace(/https?:\/\/[\S]+\.[\S]{2,}/i, this.constructor.urlPlaceholder);
     });
 
-    const remaining = this.characterLimitValue - content.length;
+    var remaining = this.characterLimitValue - content.length;
+    if (this.typeTarget.value === 'Link') {
+      // Accommodate the fact that, when syndicating, the link will be added to
+      // the end of the post after two line breaks and shortened to 23 characters
+      remaining -= 25;
+    }
 
     this.characterCounterTarget.innerHTML = remaining;
 

@@ -20,7 +20,25 @@ class SyndicateToBlueskyJob < ApplicationJob
 
     text = case post
     when Note
-      post.content
+      content = post.content
+
+      # If the content is longer than 300 characters, we'll truncate it and
+      # append a link to the full post.
+      if character_count(content) > 300
+        url = polymorphic_url(post)
+
+        # Truncate the content so that it and the URL (23 characters),
+        # separated by an ellipsis and a space, fit within the 500 character
+        # limit.
+        content = content.truncate(500 - 25, omission: "")
+        content << "… #{url}"
+      end
+
+      content
+    when Link
+      content = [post.content, post.link_data["url"]].compact_blank.join("\n\n")
+
+      (character_count(content) <= 300) ? content : "🔗 #{post.title}\n\n#{link_url(post)}"
     when CheckIn
       content = post.content.presence
 
@@ -28,16 +46,17 @@ class SyndicateToBlueskyJob < ApplicationJob
       pin << "#{post.place.name} / #{post.place.city_state_and_country(separator: " / ")}"
       candidate = [content, pin].compact.join("\n\n")
 
-      (candidate.length > 300) ? content : candidate
-    end
+      # If the content is too long for everything to fit in 300 characters,
+      # we'll truncate the content and append a link to the full post. The pin
+      # will end up coming through in the link's preview, so we can ignore that.
+      if character_count(candidate) > 300
+        url = check_in_url(post)
 
-    if text.length > 300
-      url = polymorphic_url(post)
+        content = content.truncate(300 - 25, omission: "")
+        content << "… #{url}"
+      end
 
-      # Truncate the content so that it, an ellipsis, and the URL fit within
-      # the 300 character limit
-      truncated_text = text[0...(300 - url.length - 2)]
-      text = "#{truncated_text}… #{url}"
+      content
     end
 
     text, facets = client.extract_facets(text)
@@ -69,6 +88,15 @@ class SyndicateToBlueskyJob < ApplicationJob
     url = "https://bsky.app/profile/#{client.session.handle}/post/#{bluesky_id}"
 
     post.syndication_links.create!(platform: "bluesky", url: url)
+  end
+
+  # Bluesky supports up to 300 characters, but with a bit of control over how
+  # things like URLs are represented, thanks to the convoluted use of facets.
+  # Mentions still use the full character count, but URLs are basically rich
+  # text. On our end, though, we just simulate what Mastodon does, truncating
+  # links to a total of 23 characters (a schemeless URL with an ellipsis).
+  def character_count(text)
+    text.gsub(Post::URL_REGEX, "x" * 23).length
   end
 
   def client

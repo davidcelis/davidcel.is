@@ -89,7 +89,8 @@ module ATProto
       #
       # Then, all of this info is used to create a facet for the link.
       URI::DEFAULT_PARSER.extract(text, %w[http https]).each do |url|
-        shortened_url = url.gsub(%r{^https?://}, "")[0..21] + "\u2026"
+        schemeless_url = url.gsub(%r{^https?://}, "")
+        shortened_url = schemeless_url.truncate(23, omission: "…")
         text.sub!(url, shortened_url)
 
         start_index = text.byteindex(shortened_url)
