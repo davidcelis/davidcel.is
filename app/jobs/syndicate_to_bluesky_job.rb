@@ -54,6 +54,8 @@ class SyndicateToBlueskyJob < ApplicationJob
 
         content = content.truncate(300 - 25, omission: "")
         content << "… #{url}"
+      else
+        content = candidate
       end
 
       content

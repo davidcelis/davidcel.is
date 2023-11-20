@@ -42,6 +42,8 @@ class SyndicateToMastodonJob < ApplicationJob
 
         text = text.truncate(500 - 25, omission: "")
         text << "… #{url}"
+      else
+        text = candidate
       end
 
       text
