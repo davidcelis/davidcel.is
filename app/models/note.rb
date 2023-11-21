@@ -11,6 +11,6 @@ class Note < Post
   private
 
   def generate_slug
-    self.slug = commonmark_doc.to_plaintext.truncate_words(5).parameterize
+    self.slug = commonmark_doc.to_plaintext.truncate_words(5).gsub(/['’]/, "").parameterize
   end
 end

@@ -39,7 +39,7 @@ class Link < Post
   private
 
   def generate_slug
-    self.slug = [id, title].join("-").tr("'", "").first(72).parameterize
+    self.slug = [id, title].join("-").gsub(/['’]/, "").parameterize
   end
 
   def uri

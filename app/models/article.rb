@@ -27,7 +27,7 @@ class Article < Post
   private
 
   def generate_slug
-    self.slug = title.tr("'", "").parameterize
+    self.slug = title.gsub(/['’]/, "").parameterize
   end
 
   # Override the default `commonmark_doc` method to prevent the auto-linking we
