@@ -11,6 +11,10 @@
             <%= article.excerpt.html_safe %>
           </section>
 
+          <div class="mt-1 text-base leading-7 text-slate-700">
+            <%= link_to "Read more…", polymorphic_path(article), class: "link-primary" %>
+          </div>
+
           <div data-controller="local-time" class="mt-4 flex items-center gap-4">
             <%= link_to polymorphic_path(article), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
               <span class="select-none md:absolute md:-ml-6 mr-2" title="Article" aria-hidden="true">

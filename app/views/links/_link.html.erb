@@ -11,6 +11,12 @@
             <%= link.excerpt.html_safe %>
           </section>
 
+          <% if link.excerpt != link.html %>
+            <div class="mt-1 text-base leading-7 text-slate-700">
+              <%= link_to "Read more…", polymorphic_path(link), class: "link-primary" %>
+            </div>
+          <% end %>
+
           <%= render partial: "links/preview", locals: { link: link } %>
 
           <div data-controller="local-time" class="mt-4 flex items-center gap-4">

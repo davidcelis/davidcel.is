@@ -2,7 +2,7 @@
   <div class="flex flex-col space-y-2">
     <% if link.preview_image.attached? %>
       <%= link_to link.link_data["url"], class: "w-full", target: "_blank", rel: "nofollow noopener noreferrer" do %>
-        <%= image_tag cdn_file_url(link.preview_image), class: "object-cover w-full h-64" %>
+        <%= image_tag cdn_file_url(link.preview_image), class: "object-cover w-full h-full" %>
       <% end %>
     <% end %>
 
