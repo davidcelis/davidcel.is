@@ -1,8 +1,8 @@
 <div class="relative w-full mt-4 overflow-hidden bg-slate-50 rounded-md shadow ring-1 ring-slate-200">
   <div class="flex flex-col space-y-2">
     <% if link.preview_image.attached? %>
-      <%= link_to link.link_data["url"], class: "w-full", target: "_blank", rel: "nofollow noopener noreferrer" do %>
-        <%= image_tag cdn_file_url(link.preview_image), class: "object-cover w-full h-full" %>
+      <%= link_to link.link_data["url"], target: "_blank", rel: "nofollow noopener noreferrer" do %>
+        <%= image_tag cdn_file_url(link.preview_image), class: "object-cover w-full h-64" %>
       <% end %>
     <% end %>
 
