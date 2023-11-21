@@ -1,5 +1,6 @@
 class SyndicateToBlueskyJob < ApplicationJob
   include Rails.application.routes.url_helpers
+  include ActionView::Helpers::SanitizeHelper
 
   def perform(post_id)
     post = Post.find(post_id)
@@ -18,6 +19,7 @@ class SyndicateToBlueskyJob < ApplicationJob
       return
     end
 
+    embed = nil
     text = case post
     when Note
       content = post.content
@@ -38,7 +40,22 @@ class SyndicateToBlueskyJob < ApplicationJob
     when Link
       content = [post.content, post.link_data["url"]].compact_blank.join("\n\n")
 
-      (character_count(content) <= 300) ? content : "🔗 #{post.title}\n\n#{link_url(post)}"
+      if character_count(content) > 300
+        content = "🔗 #{post.title}"
+        blob = client.upload_blob(post.preview_image_attachment)["blob"]
+
+        embed = {
+          "$type" => "app.bsky.embed.external",
+          "external" => {
+            "uri" => polymorphic_url(post),
+            "title" => "🔗 #{post.title}",
+            "description" => strip_tags(post.excerpt),
+            "thumb" => blob
+          }
+        }
+      end
+
+      content
     when CheckIn
       content = post.content.presence
 
@@ -64,11 +81,11 @@ class SyndicateToBlueskyJob < ApplicationJob
     text, facets = client.extract_facets(text)
 
     blobs = images.map do |media_attachment|
-      result = client.upload_blob(media_attachment)
+      result = client.upload_blob(media_attachment.webp_variant_attachment)
       {image: result["blob"], alt: media_attachment.description}
     end
 
-    response = client.create_post(text: text, created_at: post.created_at, facets: facets, images: blobs)
+    response = client.create_post(text: text, created_at: post.created_at, facets: facets, images: blobs, embed: embed)
     create_syndication_link(post, response)
   ensure
     client.sign_out!

@@ -21,7 +21,7 @@ module ATProto
     # @param created_at [Time] The time the post was created.
     # @param facets [Array] An Array of rich text facets to attach to the post, each as a Hash.
     # @param images [Array] An Array of images to attach to the post, each as a Hash.
-    def create_post(text:, created_at:, facets: [], images: [])
+    def create_post(text:, created_at:, facets: [], images: [], embed: nil)
       params = {
         "collection" => "app.bsky.feed.post",
         "repo" => @session.did,
@@ -33,7 +33,9 @@ module ATProto
         }
       }
 
-      if images.any?
+      if embed
+        params["record"]["embed"] = embed
+      elsif images.any?
         params["record"]["embed"] = {
           "$type" => "app.bsky.embed.images",
           "images" => images
@@ -56,13 +58,13 @@ module ATProto
     #     "size": 343459
     #   }
     # }
-    def upload_blob(media_attachment)
+    def upload_blob(attachment)
       response = nil
 
-      media_attachment.webp_variant_attachment.blob.open do |blob|
+      attachment.blob.open do |blob|
         tmpfile = ImageProcessor.process(blob, size_limit: IMAGE_SIZE_LIMIT, pixel_limit: IMAGE_PIXEL_LIMIT)
 
-        response = blob_upload_connection.post("#{BASE_PATH}.uploadBlob", tmpfile, "Content-Type" => media_attachment.webp_variant_attachment.content_type, "Content-Length" => tmpfile.size.to_s)
+        response = blob_upload_connection.post("#{BASE_PATH}.uploadBlob", tmpfile, "Content-Type" => attachment.content_type, "Content-Length" => tmpfile.size.to_s)
       end
 
       response.body
