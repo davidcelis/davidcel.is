@@ -35,6 +35,7 @@ class Post < ApplicationRecord
   validates :content, presence: true, unless: -> { type == "CheckIn" || media_attachments.any? }
 
   before_create :generate_slug
+  before_save :sanitize_content
   before_save :update_html, if: :content_changed?
   before_save :clear_coordinates, if: -> { latitude.blank? || longitude.blank? }
 
@@ -92,6 +93,13 @@ class Post < ApplicationRecord
 
   def clear_coordinates
     self.coordinates = nil
+  end
+
+  # This is a catch-all method for sanitizing content before it's saved to the
+  # database, and is where we'll do things like strip leading or trailing
+  # whitespace and converting carriage returns from CodeMirror to newlines.
+  def sanitize_content
+    self.content = content.strip.gsub(/\r\n?/, "\n")
   end
 
   def commonmark_doc
