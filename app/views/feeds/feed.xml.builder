@@ -8,15 +8,15 @@ xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
     xml.uri root_url
   end
 
-  xml.icon asset_url("me.jpg")
-  xml.logo asset_url("me.jpg")
+  xml.icon profile_picture_url
+  xml.logo profile_picture_url
 
   xml.link rel: "alternate", type: "text/html", href: @alternate_url
   xml.link rel: "self", type: "application/atom+xml", href: @self_url
 
   xml.id @self_url
   xml.updated @posts.first.created_at.iso8601
-  xml.rights "© #{Time.zone.now.year} David Celis"
+  xml.rights "© #{Date.today.year} David Celis"
 
   @posts.each do |post|
     xml.entry do

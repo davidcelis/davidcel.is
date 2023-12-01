@@ -40,15 +40,15 @@
     <%= content_for(:head) %>
 
     <meta property="og:title" content="<%= content_for(:og_title) || "davidcel.is" %>">
-    <meta property="og:description" content="<%= content_for(:og_description) || "Thoughts and musings of a Cowboy Coder." %>">
+    <meta property="og:description" content="<%= content_for(:og_description) || "Lukewarm takes from a Cowboy Coder." %>">
     <meta property="og:type" content="<%= content_for(:og_type) || "website" %>">
     <meta property="og:url" content="<%= content_for(:og_url) || request.original_url %>">
 
     <% if content_for?(:og_image) %>
       <%= content_for(:og_image) %>
     <% else %>
-      <meta property="og:image" content="<%= image_url("me.jpg") %>">
-      <meta property="og:image:alt" content="A photo of me on a horse, looking quite dapper.">
+      <meta property="og:image" content="<%= profile_picture_url %>">
+      <meta property="og:image:alt" content="<%= profile_picture_alt_text %>">
     <% end %>
     <%= content_for(:og_video) %>
 
