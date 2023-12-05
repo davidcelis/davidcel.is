@@ -1,5 +1,6 @@
 class ErrorsController < ApplicationController
   SUPPORTED_ERROR_CODES = {
+    400 => "bad_request",
     404 => "not_found",
     500 => "internal_server_error"
   }.freeze
