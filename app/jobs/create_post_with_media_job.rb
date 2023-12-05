@@ -24,7 +24,7 @@ class CreatePostWithMediaJob < ApplicationJob
       # coordinates but without any of the extra stuff like snapshots.
       post.place = if post.is_a?(CheckIn)
         create_check_in_place(post, place_params: place_params)
-      else
+      elsif place_params.present?
         Place.find_or_create_by(place_params)
       end
 
