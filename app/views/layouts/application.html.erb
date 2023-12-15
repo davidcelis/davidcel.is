@@ -63,6 +63,10 @@
       <meta name="twitter:image" content="<%= image_url("me.jpg") %>">
       <meta name="twitter:image:alt" content="A photo of me on a horse, looking quite dapper.">
     <% end %>
+
+    <% if christmas? %>
+      <script defer type="module" src="https://unpkg.com/@zachleat/snow-fall@1.0.1/snow-fall.js"></script>
+    <% end %>
   </head>
 
   <body class="bg-white antialiased">

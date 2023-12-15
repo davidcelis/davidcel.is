@@ -9,6 +9,14 @@ module ApplicationHelper
     end
   end
 
+  def let_it_snow(&block)
+    if christmas?
+      content_tag("snow-fall", &block)
+    else
+      yield
+    end
+  end
+
   def profile_picture_alt_text
     @profile_picture_alt_text ||= if christmas?
       "A photo of me wearing a blue blazer and pocket square while on a horse, looking quite dapper. Both me and the horse are wearing Santa hats."
