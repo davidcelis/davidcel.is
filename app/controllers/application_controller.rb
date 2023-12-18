@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   rescue_from Pagy::VariableError do |e|
     @exception = Errors::BadRequest.new(e.message, original_exception: e)
 
-    render "errors/bad_request", status: @exception.status
+    render "errors/bad_request", status: @exception.status_code
   end
 
   def authenticated?
