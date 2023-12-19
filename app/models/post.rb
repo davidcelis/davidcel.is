@@ -1,5 +1,6 @@
 class Post < ApplicationRecord
   include PgSearch::Model
+  include SnowflakeID
 
   EXCERPT_SEPARATOR = "<!--more-->".freeze
   DEFAULT_INCLUDES = [

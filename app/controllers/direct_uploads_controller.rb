@@ -5,7 +5,7 @@ class DirectUploadsController < ActiveStorage::DirectUploadsController
 
   def blob_args
     super.tap do |args|
-      id = ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id();")
+      id = SnowflakeID.generate
       extension = Rack::Mime::MIME_TYPES.invert[args[:content_type]]
 
       args.merge!(key: "blog/#{id}#{extension}")

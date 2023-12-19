@@ -1,6 +1,8 @@
 class Place < ApplicationRecord
   APPLE_MAPS_BASE_URL = "https://maps.apple.com/".freeze
 
+  include SnowflakeID
+
   has_many :check_ins
 
   validates :name, presence: true

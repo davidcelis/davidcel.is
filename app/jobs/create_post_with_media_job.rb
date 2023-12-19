@@ -10,7 +10,6 @@ class CreatePostWithMediaJob < ApplicationJob
       # on the post having an ID, we'll just initialize it here and pull an ID
       # before saving it.
       post = Post.new(post_params)
-      post.id = ActiveRecord::Base.connection.select_value("SELECT public.snowflake_id();")
 
       # If we have coordinates, we'll use the WeatherKit API to get the weather
       Sentry.configure_scope do |scope|
@@ -33,15 +32,9 @@ class CreatePostWithMediaJob < ApplicationJob
       # store them as MediaAttachments on the post.
       cache_link_images(post) if post.is_a?(Link)
 
-      # Then, we'll save the post so that we can start attaching the media.
-      # We have to skip validations here because posts with media attachments
-      # are allowed to have no content. We'll save the post one last time with
-      # validations at the very end of this process.
-      post.save(validate: false)
-
       media_attachments_params.each do |blob_params|
         blob_params = blob_params.with_indifferent_access
-        media_attachment = post.media_attachments.create!(
+        media_attachment = post.media_attachments.new(
           file: blob_params[:signed_id],
           description: blob_params.fetch(:description, "").strip.presence
         )

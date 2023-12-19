@@ -1,4 +1,6 @@
 class Webmention < ApplicationRecord
+  include SnowflakeID
+
   belongs_to :post, optional: true
 
   validates :source, presence: true

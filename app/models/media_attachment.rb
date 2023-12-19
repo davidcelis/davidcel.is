@@ -8,6 +8,8 @@ class MediaAttachment < ApplicationRecord
     }
   ].freeze
 
+  include SnowflakeID
+
   belongs_to :post
 
   has_one_attached :file
