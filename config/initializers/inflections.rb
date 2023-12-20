@@ -14,6 +14,9 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "AQI"
   inflect.acronym "AT"
   inflect.acronym "GitHub"
-  inflect.acronym "ID"
   inflect.acronym "OAuth"
+end
+
+Rails.autoloaders.each do |autoloader|
+  autoloader.inflector.inflect "snowflake_id" => "SnowflakeID"
 end
