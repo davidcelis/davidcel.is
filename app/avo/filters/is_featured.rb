@@ -1,5 +1,5 @@
-class HasAltTextFilter < Avo::Filters::BooleanFilter
-  self.name = "Has alt text?"
+class Avo::Filters::IsFeatured < Avo::Filters::BooleanFilter
+  self.name = "Featured?"
 
   # self.visible = -> do
   #   true
@@ -9,9 +9,9 @@ class HasAltTextFilter < Avo::Filters::BooleanFilter
     return query if values["yes"] && values["no"]
 
     if values["yes"]
-      query = query.where.not(description: nil)
+      query = query.where(featured: true)
     elsif values["no"]
-      query = query.where(description: nil)
+      query = query.where(featured: false)
     end
 
     query
@@ -25,8 +25,6 @@ class HasAltTextFilter < Avo::Filters::BooleanFilter
   end
 
   def default
-    {
-      no: true
-    }
+    {}
   end
 end

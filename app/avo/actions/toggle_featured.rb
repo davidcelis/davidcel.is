@@ -1,4 +1,4 @@
-class ToggleFeatured < Avo::BaseAction
+class Avo::Actions::ToggleFeatured < Avo::BaseAction
   self.name = "Toggle featured"
 
   def handle(**args)
