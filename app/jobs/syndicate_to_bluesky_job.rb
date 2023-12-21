@@ -30,9 +30,9 @@ class SyndicateToBlueskyJob < ApplicationJob
         url = polymorphic_url(post)
 
         # Truncate the content so that it and the URL (23 characters),
-        # separated by an ellipsis and a space, fit within the 500 character
+        # separated by an ellipsis and a space, fit within the 300 character
         # limit.
-        content = content.truncate(500 - 25, omission: "")
+        content = content.truncate(300 - 25, omission: "")
         content << "… #{url}"
       end
 
