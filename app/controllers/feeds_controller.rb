@@ -1,5 +1,8 @@
 class FeedsController < ApplicationController
-  before_action :set_proper_content_type
+  before_action :set_proper_content_type, except: :index
+
+  def index
+  end
 
   def main
     _, @posts = pagy(Post.main.includes(Post::DEFAULT_INCLUDES))
@@ -56,6 +59,20 @@ class FeedsController < ApplicationController
     @subtitle = "Notes"
     @self_url = notes_feed_url
     @alternate_url = notes_url
+
+    render :feed, formats: :xml
+  end
+
+  def photos
+    posts = Post.includes(Post::DEFAULT_INCLUDES)
+      .joins(:media_attachments)
+      .where(media_attachments: {featured: true})
+
+    _, @posts = pagy(posts)
+
+    @subtitle = "Photos"
+    @self_url = photos_feed_url
+    @alternate_url = photos_url
 
     render :feed, formats: :xml
   end

@@ -1,0 +1,112 @@
+<div class="py-8">
+  <div class="lg:px-8">
+    <div class="lg:max-w-4xl">
+      <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+        <h1 class="text-2xl font-bold leading-7 text-slate-900">RSS Feeds</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
+    <article class="py-10 sm:py-12">
+      <div class="lg:px-8">
+        <div class="lg:max-w-4xl">
+          <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+            <div class="prose prose-slate mt-1 text-base leading-7 text-slate-700 lg:prose-lg prose-ul:pl-0 prose-li:pl-0 prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900">
+              <p>
+                Still using a feed reader? Me too! I rely on RSS feeds to keep up
+                with other blogs and news sites, so I make sure to provide them
+                for my own content as well. Every post I write is syndicated via
+                RSS, and I maintain multiple feeds so you can pick and choose from
+                whatever you’re interested in:
+              </p>
+
+              <p>
+                The <%= link_to "main feed", main_feed_path %> has my core posts:
+                <%= link_to "articles", articles_path %>, <%= link_to "notes", notes_path %>,
+                and <%= link_to "links", links_path %> that I share. You can also subscribe
+                to each kind of post individually:
+              </p>
+
+              <ul class="list-none">
+                <li>
+                  <span class="select-none">📝</span>
+
+                  The <%= link_to "articles feed", articles_feed_path %> contains only
+                  my long-form <%= link_to "articles", articles_path %>. I write these
+                  pretty infrequently, so you won't get too many updates here.
+                </li>
+
+                <li>
+                  <span class="select-none">✏️</span>
+
+                  The <%= link_to "notes feed", notes_feed_path %> just has my short-form
+                  <%= link_to "notes", notes_path %> (aka "tweets" or "lukewarm takes").
+                  These are more frequent, but not as much as when I was on Twitter.
+                </li>
+
+                <li>
+                  <span class="select-none">🔗</span>
+
+                  The <%= link_to "links feed", links_feed_path %> tracks the
+                  <%= link_to "links", links_path %> that I share from around the web
+                  with a bit of commentary from me. Unlike the other feeds, clicking on
+                  the title of a link in your feed reader will take you to the source
+                  material instead of my site. If you want to get to my site, you can
+                  click on the little 🐴 at the bottom of the entry in your reader.
+                </li>
+
+                <li>
+                  <span class="select-none">📍</span>
+
+                  The <%= link_to "check-ins feed", check_ins_feed_path %> contains all
+                  of my <%= link_to "check-ins", check_ins_path %>. I check in a lot, and
+                  you probably won’t really care when I do. But if you do want to see where
+                  I’m hanging out or what I’m up to, feel free!
+                </li>
+
+                <li>
+                  <span class="select-none">📸</span>
+
+                  The <%= link_to "photos feed", photos_feed_path %> has the
+                  <%= link_to "photos", photos_path %> that I take and feature on my site.
+                  I share pics in different ways, so you’ll see a mix of notes, check-ins,
+                  and articles in this feed.
+                </li>
+
+                <li>
+                  <span class="select-none">🗃️</span>
+
+                  I also have one <%= link_to "mega feed", all_feed_path %> that’ll get you
+                  everything I post. I can’t in good conscience recommend it, but it’s there.
+                </li>
+              </ul>
+
+              <h3 id="how-to-subscribe">How to Subscribe</h3>
+
+              <p>
+                If you’re new to RSS, you’ll need an RSS reader. There are a lot of options
+                out there but, if you’re in the Apple ecosystem like me, I highly recommend
+                <a href="https://reederapp.com/">Reeder</a>. It’s available for macOS, iOS,
+                and iPadOS, and you can subscribe to feeds right from the app and have them
+                sync across all of your devices via iCloud.
+              </p>
+
+              <p>
+                Once you have an RSS reader, you can subscribe to any of the feeds above
+                by clicking on their links; that should prompt you to open them in whatever
+                reader you’ve installed. If that doesn’t work and they open in your browser
+                instead, you can copy the URL and paste it into whatever your reader app’s
+                “new subscription” flow is. Thanks for reading!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>
+
+<%= content_for(:og_title, "RSS Feeds") %>
+<%= content_for(:og_description, "Read my posts in your preferred feed reader!") %>
+<%= content_for(:og_type, "profile") %>

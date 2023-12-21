@@ -18,7 +18,9 @@ module AtomFeedHelper
       atom_article_content(post)
     when CheckIn
       atom_check_in_content(post)
-    when Link, Note
+    when Link
+      atom_link_content(post)
+    when Note
       atom_note_content(post)
     end
   end
@@ -61,6 +63,12 @@ module AtomFeedHelper
     note.media_attachments.reduce(note.html) do |html, media_attachment|
       html + atom_media_tag(media_attachment)
     end
+  end
+
+  def atom_link_content(link)
+    content = atom_note_content(link)
+
+    content + content_tag(:p, link_to("🐴", polymorphic_url(link)))
   end
 
   def atom_media_tag(media_attachment)
