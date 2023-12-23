@@ -34,7 +34,7 @@
 </article>
 
 <%= content_for(:og_title, @article.title) %>
-<%= content_for(:og_description, strip_tags(@article.excerpt).strip) %>
+<%= content_for(:og_description, strip_tags(@article.og_description).strip) %>
 <%= content_for(:og_type, "article") %>
 <%= content_for(:og_url, post_url(@article.id)) %>
 
