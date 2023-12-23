@@ -3,6 +3,14 @@ class Avo::Resources::Article < Avo::BaseResource
 
   self.title = :title
 
+  self.find_record_method = -> do
+    if id.is_a?(Array)
+      (id.first.to_i == 0) ? query.where(slug: id) : query.where(id: id)
+    else
+      (id.to_i == 0) ? query.find_by_slug(id) : query.find(id)
+    end
+  end
+
   self.includes = Post::DEFAULT_INCLUDES
   # self.search_query = -> do
   #   scope.ransack(id_eq: params[:q], m: "or").result(distinct: false)
