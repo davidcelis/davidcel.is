@@ -248,6 +248,12 @@ class CreatePostWithMediaJob < ApplicationJob
   end
 
   def generate_webp_variant(media_attachment)
+    # If the file is already a WebP, just attach it as the webp_variant.
+    if media_attachment.content_type == "image/webp"
+      media_attachment.webp_variant.attach(media_attachment.file.blob)
+      return
+    end
+
     filename = File.basename(media_attachment.file.blob.filename.to_s, ".*")
 
     media_attachment.file.blob.open do |file|
