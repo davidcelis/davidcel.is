@@ -15,7 +15,7 @@ module AtomFeedHelper
   def atom_content_for(post)
     case post
     when Article
-      atom_article_content(post)
+      post.html
     when CheckIn
       atom_check_in_content(post)
     when Link
@@ -26,16 +26,6 @@ module AtomFeedHelper
   end
 
   private
-
-  def atom_article_content(article)
-    html = "#{article.excerpt}<p>#{link_to "Continue reading…", polymorphic_url(article)}</p>"
-
-    if (image = article.media_attachments.first(&:image?))
-      html = "#{image_tag(cdn_file_url(image), alt: image.description)}#{html}"
-    end
-
-    html
-  end
 
   def atom_check_in_content(check_in)
     place_parts = [
