@@ -25,8 +25,6 @@ class Avo::Filters::HasAltText < Avo::Filters::BooleanFilter
   end
 
   def default
-    {
-      no: true
-    }
+    {}
   end
 end

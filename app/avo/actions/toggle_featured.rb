@@ -2,14 +2,14 @@ class Avo::Actions::ToggleFeatured < Avo::BaseAction
   self.name = "Toggle featured"
 
   def handle(**args)
-    models = args[:models]
+    records = args[:query]
 
     # If every selection shares the same value, toggle them. Otherwise, mark
     # them all as featured.
-    if models.all?(&:featured?) || models.none?(&:featured?)
-      models.each { |model| model.update!(featured: !model.featured) }
+    if records.all?(&:featured?) || records.none?(&:featured?)
+      records.each { |record| record.update!(featured: !record.featured) }
     else
-      models.each { |model| model.update!(featured: true) }
+      records.each { |record| record.update!(featured: true) }
     end
 
     succeed "Done."

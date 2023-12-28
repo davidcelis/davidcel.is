@@ -2,7 +2,7 @@ class Avo::Resources::MediaAttachment < Avo::BaseResource
   self.title = :id
   self.description = -> do
     if view.in?(%i[show edit])
-      model.post.content
+      record.post.content
     else
       "Photos, videos, and other media attachments"
     end
@@ -19,9 +19,12 @@ class Avo::Resources::MediaAttachment < Avo::BaseResource
 
   self.grid_view = {
     card: -> do
+      title = record.post.title.presence || record.post.content.presence || record.post.id
+      title = "⭐ #{title}" if record.featured?
+
       {
         cover_url: Rails.application.routes.url_helpers.cdn_file_url(record),
-        title: record.post.title.presence || record.post.content.presence || record.post.id,
+        title: title,
         body: record.description
       }
     end
