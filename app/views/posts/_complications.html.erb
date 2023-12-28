@@ -25,4 +25,11 @@
       <%= timestamp(post.created_at, full: true, classes: ["dt-published"]) %>
     <% end %>
   </span>
+
+  <% if authenticated? %>
+    <span class="font-mono text-slate-500">
+      <span class="font-sans select-none" aria-hidden="true">🔏 </span>
+      <%= link_to "Edit post", edit_post_path(post.id), class: "link-primary font-bold" %>
+    </span>
+  <% end %>
 </div>

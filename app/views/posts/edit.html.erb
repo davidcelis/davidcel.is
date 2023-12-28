@@ -1,0 +1,108 @@
+<% content_for :head do %>
+  <%# Prevent Turbo from caching the page; it doesn't play nicely with the form. %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
+
+<div class="py-12 sm:py-8">
+  <div class="sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
+    <section id="post-form" class="py-10 sm:py-12 border-b border-slate-100">
+      <div class="lg:px-8">
+        <div class="lg:max-w-4xl">
+          <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+            <div class="flex">
+              <%= form_with model: @post, url: post_path(@post.id), html: {class: "relative grow", data: {"controller" => "post-editor", "post-editor-target" => "form", "post-editor-direct-upload-url-value" => direct_uploads_url}} do |f| %>
+                <div class="post-editor-container border border-slate-300 rounded-lg shadow-sm overflow-hidden">
+                  <%= hidden_field_tag "_type", @post.type, data: {"post-editor-target" => "type"} %>
+
+                  <%= f.text_field :title, name: "post[title]", placeholder: "Title", class: "#{"hidden " unless @post.title.present?}block w-full border-0 pt-2.5 text-lg font-medium placeholder-slate-500 focus:ring-0", data: {"post-editor-target" => "title"} %>
+                  <%= f.text_area :content, name: "post[content]", data: {"post-editor-target" => "editor"} %>
+
+                  <div aria-hidden="true">
+                    <div class="flex flex-wrap px-2 gap-x-2" data-post-editor-target="mediaPreviewZone">
+                      <% @post.media_attachments.each do |media| %>
+                        <div class="relative w-32 h-32 mb-2" data-post-editor-target="mediaPreview" data-controller="reveal" data-file-name="<%= media.filename %>" data-file-size="<%= media.byte_size %>" data-file-type="<%= media.content_type %>" data-file-last-modified="<%= media.updated_at.to_i %>">
+                          <% if media.image? %>
+                            <%= image_tag cdn_file_url(media), class: "object-cover rounded height-full w-full shadow-md" %>
+                          <% elsif media.video_or_gif? %>
+                            <%= image_tag cdn_file_url(media.preview_image), class: "object-cover rounded height-full w-full shadow-md" %>
+                          <% end %>
+
+                          <%= hidden_field_tag "post[media_attachments][][id]", media.id %>
+                          <%= hidden_field_tag "post[media_attachments][][signed_id]", nil %>
+
+                          <button class="absolute bottom-1 left-1 px-1 font-bold font-ui-sans rounded-[.25rem] bg-black bg-opacity-[.65] hover:bg-black text-white select-none" data-action="click->reveal#show:prevent" data-reveal-target="button">+ALT</button>
+
+                          <div class="hidden" data-reveal-target="item">
+                            <div class="fixed inset-0 z-[25] height-screen w-screen bg-slate-800/40 backdrop-blur-sm opacity-100" data-action="click->reveal#hide:prevent"></div>
+                            <div class="fixed top-8 max-h-[92vh] inset-x-4 mx-auto z-[50] origin-top flex flex-col gap-4 p-4 rounded-md max-w-prose bg-white opacity-100 scale-100 overflow-y-auto" data-reveal-target="item">
+                              <div class="flex justify-between">
+                                <h2 class="text-xl font-bolt text-slate-900">Description</h2>
+                                <button class="text-sm py-0 px-2 rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary" data-action="click->reveal#hide:prevent">Close</button>
+                              </div>
+
+                              <% if media.image? %>
+                                <%= image_tag cdn_file_url(media), class: "object-cover rounded height-full w-full shadow-md" %>
+                              <% elsif media.video_or_gif? %>
+                                <%= image_tag cdn_file_url(media.preview_image), class: "object-cover rounded height-full w-full shadow-md" %>
+                              <% end %>
+
+                              <%= text_area_tag "post[media_attachments][][description]", media.description, placeholder: "Describe the image", class: "border border-slate-200 rounded p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent placeholder:italic min-h-[100px] resize-none", data: {"reveal-target" => "focus"} %>
+                            </div>
+                          </div>
+
+                          <button class="absolute top-1 right-1 p-1 rounded-full bg-black bg-opacity-[.65] hover:bg-black" data-action="click->post-editor#removeMediaAttachment:prevent">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-white" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"></path></svg>
+                          </button>
+                        </div>
+                      <% end %>
+                    </div>
+
+                    <div class="border-t border-slate-200 px-2 py-2 flex justify-between items-center space-x-3 sm:px-3">
+                      <div class="flex-shrink">
+                        <div class="flex justify-between items-center space-x-3">
+                          <button type="button" class="group flex items-center" data-action="click->post-editor#selectFiles">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-8 w-8 fill-slate-400 group-hover:fill-slate-600"><path d="M220.6 121.2L271.1 96 448 96v96H333.2c-21.9-15.1-48.5-24-77.2-24s-55.2 8.9-77.2 24H64V128H192c9.9 0 19.7-2.3 28.6-6.8zM0 128V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H271.1c-9.9 0-19.7 2.3-28.6 6.8L192 64H160V48c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16l0 16C28.7 64 0 92.7 0 128zM168 304a88 88 0 1 1 176 0 88 88 0 1 1 -176 0z"/></svg>
+                            <span class="hidden">Attach media</span>
+                          </button>
+
+                          <%= file_field_tag :files, multiple: true, hidden: true, accept: "image/*,video/*", data: {"post-editor-target" => "dummyFileField", "action" => "change->post-editor#dummyFileFieldChanged"} %>
+                        </div>
+                      </div>
+
+                      <div class="flex-shrink-0">
+                        <span id="character_counter" class="select-none text-sm text-slate-500 italic px-2" data-post-editor-target="characterCounter">500</span>
+                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-500 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">Update</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <style>
+      /* Ink MDE customization */
+      .ink-mde {
+        border: none !important;
+
+        --ink-code-font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        --ink-font-family: var(--ink-code-font-family);
+
+        /* Figure out how to keep the carat from disappearing in dark mode */
+      }
+
+      .ink-mde-editor {
+        min-height: 144px !important;
+        cursor: text;
+      }
+
+      .cm-focused {
+        outline: none !important;
+      }
+    </style>
+
+  </div>
+</div>

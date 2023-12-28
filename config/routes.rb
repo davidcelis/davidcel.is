@@ -5,7 +5,13 @@ Rails.application.routes.draw do
 
   get "/about", to: "pages#about"
 
-  resources :posts, only: [:index, :create]
+  # For the generic /posts/:id route (i.e. to route to a post without using
+  # its type, like Article or Note), we'll only support numeric IDs. Only
+  # polymorphic routes will support something like fetching posts by slugs.
+  # This also ensures that our legacy URLs listed below won't conflict.
+  get "/posts/:id", to: "posts#show", as: :post, constraints: {id: /\d+/}
+
+  resources :posts, only: [:index, :create, :edit, :update]
   resources :articles, only: [:index, :show]
   resources :check_ins, only: [:index, :show], path: "check-ins"
   resources :links, only: [:index, :show]
@@ -23,12 +29,6 @@ Rails.application.routes.draw do
   get "/feeds/photos", to: "feeds#photos", format: :xml, as: :photos_feed
   get "/feeds/main", to: "feeds#main", format: :xml, as: :main_feed
   get "/feed", to: "feeds#main", format: :xml
-
-  # For the generic /posts/:id route (i.e. to route to a post without using
-  # its type, like Article or Note), we'll only support numeric IDs. Only
-  # polymorphic routes will support something like fetching posts by slugs.
-  # This also ensures that our legacy URLs listed below won't conflict.
-  get "/posts/:id", to: "posts#show", as: :post, constraints: {id: /\d+/}
 
   post :webmention, to: "webmentions#receive"
 

@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :require_authentication, only: [:create]
+  before_action :require_authentication, only: [:create, :edit, :update]
 
   def index
     posts = Post.includes(Post::DEFAULT_INCLUDES)
@@ -66,6 +66,37 @@ class PostsController < ApplicationController
     end
   end
 
+  def edit
+    @post = Post.includes(Post::DEFAULT_INCLUDES).find(params[:id])
+  end
+
+  def update
+    post = Post.find(params[:id])
+
+    ActiveRecord::Base.transaction do
+      # We only support updating the post's title, content, and media
+      post_params = params.require(:post).permit(:title, :content)
+      post.update!(post_params)
+
+      # Destroy any media attachments that weren't re-submitted in the update
+      post.media_attachments.where.not(id: media_attachments_params.map { |p| p[:id] }).destroy_all
+
+      # Update or create the media attachments that _were_ submitted
+      media_attachments_params.each do |media_attachment_params|
+        media_attachment = if media_attachment_params[:id].present?
+          post.media_attachments.find(media_attachment_params[:id])
+        elsif media_attachment_params[:signed_id].present?
+          post.media_attachments.new(file: media_attachment_params[:signed_id])
+        end
+
+        media_attachment.description = media_attachment_params[:description]
+        media_attachment.save!
+      end
+    end
+
+    redirect_to polymorphic_path(post), notice: "Post updated!"
+  end
+
   private
 
   def post_params
@@ -77,7 +108,7 @@ class PostsController < ApplicationController
   end
 
   def media_attachments_params
-    params.require(:post).permit(media_attachments: [:signed_id, :description]).fetch(:media_attachments, [])
+    params.require(:post).permit(media_attachments: [:id, :signed_id, :description]).fetch(:media_attachments, [])
   end
 
   def place_params

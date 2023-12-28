@@ -64,6 +64,13 @@
                 <% end %>
               </div>
 
+              <% if authenticated? %>
+                <span class="font-mono text-slate-500">
+                  <span class="font-sans select-none" aria-hidden="true">🔏 </span>
+                  <%= link_to "Edit post", edit_post_path(@check_in.id), class: "link-primary font-bold" %>
+                </span>
+              <% end %>
+
               <%= render partial: "posts/meta", locals: { post: @check_in } %>
             </div>
           </div>
