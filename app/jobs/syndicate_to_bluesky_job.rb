@@ -7,8 +7,12 @@ class SyndicateToBlueskyJob < ApplicationJob
 
     # Although ATProto technically supports updating repo records, Bluesky
     # has "temporarily" disabled this for posts. Until they support editing
-    # posts, we'll skip syndicating any updates.
-    return if post.syndication_links.where(platform: "bluesky").exists?
+    # posts, we'll delete the original record and create a new one.
+    if (link = post.syndication_links.find_by(platform: "bluesky"))
+      rkey = link.url.split("/").last
+      client.delete_post(rkey)
+      link.destroy!
+    end
 
     # If the post is an Article, we'll just syndicate the title and URL.
     if post.is_a?(Article) && !post.syndication_links.where(platform: "bluesky").exists?

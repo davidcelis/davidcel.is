@@ -41,6 +41,19 @@ module ATProto
       connection.post("#{BASE_PATH}.putRecord", params.to_json)
     end
 
+    # Deletes a post in the user's feed.
+    #
+    # @param rkey [String] The ID of the post to delete.
+    def delete_post(rkey)
+      params = {
+        "collection" => "app.bsky.feed.post",
+        "repo" => @session.did,
+        "rkey" => rkey
+      }
+
+      connection.post("#{BASE_PATH}.deleteRecord", params.to_json)
+    end
+
     # Uploads a blob to the user's repo.
     #
     # @param blob [String] The bytestream of the blob to upload.
@@ -144,7 +157,7 @@ module ATProto
           "$type" => "app.bsky.feed.post",
           "text" => text,
           "facets" => facets,
-          "createdAt" => created_at.utc.iso8601(3)
+          "createdAt" => created_at.utc.iso8601(6)
         }
       }
 
