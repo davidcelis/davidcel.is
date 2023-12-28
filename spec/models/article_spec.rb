@@ -24,13 +24,26 @@ RSpec.describe Article, type: :model do
   end
 
   describe "syndication" do
-    it "enqueues a job to syndicate the post to Mastodon on creation" do
+    it "enqueues a job to syndicate the post on creation" do
       allow(SyndicateToMastodonJob).to receive(:perform_async)
+      allow(SyndicateToBlueskyJob).to receive(:perform_async)
 
       article.save!
-      article.update!(content: "Updated article")
 
       expect(SyndicateToMastodonJob).to have_received(:perform_async).with(article.id).once
+      expect(SyndicateToBlueskyJob).to have_received(:perform_async).with(article.id).once
+    end
+
+    it "enqueues a job to syndicate the post to Mastodon on update" do
+      article.save!
+
+      allow(SyndicateToMastodonJob).to receive(:perform_async)
+      allow(SyndicateToBlueskyJob).to receive(:perform_async)
+
+      article.update!(content: "Goodbye, world!")
+
+      expect(SyndicateToMastodonJob).to have_received(:perform_async).with(article.id).once
+      expect(SyndicateToBlueskyJob).to have_received(:perform_async).with(article.id).once
     end
   end
 
