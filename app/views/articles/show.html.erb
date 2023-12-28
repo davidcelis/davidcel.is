@@ -31,6 +31,11 @@
                 <span class="font-sans select-none" aria-hidden="true">🔏 </span>
                 <%= link_to "Edit post", edit_post_path(@article.id), class: "link-primary font-bold" %>
               </span>
+
+              <span class="font-mono text-sm text-slate-500">
+                <span class="font-sans select-none" aria-hidden="true">🚮 </span>
+                <%= link_to "Delete post", post_path(@article.id), class: "link-primary font-bold", data: { turbo_method: :delete, turbo_confirm: "You sure?" } %>
+              </span>
             <% end %>
 
             <%= render partial: "posts/meta", locals: { post: @article } %>

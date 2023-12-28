@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   # This also ensures that our legacy URLs listed below won't conflict.
   get "/posts/:id", to: "posts#show", as: :post, constraints: {id: /\d+/}
 
-  resources :posts, only: [:index, :create, :edit, :update]
+  resources :posts, only: [:index, :create, :edit, :update, :destroy]
   resources :articles, only: [:index, :show]
   resources :check_ins, only: [:index, :show], path: "check-ins"
   resources :links, only: [:index, :show]

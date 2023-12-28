@@ -41,6 +41,7 @@ class Post < ApplicationRecord
   before_save :clear_coordinates, if: -> { latitude.blank? || longitude.blank? }
 
   after_commit :syndicate, on: [:create, :update]
+  before_destroy :unsyndicate, prepend: true
 
   default_scope { order(id: :desc) }
 
@@ -84,6 +85,18 @@ class Post < ApplicationRecord
   def syndicate
     SyndicateToMastodonJob.perform_async(id)
     SyndicateToBlueskyJob.perform_async(id)
+  end
+
+  def unsyndicate
+    if (mastodon_link = syndication_links.find_by(platform: "mastodon"))
+      status_id = mastodon_link.url.split("/").last
+      DeleteFromMastodonJob.perform_async(status_id)
+    end
+
+    if (bluesky_link = syndication_links.find_by(platform: "bluesky"))
+      rkey = bluesky_link.url.split("/").last
+      DeleteFromBlueskyJob.perform_async(rkey)
+    end
   end
 
   def generate_slug

@@ -28,6 +28,10 @@ module Mastodon
       connection.put("/api/v1/statuses/#{id}", params.to_json).body
     end
 
+    def delete_status(id)
+      connection.delete("/api/v1/statuses/#{id}")
+    end
+
     def upload_media(media_attachment)
       response = media_attachment.open do |blob|
         tmpfile = blob
