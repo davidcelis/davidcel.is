@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.2.2"
+ruby "3.3.0"
 
 gem "rails", "~> 7.1.0"
 
@@ -87,6 +87,8 @@ group :development, :test do
 end
 
 group :development do
+  gem "ruby-lsp"
+
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 
