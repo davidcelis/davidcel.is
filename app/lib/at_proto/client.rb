@@ -22,27 +22,23 @@ module ATProto
     # @param facets [Array] An Array of rich text facets to attach to the post, each as a Hash.
     # @param images [Array] An Array of images to attach to the post, each as a Hash.
     def create_post(text:, created_at:, facets: [], images: [], embed: nil)
-      params = {
-        "collection" => "app.bsky.feed.post",
-        "repo" => @session.did,
-        "record" => {
-          "$type" => "app.bsky.feed.post",
-          "text" => text,
-          "facets" => facets,
-          "createdAt" => created_at.utc.iso8601(3)
-        }
-      }
-
-      if embed
-        params["record"]["embed"] = embed
-      elsif images.any?
-        params["record"]["embed"] = {
-          "$type" => "app.bsky.embed.images",
-          "images" => images
-        }
-      end
+      params = post_params(text: text, created_at: created_at, facets: facets, images: images, embed: embed)
 
       connection.post("#{BASE_PATH}.createRecord", params.to_json)
+    end
+
+    # Updates a post in the user's feed.
+    #
+    # @param rkey [String] The ID of the post to update.
+    # @param text [String] The text of the post.
+    # @param created_at [Time] The time the post was created.
+    # @param facets [Array] An Array of rich text facets to attach to the post, each as a Hash.
+    # @param images [Array] An Array of images to attach to the post, each as a Hash.
+    def update_post(rkey, text:, created_at:, facets: [], images: [], embed: nil)
+      params = post_params(text: text, created_at: created_at, facets: facets, images: images, embed: embed)
+      params["rkey"] = rkey
+
+      connection.post("#{BASE_PATH}.putRecord", params.to_json)
     end
 
     # Uploads a blob to the user's repo.
@@ -139,6 +135,30 @@ module ATProto
     end
 
     private
+
+    def post_params(text:, created_at:, facets: [], images: [], embed: nil)
+      params = {
+        "collection" => "app.bsky.feed.post",
+        "repo" => @session.did,
+        "record" => {
+          "$type" => "app.bsky.feed.post",
+          "text" => text,
+          "facets" => facets,
+          "createdAt" => created_at.utc.iso8601(3)
+        }
+      }
+
+      if embed
+        params["record"]["embed"] = embed
+      elsif images.any?
+        params["record"]["embed"] = {
+          "$type" => "app.bsky.embed.images",
+          "images" => images
+        }
+      end
+
+      params
+    end
 
     def connection
       @connection ||= Faraday.new(ATProto::BASE_URL) do |f|

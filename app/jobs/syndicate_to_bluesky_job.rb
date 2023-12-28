@@ -5,8 +5,13 @@ class SyndicateToBlueskyJob < ApplicationJob
   def perform(post_id)
     post = Post.find(post_id)
 
+    # Although ATProto technically supports updating repo records, Bluesky
+    # has "temporarily" disabled this for posts. Until they support editing
+    # posts, we'll skip syndicating any updates.
+    return if post.syndication_links.where(platform: "bluesky").exists?
+
     # If the post is an Article, we'll just syndicate the title and URL.
-    if post.is_a?(Article)
+    if post.is_a?(Article) && !post.syndication_links.where(platform: "bluesky").exists?
       text, facets = client.extract_facets("“#{post.title}”\n\n#{article_url(post)}")
       response = client.create_post(text: text, created_at: post.created_at, facets: facets)
       return create_syndication_link(post, response)
@@ -85,8 +90,13 @@ class SyndicateToBlueskyJob < ApplicationJob
       {image: result["blob"], alt: media_attachment.description}
     end
 
-    response = client.create_post(text: text, created_at: post.created_at, facets: facets, images: blobs, embed: embed)
-    create_syndication_link(post, response)
+    if (link = post.syndication_links.find_by(platform: "bluesky"))
+      rkey = link.url.split("/").last
+      client.update_post(rkey, text: text, created_at: post.created_at, facets: facets, images: blobs, embed: embed)
+    else
+      response = client.create_post(text: text, created_at: post.created_at, facets: facets, images: blobs, embed: embed)
+      create_syndication_link(post, response)
+    end
   ensure
     client.sign_out!
   end

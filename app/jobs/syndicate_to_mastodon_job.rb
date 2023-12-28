@@ -64,12 +64,16 @@ class SyndicateToMastodonJob < ApplicationJob
       end
     end
 
-    status = client.create_status(content: content, media_ids: media_ids, idempotency_key: post.id)
-
-    post.syndication_links.create!(
-      platform: "mastodon",
-      url: status["url"]
-    )
+    if (link = post.syndication_links.find_by(platform: "mastodon"))
+      status_id = link.url.split("/").last
+      client.update_status(status_id, content: content, media_ids: media_ids)
+    else
+      status = client.create_status(content: content, media_ids: media_ids, idempotency_key: post.id)
+      post.syndication_links.create!(
+        platform: "mastodon",
+        url: status["url"]
+      )
+    end
   end
 
   private

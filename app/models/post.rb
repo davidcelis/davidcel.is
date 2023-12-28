@@ -40,7 +40,7 @@ class Post < ApplicationRecord
   before_save :update_html, if: :content_changed?
   before_save :clear_coordinates, if: -> { latitude.blank? || longitude.blank? }
 
-  after_commit :syndicate, on: :create
+  after_commit :syndicate, on: [:create, :update]
 
   default_scope { order(id: :desc) }
 
@@ -82,8 +82,6 @@ class Post < ApplicationRecord
   private
 
   def syndicate
-    return if Rails.env.development?
-
     SyndicateToMastodonJob.perform_async(id)
     SyndicateToBlueskyJob.perform_async(id)
   end

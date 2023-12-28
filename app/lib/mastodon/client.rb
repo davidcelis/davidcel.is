@@ -22,6 +22,12 @@ module Mastodon
       connection.post("/api/v1/statuses", params.to_json, headers).body
     end
 
+    def update_status(id, content:, media_ids: [], idempotency_key: nil)
+      params = {status: content, media_ids: media_ids}
+
+      connection.put("/api/v1/statuses/#{id}", params.to_json).body
+    end
+
     def upload_media(media_attachment)
       response = media_attachment.open do |blob|
         tmpfile = blob
