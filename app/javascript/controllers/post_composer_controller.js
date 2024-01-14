@@ -69,6 +69,8 @@ export default class extends Controller {
     // Lifecycle-related values
     prepopulatedNearbyLocations: { type: Boolean, default: false },
     watchPositionId: Number,
+    previousLatitude: Number,
+    previousLongitude: Number
   };
 
   // TODO: Once Safari supports positive look-behinds, we can use these instead:
@@ -172,6 +174,14 @@ export default class extends Controller {
       this.debugLatitudeTarget.innerHTML = position.coords.latitude;
       this.debugLongitudeTarget.innerHTML = position.coords.longitude;
 
+      // If our coordinates haven't changed, return early.
+      if (this.previousLatitudeValue === latitude && this.previousLongitudeValue === longitude) {
+        return;
+      } else {
+        this.previousLatitudeValue = latitude;
+        this.previousLongitudeValue = longitude;
+      }
+
       const geocoder = new window.mapkit.Geocoder({});
       const coordinate = new window.mapkit.Coordinate(latitude, longitude);
 
@@ -209,6 +219,7 @@ export default class extends Controller {
       this.logError(error)
     }, {
       enableHighAccuracy: true,
+      maximumAge: 10000,
       timeout: 10000
     });
   }
