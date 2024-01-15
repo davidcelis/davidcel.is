@@ -70,7 +70,8 @@ export default class extends Controller {
     prepopulatedNearbyLocations: { type: Boolean, default: false },
     watchPositionId: Number,
     previousLatitude: Number,
-    previousLongitude: Number
+    previousLongitude: Number,
+    locationLastUpdatedAt: Number,
   };
 
   // TODO: Once Safari supports positive look-behinds, we can use these instead:
@@ -174,6 +175,12 @@ export default class extends Controller {
       this.debugLatitudeTarget.innerHTML = position.coords.latitude;
       this.debugLongitudeTarget.innerHTML = position.coords.longitude;
 
+      // If we've already done a reverse geocode in the last 5 seconds, return
+      // early so we don't spam the API.
+      if (this.locationLastUpdatedAtValue && ((Date.now() - this.locationLastUpdatedAtValue) < 5000)) {
+        return;
+      }
+
       // If our coordinates haven't changed, return early.
       if (this.previousLatitudeValue === latitude && this.previousLongitudeValue === longitude) {
         return;
@@ -186,6 +193,8 @@ export default class extends Controller {
       const coordinate = new window.mapkit.Coordinate(latitude, longitude);
 
       geocoder.reverseLookup(coordinate, (error, data) => {
+        this.locationLastUpdatedAtValue = Date.now();
+
         if (error) {
           this.logError(error)
         } else {
@@ -208,11 +217,25 @@ export default class extends Controller {
           this.placeCountryCodeTarget.value = place.countryCode || '';
 
           // Finally, make all of this visible in the debug pane.
-          this.debugPlaceNameTarget.innerHTML = place.subLocality;
-          this.debugPlaceCityTarget.innerHTML = place.locality;
-          this.debugPlaceStateTarget.innerHTML = `${place.administrativeArea} (${place.administrativeAreaCode})`;
-          this.debugPlacePostalCodeTarget.innerHTML = place.postCode;
-          this.debugPlaceCountryTarget.innerHTML = `${place.country} (${place.countryCode})`;
+          this.debugPlaceNameTarget.innerHTML = place.subLocality || '';
+          this.debugPlaceCityTarget.innerHTML = place.locality || '';
+          this.debugPlacePostalCodeTarget.innerHTML = place.postCode || '';
+
+          this.debugPlaceStateTarget.innerHTML = '';
+          if (place.administrativeArea) {
+            this.debugPlaceStateTarget.innerHTML += place.administrativeArea;
+          }
+          if (place.administrativeAreaCode) {
+            this.debugPlaceStateTarget.innerHTML += ` (${place.administrativeAreaCode})`;
+          }
+
+          this.debugPlaceCountryTarget.innerHTML = '';
+          if (place.country) {
+            this.debugPlaceCountryTarget.innerHTML += place.country;
+          }
+          if (place.countryCode) {
+            this.debugPlaceCountryTarget.innerHTML += ` (${place.countryCode})`;
+          }
         }
       });
     }, (error) => {
