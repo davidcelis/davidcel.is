@@ -179,7 +179,7 @@ module ATProto
         f.request :json
         f.request :authorization, "Bearer", @session.access_token
 
-        # f.response :raise_error
+        f.response :raise_error
         f.response :json
       end
     end
@@ -189,7 +189,7 @@ module ATProto
         f.request :retry
         f.request :authorization, "Bearer", @session.access_token
 
-        # f.response :raise_error
+        f.response :raise_error
         f.response :json
       end
     end
