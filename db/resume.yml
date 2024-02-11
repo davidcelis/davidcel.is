@@ -20,25 +20,25 @@ basics:
     - network: GitHub
       username: davidcelis
       url: https://github.com/davidcelis
-    - network: Instagram
-      username: davidcelis
-      url: https://instagram.com/davidcelis
     - network: Mastodon
       username: "@davidcelis@xoxo.zone"
       url: https://xoxo.zone/@davidcelis
-    - network: Twitter
+    - network: Bluesky
+      username: davidcel.is
+      url: https://bsky.app/profile/davidcel.is
+    - network: Instagram
       username: davidcelis
-      url: https://twitter.com/davidcelis
+      url: https://instagram.com/davidcelis
 
 skills:
-  - {name: "Ruby/Rails", level: "Expert"}
-  - {name: "Sorbet", level: "Proficient"}
-  - {name: "GraphQL", level: "Expert"}
-  - {name: "SQL/PostgreSQL/MySQL", level: "Proficient"}
-  - {name: "JavaScript/TypeScript", level: "Learning"}
-  - {name: "Redis", level: "Proficient"}
-  - {name: "Docker", level: "Intermediate"}
-  - {name: "Git(Hub)", level: "Expert"}
+  - { name: "Ruby/Rails", level: "Expert" }
+  - { name: "Sorbet", level: "Proficient" }
+  - { name: "GraphQL", level: "Expert" }
+  - { name: "SQL/PostgreSQL/MySQL", level: "Proficient" }
+  - { name: "JavaScript/TypeScript", level: "Learning" }
+  - { name: "Redis", level: "Proficient" }
+  - { name: "Docker", level: "Intermediate" }
+  - { name: "Git(Hub)", level: "Expert" }
 
 work:
   - name: FireHydrant
