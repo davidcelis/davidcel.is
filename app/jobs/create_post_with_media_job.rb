@@ -36,7 +36,8 @@ class CreatePostWithMediaJob < ApplicationJob
         blob_params = blob_params.with_indifferent_access
         post.media_attachments.new(
           file: blob_params[:signed_id],
-          description: blob_params.fetch(:description, "").strip.presence
+          description: blob_params.fetch(:description, "").strip.presence,
+          featured: blob_params[:featured]
         )
       end
 

@@ -89,8 +89,7 @@ class PostsController < ApplicationController
           post.media_attachments.new(file: media_attachment_params[:signed_id])
         end
 
-        media_attachment.description = media_attachment_params[:description]
-        media_attachment.save!
+        media_attachment.update!(media_attachment_params.slice(:description, :featured))
       end
     end
 
@@ -115,7 +114,7 @@ class PostsController < ApplicationController
   end
 
   def media_attachments_params
-    params.require(:post).permit(media_attachments: [:id, :signed_id, :description]).fetch(:media_attachments, [])
+    params.require(:post).permit(media_attachments: [:id, :signed_id, :description, :featured]).fetch(:media_attachments, [])
   end
 
   def place_params

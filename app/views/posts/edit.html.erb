@@ -30,7 +30,7 @@
                           <%= hidden_field_tag "post[media_attachments][][id]", media.id %>
                           <%= hidden_field_tag "post[media_attachments][][signed_id]", nil %>
 
-                          <button class="absolute bottom-1 left-1 px-1 font-bold font-ui-sans rounded-[.25rem] bg-black bg-opacity-[.65] hover:bg-black text-white select-none" data-action="click->reveal#show:prevent" data-reveal-target="button">+ALT</button>
+                          <button class="absolute bottom-1 left-1 px-1 font-bold font-ui-sans rounded-[.25rem] bg-black bg-opacity-[.65] hover:bg-black text-white select-none" data-action="click->reveal#show:prevent" data-reveal-target="button">✏️</button>
 
                           <div class="hidden" data-reveal-target="item">
                             <div class="fixed inset-0 z-[25] height-screen w-screen bg-slate-800/40 backdrop-blur-sm opacity-100" data-action="click->reveal#hide:prevent"></div>
@@ -47,6 +47,16 @@
                               <% end %>
 
                               <%= text_area_tag "post[media_attachments][][description]", media.description, placeholder: "Describe the image", class: "border border-slate-200 rounded p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent placeholder:italic min-h-[100px] resize-none", data: {"reveal-target" => "focus"} %>
+
+                              <div class="flex items-center">
+                                <button data-action="click->post-editor#toggleFeaturedMedia:prevent type="button" role="switch" class="<%= media.featured? ? "bg-pink-600" : "bg-slate-200" %> relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2">
+                                  <span class="<%= media.featured? ? "translate-x-5" : "translate-x-0" %> pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                                </button>
+
+                                <span class="ml-3 text-sm text-slate-900">Featured</span>
+
+                                <%= hidden_field_tag "post[media_attachments][][featured]", media.featured? %>
+                              </div>
                             </div>
                           </div>
 

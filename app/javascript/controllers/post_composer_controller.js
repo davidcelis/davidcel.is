@@ -479,62 +479,95 @@ export default class extends Controller {
     signedIdHiddenInput.name = 'post[media_attachments][][signed_id]';
     previewElement.appendChild(signedIdHiddenInput);
 
-    // Add a button that'll toggle a small modal with a form for alt text.
+    // Add a button that'll toggle a small modal with a form for alt text and
+    // marking the media attachment as "featured" to show it on the photos page.
     // This will be hidden at first, and then shown when the upload completes.
-    const altTextButton = document.createElement('button');
-    altTextButton.classList.add('hidden', 'absolute', 'bottom-1', 'left-1', 'px-1', 'font-bold', 'font-ui-sans', 'rounded-[.25rem]', 'bg-black', 'bg-opacity-[.65]', 'hover:bg-black', 'text-white', 'select-none');
-    altTextButton.innerHTML = '+ALT'
-    altTextButton.dataset.action = 'click->reveal#show:prevent'
-    altTextButton.dataset.revealTarget = 'button';
-    previewElement.appendChild(altTextButton);
+    const editMediaButton = document.createElement('button');
+    editMediaButton.classList.add('hidden', 'absolute', 'bottom-1', 'left-1', 'px-1', 'font-bold', 'font-ui-sans', 'rounded-[.25rem]', 'bg-black', 'bg-opacity-[.65]', 'hover:bg-black', 'text-white', 'select-none');
+    editMediaButton.innerHTML = '✏️'
+    editMediaButton.dataset.action = 'click->reveal#show:prevent'
+    editMediaButton.dataset.revealTarget = 'button';
+    previewElement.appendChild(editMediaButton);
 
     // Then, start building the modal itself by creating a wrapper div.
-    const altTextModal = document.createElement('div');
-    altTextModal.classList.add('hidden');
-    altTextModal.dataset.revealTarget = 'item';
+    const editMediaModal = document.createElement('div');
+    editMediaModal.classList.add('hidden');
+    editMediaModal.dataset.revealTarget = 'item';
 
     // Add a background blur that'll dismiss the modal when clicked.
-    const altTextFormBackgroundBlur = document.createElement('div');
-    altTextFormBackgroundBlur.classList.add('fixed', 'inset-0', 'z-[25]', 'height-screen', 'w-screen', 'bg-slate-800/40', 'backdrop-blur-sm', 'opacity-100');
-    altTextFormBackgroundBlur.dataset.action = 'click->reveal#hide:prevent';
-    altTextModal.appendChild(altTextFormBackgroundBlur);
+    const editMediaFormBackgroundBlur = document.createElement('div');
+    editMediaFormBackgroundBlur.classList.add('fixed', 'inset-0', 'z-[25]', 'height-screen', 'w-screen', 'bg-slate-800/40', 'backdrop-blur-sm', 'opacity-100');
+    editMediaFormBackgroundBlur.dataset.action = 'click->reveal#hide:prevent';
+    editMediaModal.appendChild(editMediaFormBackgroundBlur);
 
     // Then, start building the form itself.
-    const altTextForm = document.createElement('div');
-    altTextForm.classList.add('fixed', 'top-8', 'max-h-[92vh]', 'inset-x-4', 'mx-auto', 'z-[50]', 'origin-top', 'flex', 'flex-col', 'gap-4', 'p-4', 'rounded-md', 'max-w-prose', 'bg-white', 'opacity-100', 'scale-100', 'overflow-y-auto');
-    altTextForm.dataset.revealTarget = 'item';
+    const editMediaForm = document.createElement('div');
+    editMediaForm.classList.add('fixed', 'top-8', 'max-h-[92vh]', 'inset-x-4', 'mx-auto', 'z-[50]', 'origin-top', 'flex', 'flex-col', 'gap-4', 'p-4', 'rounded-md', 'max-w-prose', 'bg-white', 'opacity-100', 'scale-100', 'overflow-y-auto');
+    editMediaForm.dataset.revealTarget = 'item';
 
     // Add a header with a dismiss button...
-    const altTextFormHeader = document.createElement('div');
-    altTextFormHeader.classList.add('flex', 'justify-between');
-    const altTextFormH2 = document.createElement('h2');
-    altTextFormH2.classList.add('text-xl', 'font-bolt', 'text-slate-900');
-    altTextFormH2.innerHTML = 'Description';
-    const altTextFormDismissButton = document.createElement('button');
-    altTextFormDismissButton.classList.add('text-sm', 'py-0', 'px-2', 'rounded-sm', 'transition', 'active:transition-none', 'bg-slate-100', 'font-medium', 'hover:bg-pink-100', 'active:bg-slate-100', 'active:text-pink-900/60', 'link-primary');
-    altTextFormDismissButton.dataset.action = 'click->reveal#hide:prevent';
-    altTextFormDismissButton.innerHTML = 'Close';
+    const editMediaFormHeader = document.createElement('div');
+    editMediaFormHeader.classList.add('flex', 'justify-between');
+    const editMediaFormH2 = document.createElement('h2');
+    editMediaFormH2.classList.add('text-xl', 'font-bolt', 'text-slate-900');
+    editMediaFormH2.innerHTML = 'Description';
+    const editMediaFormDismissButton = document.createElement('button');
+    editMediaFormDismissButton.classList.add('text-sm', 'py-0', 'px-2', 'rounded-sm', 'transition', 'active:transition-none', 'bg-slate-100', 'font-medium', 'hover:bg-pink-100', 'active:bg-slate-100', 'active:text-pink-900/60', 'link-primary');
+    editMediaFormDismissButton.dataset.action = 'click->reveal#hide:prevent';
+    editMediaFormDismissButton.innerHTML = 'Close';
 
     // ... render the image so we can see what we're describing...
-    const altTextFormImagePreview = document.createElement('img');
-    altTextFormImagePreview.classList.add('object-cover', 'rounded', 'w-full', 'shadow-md');
-    altTextFormImagePreview.src = imageUrl;
+    const editMediaFormImagePreview = document.createElement('img');
+    editMediaFormImagePreview.classList.add('object-cover', 'rounded', 'w-full', 'shadow-md');
+    editMediaFormImagePreview.src = imageUrl;
 
     // ... and a text input for the alt text...
-    const altTextInput = document.createElement('textarea');
-    altTextInput.classList.add('border', 'border-slate-200', 'rounded', 'p-2', 'text-slate-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-pink-500', 'focus:border-transparent', 'placeholder:italic', 'min-h-[100px]', 'resize-none');
-    altTextInput.placeholder = 'Describe the image';
-    altTextInput.name = 'post[media_attachments][][description]';
-    altTextInput.dataset.revealTarget = 'focus';
+    const editMediaInput = document.createElement('textarea');
+    editMediaInput.classList.add('border', 'border-slate-200', 'rounded', 'p-2', 'text-slate-900', 'focus:outline-none', 'focus:ring-2', 'focus:ring-pink-500', 'focus:border-transparent', 'placeholder:italic', 'min-h-[100px]', 'resize-none');
+    editMediaInput.placeholder = 'Describe the image';
+    editMediaInput.name = 'post[media_attachments][][description]';
+    editMediaInput.dataset.revealTarget = 'focus';
+
+    // ... and a toggle for marking the media as "featured"...
+    const editMediaFeaturedGroup = document.createElement('div');
+    editMediaFeaturedGroup.classList.add('flex', 'items-center');
+    const editMediaFeaturedToggle = document.createElement('button');
+    editMediaFeaturedToggle.type = 'button';
+    editMediaFeaturedToggle.role = 'switch';
+    editMediaFeaturedToggle.classList.add('bg-pink-600', 'relative', 'inline-flex', 'h-6', 'w-11', 'flex-shrink-0', 'cursor-pointer', 'rounded-full', 'border-2', 'border-transparent', 'transition-colors', 'duration-200', 'ease-in-out', 'focus:outline-none', 'focus:ring-2', 'focus:ring-indigo-600', 'focus:ring-offset-2');
+    const editMediaFeaturedToggleSpan = document.createElement('span');
+    editMediaFeaturedToggleSpan.classList.add('translate-x-5', 'pointer-events-none', 'inline-block', 'h-5', 'w-5', 'transform', 'rounded-full', 'bg-white', 'shadow', 'ring-0', 'transition', 'duration-200', 'ease-in-out');
+    editMediaFeaturedToggle.appendChild(editMediaFeaturedToggleSpan);
+    const editMediaFeaturedLabel = document.createElement('span');
+    editMediaFeaturedLabel.classList.add('ml-3', 'text-sm', 'text-slate-900');
+    editMediaFeaturedLabel.innerHTML = 'Featured';
+    const editMediaFeaturedInput = document.createElement('input');
+    editMediaFeaturedInput.type = 'hidden';
+    editMediaFeaturedInput.name = 'post[media_attachments][][featured]';
+    editMediaFeaturedInput.value = 'true';
+
+    editMediaFeaturedGroup.appendChild(editMediaFeaturedToggle);
+    editMediaFeaturedGroup.appendChild(editMediaFeaturedLabel);
+    editMediaFeaturedGroup.appendChild(editMediaFeaturedInput);
+
+    // ... with an event listener to toggle the switch...
+    editMediaFeaturedToggle.addEventListener('click', () => {
+      editMediaFeaturedToggle.classList.toggle('bg-pink-600');
+      editMediaFeaturedToggle.classList.toggle('bg-slate-200');
+      editMediaFeaturedToggleSpan.classList.toggle('translate-x-5');
+      editMediaFeaturedToggleSpan.classList.toggle('translate-x-0');
+      editMediaFeaturedInput.value = editMediaFeaturedInput.value === 'true' ? 'false' : 'true';
+    });
 
     // ... and finally, assemble the form.
-    altTextFormHeader.appendChild(altTextFormH2);
-    altTextFormHeader.appendChild(altTextFormDismissButton);
-    altTextForm.appendChild(altTextFormHeader);
-    altTextForm.appendChild(altTextFormImagePreview);
-    altTextForm.appendChild(altTextInput);
-    altTextModal.appendChild(altTextForm);
-    previewElement.appendChild(altTextModal);
+    editMediaFormHeader.appendChild(editMediaFormH2);
+    editMediaFormHeader.appendChild(editMediaFormDismissButton);
+    editMediaForm.appendChild(editMediaFormHeader);
+    editMediaForm.appendChild(editMediaFormImagePreview);
+    editMediaForm.appendChild(editMediaInput);
+    editMediaForm.appendChild(editMediaFeaturedGroup);
+    editMediaModal.appendChild(editMediaForm);
+    previewElement.appendChild(editMediaModal);
 
     // Add a button to remove the media attachment from the post. Like the alt
     // text button, this will start hidden and be shown when the upload's done.
@@ -574,7 +607,7 @@ export default class extends Controller {
         // When the upload is done, get rid of the progress bar and show the
         // buttons to add alt text or remove the media attachment from the post
         progressBar.remove();
-        altTextButton.classList.remove('hidden');
+        editMediaButton.classList.remove('hidden');
         removeButton.classList.remove('hidden');
 
         // Then, set the hidden input's value to the blob's signed ID.
