@@ -30,7 +30,7 @@
                           <%= hidden_field_tag "post[media_attachments][][id]", media.id %>
                           <%= hidden_field_tag "post[media_attachments][][signed_id]", nil %>
 
-                          <button class="absolute bottom-1 left-1 px-1 font-bold font-ui-sans rounded-[.25rem] bg-black bg-opacity-[.65] hover:bg-black text-white select-none" data-action="click->reveal#show:prevent" data-reveal-target="button">✏️</button>
+                          <button class="absolute bottom-1 left-1 px-1 font-bold font-ui-sans rounded-[.25rem] bg-black bg-opacity-[.65] hover:bg-black text-white select-none" data-action="click->reveal#show:prevent" data-reveal-target="button">+ALT</button>
 
                           <div class="hidden" data-reveal-target="item">
                             <div class="fixed inset-0 z-[25] height-screen w-screen bg-slate-800/40 backdrop-blur-sm opacity-100" data-action="click->reveal#hide:prevent"></div>
@@ -57,6 +57,8 @@
 
                                 <%= hidden_field_tag "post[media_attachments][][featured]", media.featured? %>
                               </div>
+
+                              <button class="p-2 mt-2 w-full rounded-sm transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary" data-action="click->reveal#hide:prevent">Confirm</button>
                             </div>
                           </div>
 

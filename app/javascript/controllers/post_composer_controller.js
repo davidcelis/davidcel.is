@@ -484,7 +484,7 @@ export default class extends Controller {
     // This will be hidden at first, and then shown when the upload completes.
     const editMediaButton = document.createElement('button');
     editMediaButton.classList.add('hidden', 'absolute', 'bottom-1', 'left-1', 'px-1', 'font-bold', 'font-ui-sans', 'rounded-[.25rem]', 'bg-black', 'bg-opacity-[.65]', 'hover:bg-black', 'text-white', 'select-none');
-    editMediaButton.innerHTML = '✏️'
+    editMediaButton.innerHTML = '+ALT'
     editMediaButton.dataset.action = 'click->reveal#show:prevent'
     editMediaButton.dataset.revealTarget = 'button';
     previewElement.appendChild(editMediaButton);
@@ -559,6 +559,12 @@ export default class extends Controller {
       editMediaFeaturedInput.value = editMediaFeaturedInput.value === 'true' ? 'false' : 'true';
     });
 
+    // ... and a button that just says "Confirm" but just closes the modal...
+    const confirmButton = document.createElement('button');
+    confirmButton.classList.add('p-2', 'mt-2', 'w-full', 'rounded-sm', 'transition', 'active:transition-none', 'bg-slate-100', 'font-medium', 'hover:bg-pink-100', 'active:bg-slate-100', 'active:text-pink-900/60', 'link-primary');
+    confirmButton.innerHTML = 'Confirm';
+    confirmButton.dataset.action = 'click->reveal#hide:prevent';
+
     // ... and finally, assemble the form.
     editMediaFormHeader.appendChild(editMediaFormH2);
     editMediaFormHeader.appendChild(editMediaFormDismissButton);
@@ -566,6 +572,7 @@ export default class extends Controller {
     editMediaForm.appendChild(editMediaFormImagePreview);
     editMediaForm.appendChild(editMediaInput);
     editMediaForm.appendChild(editMediaFeaturedGroup);
+    editMediaForm.appendChild(confirmButton);
     editMediaModal.appendChild(editMediaForm);
     previewElement.appendChild(editMediaModal);
 
