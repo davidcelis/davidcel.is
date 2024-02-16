@@ -1,5 +1,6 @@
 class FeedsController < ApplicationController
   before_action :set_proper_content_type, except: :index
+  after_action :track_page_view
 
   def index
   end
