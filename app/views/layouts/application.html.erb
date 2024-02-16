@@ -66,6 +66,10 @@
       <meta name="twitter:image:alt" content="A photo of me on a horse, looking quite dapper.">
     <% end %>
 
+    <% unless authenticated? %>
+      <script defer data-domain="davidcel.is" src="https://pls.davidcel.is/js/script.js"></script>
+    <% end %>
+
     <% if christmas? %>
       <script defer type="module" src="https://unpkg.com/@zachleat/snow-fall@1.0.1/snow-fall.js"></script>
     <% end %>
