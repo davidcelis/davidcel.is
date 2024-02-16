@@ -66,7 +66,7 @@
       <meta name="twitter:image:alt" content="A photo of me on a horse, looking quite dapper.">
     <% end %>
 
-    <% unless authenticated? %>
+    <% if Rails.env.production? && !authenticated? %>
       <script defer data-domain="davidcel.is" src="https://pls.davidcel.is/js/script.js"></script>
     <% end %>
 

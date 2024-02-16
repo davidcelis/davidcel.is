@@ -232,6 +232,7 @@ GEM
     pg_search (2.3.6)
       activerecord (>= 5.2)
       activesupport (>= 5.2)
+    plausible_api (0.3)
     prism (0.19.0)
     propshaft (0.8.0)
       actionpack (>= 7.0.0)
@@ -441,6 +442,7 @@ DEPENDENCIES
   pagy (~> 5.10)
   pg (~> 1.1)
   pg_search (~> 2.3)
+  plausible_api
   propshaft
   pry-byebug
   pry-rails

@@ -66,6 +66,9 @@ gem "sentry-ruby"
 gem "sentry-rails"
 gem "sentry-sidekiq"
 
+# Use Plausible for analytics
+gem "plausible_api"
+
 # Tame Rails' logging
 gem "lograge"
 
