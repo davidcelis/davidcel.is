@@ -6,10 +6,8 @@ For myself, there's an admin to manage my posts and photos, although I don't syn
 
 As mentioned before, I hope to continue actively maintaining this website and adding to it. For example, some things I'd love to implement are:
 
-- [x] Serving WebP images to browsers that support it (while still storing the originals)
-  - [ ] WebP images should be what's used to syndicate to external services, especially since Bluesky has such a small file size limit
 - [ ] Show webmentions on posts
-- [ ] Allow commenting on posts via email (using ActionMailbox)
+- [ ] Allow commenting on posts via email (not sure about third-party comment systems, but I could use something like ActionMailbox to accept comments via email)
 - [ ] Drafts (especially for articles) so I can start writing something and finish later
 - [ ] Show my most recent check-in (or location in general) in the sidebar
 - [ ] More types of posts!
@@ -19,6 +17,8 @@ As mentioned before, I hope to continue actively maintaining this website and ad
 
 ## License
 
-This code, my website, and all of the content therein are licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). What does this mean in practice? As long as you provide the proper attribution to me, you're free to fork this repository and modify it to develop your own website, and you're free to share or even adapt the articles or other posts that I've written, even for commercial purposes. Just give me appropriate credit, provide a link to my license, and indicate whether or not you made changes.
+The code that powers my website is licensed under the [MIT license](/LICENSE.txt). All of the content that I publish on my website is licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
-The design is a modified version of [Tailwind's Transmit UI template](https://tailwindui.com/templates/transmit), but the code was written by me, and it was largely written _for_ me. There's a lot of hard-coded personal text, and there's currently no theming to make it easy to customize its appearance. You're free to use this code to develop your own website, but you'll want to do proper personalization to make it yours!
+What does this mean in practice? You're free to fork this repository and modify it to develop your own website as long as you retain the existing license and copyright notice. An acknowledgement on your website is not necessary, but is definitely appreciated! Additionally, you're free to share or adapt the articles or other posts that I've written, even for commercial purposes. This, however, does require that you give me appropriate credit, provide a link to my license, and indicate whether or not you made changes.
+
+The design of my website is a modified version of [Tailwind's Transmit UI template](https://tailwindui.com/templates/transmit), but the code was written by me, and it was largely written _for_ me. There's a lot of hard-coded personal text, and there's currently no theming to make it easy to customize its appearance. You're free to use this code to develop your own website, but you'll want to do proper personalization to make it yours!
