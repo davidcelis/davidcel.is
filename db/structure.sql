@@ -28,6 +28,18 @@ CREATE TYPE public.webmention_status AS ENUM (
 
 
 --
+-- Name: webmention_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.webmention_type AS ENUM (
+    'reply',
+    'like',
+    'repost',
+    'mention'
+);
+
+
+--
 -- Name: snowflake_id(timestamp with time zone); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -279,7 +291,8 @@ CREATE TABLE public.webmentions (
     html text,
     mf2 jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    type public.webmention_type DEFAULT 'mention'::public.webmention_type
 );
 
 
@@ -469,10 +482,31 @@ CREATE INDEX index_webmentions_on_post_id ON public.webmentions USING btree (pos
 
 
 --
+-- Name: index_webmentions_on_post_id_and_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_webmentions_on_post_id_and_type ON public.webmentions USING btree (post_id, type) WHERE (status = 'verified'::public.webmention_status);
+
+
+--
 -- Name: index_webmentions_on_source_and_target; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_webmentions_on_source_and_target ON public.webmentions USING btree (source, target);
+
+
+--
+-- Name: index_webmentions_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_webmentions_on_status ON public.webmentions USING btree (status);
+
+
+--
+-- Name: index_webmentions_on_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_webmentions_on_type ON public.webmentions USING btree (type);
 
 
 --
@@ -522,6 +556,8 @@ ALTER TABLE ONLY public.active_storage_attachments
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240219210343'),
+('20240219210215'),
 ('20231117172246'),
 ('20230917160025'),
 ('20230906013328'),
