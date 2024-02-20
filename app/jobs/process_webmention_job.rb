@@ -21,6 +21,19 @@ class ProcessWebmentionJob < ApplicationJob
     # Update the webmention
     webmention.mf2 = mf2.to_hash
 
+    # For convenience, set the type of the webmention based on the microformats
+    h_entry = mf2.items.find { |item| item.type == "h-entry" }
+    webmention.type = case
+    when h_entry.respond_to?(:like_of)
+      "like"
+    when h_entry.respond_to?(:repost_of)
+      "repost"
+    when h_entry.respond_to?(:in_reply_to)
+      "reply"
+    else
+      "mention"
+    end
+
     # Mark the webmention as verified
     webmention.verified!
   end
