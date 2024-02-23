@@ -33,7 +33,7 @@ class Post < ApplicationRecord
   has_many :media_attachments, dependent: :destroy
   has_many :syndication_links, dependent: :destroy
   has_many :webmentions, -> { verified }, dependent: :destroy
-  has_many :unverified_webmentions, -> { unverified }, class_name: "Webmention", dependent: :destroy
+  has_many :unverified_webmentions, -> { where.not(status: "verified") }, class_name: "Webmention", dependent: :destroy
 
   has_many :likes, -> { verified.where(type: "like") }, class_name: "Webmention"
   has_many :reposts, -> { verified.where(type: "repost") }, class_name: "Webmention"
