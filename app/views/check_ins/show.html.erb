@@ -57,10 +57,17 @@
                 <% end %>
               </div>
 
-              <div data-controller="local-time" data-local-time-full-value class="pt-4 text-sm text-slate-500">
-                <span class="font-sans select-none" data-local-time-target="emoji"><%= clock_emoji(@check_in.created_at) %> </span>
+              <div data-controller="local-time" data-local-time-full-value class="pt-4 font-mono text-sm text-slate-500">
+                <span class=" \select-none" data-local-time-target="emoji"><%= clock_emoji(@check_in.created_at) %> </span>
+
                 <%= link_to polymorphic_path(@check_in), class: "u-url text-sm font-bold leading-6 link-primary" do %>
                   <%= timestamp(@check_in.created_at, full: true, classes: ["dt-published"]) %>
+                <% end %>
+
+                <% @check_in.syndication_links.each do |link| %>
+                  <% if link_tag = syndication_link_tag(link) %>
+                    <span>/ </span><%= link_tag %>
+                  <% end %>
                 <% end %>
               </div>
 
