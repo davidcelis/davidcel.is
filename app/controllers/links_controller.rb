@@ -4,6 +4,8 @@ class LinksController < ApplicationController
     links = links.unscope(:order).search(params[:q]) if params[:q].present?
     @pagy, @posts = pagy(links)
 
+    ActiveRecord::Precounter.new(@posts).precount(:likes, :reposts, :replies)
+
     render "posts/index", formats: [:html]
   end
 

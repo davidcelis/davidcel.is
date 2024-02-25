@@ -5,6 +5,8 @@ class NotesController < ApplicationController
 
     @pagy, @posts = pagy(notes)
 
+    ActiveRecord::Precounter.new(@posts).precount(:likes, :reposts, :replies)
+
     render "posts/index", formats: [:html]
   end
 

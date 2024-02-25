@@ -19,6 +19,8 @@ class Post < ApplicationRecord
   class_attribute :markdown_rendering_options, instance_writer: false
   class_attribute :markdown_extensions, instance_writer: false
 
+  alias_attribute :humanized_type, :type
+
   # These are the defaults we'll likely want for most post types.
   self.markdown_parsing_options = [:UNSAFE, :SMART]
   self.markdown_rendering_options = [:UNSAFE, :SMART, :HARDBREAKS]

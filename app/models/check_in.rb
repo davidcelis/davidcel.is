@@ -17,6 +17,10 @@ class CheckIn < Post
     slug
   end
 
+  def humanized_type
+    "Check-in"
+  end
+
   private
 
   def generate_slug

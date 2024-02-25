@@ -6,6 +6,8 @@ class PostsController < ApplicationController
     posts = posts.unscope(:order).search(params[:q]) if params[:q].present?
     @pagy, @posts = pagy(posts)
 
+    ActiveRecord::Precounter.new(@posts).precount(:likes, :reposts, :replies)
+
     # To show link previews, we'll preload their favicons and preview images.
     ActiveRecord::Associations::Preloader.new(
       records: @posts.select { |p| p.is_a?(Link) },

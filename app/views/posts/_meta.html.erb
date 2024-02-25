@@ -1,3 +1,32 @@
+<% index ||= false %>
+
+<% if index %>
+  <div data-controller="local-time" class="mt-4 flex items-center gap-2 font-mono text-sm text-slate-500">
+    <%= link_to polymorphic_path(post), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
+      <span class="select-none md:absolute md:-ml-6 mr-2" title="<%= post.humanized_type %>" aria-hidden="true">
+        <%= post_emoji(post) %>
+      </span>
+
+      <%= timestamp(post.created_at, classes: ["dt-published"]) %>
+    <% end %>
+
+    <% if post.replies_count > 0 %>
+      <span class="select-none" aria-hidden="true">/ </span>
+      <span title="Replies" aria-label="Replies">💬 <%= post.replies_count %></span>
+    <% end %>
+
+    <% if post.reposts_count > 0 %>
+      <span class="select-none" aria-hidden="true">/ </span>
+      <span title="Reposts" aria-label="Reposts">🔁 <%= post.reposts_count %></span>
+    <% end %>
+
+    <% if post.likes_count > 0 %>
+      <span class="select-none" aria-hidden="true">/ </span>
+      <span title="Likes" aria-label="Likes">❤️ <%= post.likes_count %></span>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="hidden">
   <div class="u-author h-card">
     <%= image_tag profile_picture_url, alt: profile_picture_alt_text, class: "u-photo" %>
@@ -8,10 +37,10 @@
     <%= timestamp(post.updated_at, full: true, classes: ["dt-updated"]) %>
   <% end %>
 
-  <% if (place = post.place) %>
+  <% if post.is_a?(CheckIn) %>
     <div class="p-geo">
-      <span class="p-latitude"><%= place.latitude %></span>
-      <span class="p-longitude"><%= place.longitude %></span>
+      <span class="p-latitude"><%= post.place.latitude %></span>
+      <span class="p-longitude"><%= post.place.longitude %></span>
     </div>
   <% end %>
 

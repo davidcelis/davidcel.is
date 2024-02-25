@@ -11,6 +11,7 @@ gem "propshaft"
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
 gem "pg_search", "~> 2.3"
+gem "activerecord-precounter", "~> 0.4"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 6.0"
@@ -91,6 +92,7 @@ end
 
 group :development do
   gem "ruby-lsp"
+  gem "ruby-lsp-rails"
 
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"

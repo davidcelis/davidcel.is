@@ -4,6 +4,8 @@ class ArticlesController < ApplicationController
     articles = articles.unscope(:order).search(params[:q]) if params[:q].present?
     @pagy, @posts = pagy(articles)
 
+    ActiveRecord::Precounter.new(@posts).precount(:likes, :reposts, :replies)
+
     render "posts/index", formats: [:html]
   end
 

@@ -15,16 +15,7 @@
             <%= link_to "Read more…", polymorphic_path(article), class: "link-primary" %>
           </div>
 
-          <div data-controller="local-time" class="mt-4 flex items-center gap-4">
-            <%= link_to polymorphic_path(article), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
-              <span class="select-none md:absolute md:-ml-6 mr-2" title="Article" aria-hidden="true">
-                📝
-              </span>
-              <%= timestamp(article.created_at, classes: ["dt-published"]) %>
-            <% end %>
-          </div>
-
-          <%= render partial: "posts/meta", locals: { post: article } %>
+          <%= render partial: "posts/meta", locals: { post: article, index: true } %>
         </div>
       </div>
     </div>

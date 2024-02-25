@@ -19,16 +19,7 @@
 
           <%= media_gallery_tag(check_in.media_attachments) %>
 
-          <div data-controller="local-time" class="mt-4 flex items-center gap-4">
-            <%= link_to polymorphic_path(check_in), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
-              <span class="select-none md:absolute md:-ml-6 mr-2" title="Check-In" aria-hidden="true">
-                📍
-              </span>
-              <%= timestamp(check_in.created_at, classes: ["dt-published"]) %>
-            <% end %>
-          </div>
-
-          <%= render partial: "posts/meta", locals: { post: check_in } %>
+          <%= render partial: "posts/meta", locals: { post: check_in, index: true } %>
         </div>
       </div>
     </div>

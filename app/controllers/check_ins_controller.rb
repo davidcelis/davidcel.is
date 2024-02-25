@@ -5,6 +5,8 @@ class CheckInsController < ApplicationController
 
     @pagy, @posts = pagy(check_ins)
 
+    ActiveRecord::Precounter.new(@posts).precount(:likes, :reposts, :replies)
+
     render "posts/index", formats: [:html]
   end
 
