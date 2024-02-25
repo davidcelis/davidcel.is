@@ -1,4 +1,18 @@
 <div class="flex flex-col flex-wrap justify-between space-y-1 w-full pt-4 text-sm text-slate-500">
+  <span data-controller="local-time" data-local-time-full-value class="font-mono">
+    <span class="font-sans select-none" data-local-time-target="emoji" aria-hidden="true"><%= clock_emoji(post.created_at) %> </span>
+
+    <%= link_to polymorphic_path(post), class: "u-url text-sm font-bold leading-6 link-primary" do %>
+      <%= timestamp(post.created_at, full: true, classes: ["dt-published"]) %>
+    <% end %>
+
+    <% post.syndication_links.each do |link| %>
+      <% if link_tag = syndication_link_tag(link) %>
+        <span>/ </span><%= link_tag %>
+      <% end %>
+    <% end %>
+  </span>
+
   <% if post.place.present? %>
     <span class="font-mono text-slate-500">
       <span class="font-sans select-none" aria-hidden="true">📍 </span>
@@ -18,13 +32,6 @@
       </span>
     <% end %>
   <% end %>
-
-  <span data-controller="local-time" data-local-time-full-value class="font-mono">
-    <span class="font-sans select-none" data-local-time-target="emoji" aria-hidden="true"><%= clock_emoji(post.created_at) %> </span>
-    <%= link_to polymorphic_path(post), class: "u-url text-sm font-bold leading-6 link-primary" do %>
-      <%= timestamp(post.created_at, full: true, classes: ["dt-published"]) %>
-    <% end %>
-  </span>
 
   <% if authenticated? %>
     <span class="font-mono">
