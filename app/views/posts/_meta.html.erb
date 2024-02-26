@@ -25,6 +25,18 @@
       <span title="Likes" aria-label="Likes">❤️ <%= post.likes_count %></span>
     <% end %>
   </div>
+<% else %>
+  <% if (likes = post.webmentions.select(&:like?).presence) %>
+    <%= render partial: "posts/likes", locals: {likes: likes} %>
+  <% end %>
+
+  <% if (reposts = post.webmentions.select(&:repost?).presence) %>
+    <%= render partial: "posts/reposts", locals: {reposts: reposts} %>
+  <% end %>
+
+  <% if (replies = post.webmentions.select(&:reply?).presence) %>
+    <%= render partial: "posts/replies", locals: {replies: replies.sort_by(&:published_at)} %>
+  <% end %>
 <% end %>
 
 <div class="hidden">

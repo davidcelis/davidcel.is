@@ -6,6 +6,7 @@ class Post < ApplicationRecord
   DEFAULT_INCLUDES = [
     :place,
     :syndication_links,
+    :webmentions,
     {
       media_attachments: {
         file_attachment: :blob,

@@ -1,0 +1,12 @@
+<div id="likes" class="pt-4 gap-4 flex items-center text-sm text-slate-500">
+  <span class="font-mono flex-shrink-0">
+    <span class="select-none font-sans" aria-hidden="true">❤️ </span>
+    <span class="font-bold"> <%= likes.count %></span>
+  </span>
+
+  <div class="flex flex-wrap overflow-hidden">
+    <% likes.each do |like| %>
+      <%= like_tag(like) %>
+    <% end %>
+  </div>
+</div>

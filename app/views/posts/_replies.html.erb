@@ -1,0 +1,37 @@
+<div id="replies" class="mt-8 gap-4 flex flex-col divide-y divide-slate-200">
+  <h2 class="text-xl font-bold text-slate-900">💬 Replies (<%= replies.count %>)</h2>
+
+  <div class="pt-8 flow-root">
+    <div class="-my-8 divide-y divide-slate-200">
+      <% replies.each do |reply| %>
+        <div class="py-8">
+          <div class="flex items-center">
+            <%= link_to reply.h_entry.author.url do %>
+              <%= avatar_tag(reply.h_entry.author) %>
+            <% end %>
+
+            <div class="ml-4">
+              <h4 class="text-sm font-bold text-slate-900">
+                <%= link_to reply.h_entry.author.name, reply.h_entry.author.url, target: "_blank", class: "hover:underline" %>
+              </h4>
+
+              <div class="mt-1 flex items-center" data-controller="local-time" data-local-time-full-value>
+                <%= link_to reply.h_entry.url, target: "_blank", class: "hover:underline" do %>
+                  <%= timestamp(reply.published_at, full: true, classes: ["font-sans"]) %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <div class="prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 text-slate-700 lg:prose-lg mt-4 space-y-6 text-base">
+            <%= sanitize(reply.h_entry.content.html) %>
+          </div>
+
+          <% if reply.h_entry.respond_to?(:photo) %>
+            <%= reply_photo_gallery_tag(reply.h_entry.photo(:all).map(&:to_s)) %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

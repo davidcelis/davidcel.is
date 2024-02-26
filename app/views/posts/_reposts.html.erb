@@ -1,0 +1,12 @@
+<div id="reposts" class="mt-4 gap-4 flex items-center text-sm text-slate-500">
+  <span class="font-mono flex-shrink-0">
+    <span class="select-none font-sans" aria-hidden="true">🔁 </span>
+    <span class="font-bold"> <%= reposts.count %></span>
+  </span>
+
+  <div class="flex flex-wrap overflow-hidden">
+    <% reposts.each do |repost| %>
+      <%= repost_tag(repost) %>
+    <% end %>
+  </div>
+</div>
