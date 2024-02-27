@@ -22,7 +22,7 @@ module WebmentionHelper
   end
 
   def avatar_tag(author)
-    fallback_image = "https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(author.uid)}.png?d=identicon"
+    fallback_image = "https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(author.url)}.png?d=identicon"
     author_image = author.photo
 
     image_tag(author_image, class: "inline-block h-8 w-8 rounded-full ring-2 ring-white", onerror: "this.src='#{fallback_image}'")
