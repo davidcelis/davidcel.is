@@ -35,3 +35,6 @@ preload_app!
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
+
+# Watch for changes and recompile CSS as necessary in development
+plugin :tailwindcss if ENV.fetch("RAILS_ENV", "development") == "development"
