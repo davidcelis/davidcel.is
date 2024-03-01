@@ -96,7 +96,7 @@
 <% content_for(:og_title, "📍 #{@check_in.place.name} / #{@check_in.place.city_state_and_country(separator: " / ")}") %>
 <% content_for(:og_description, strip_tags(@check_in.html).strip.presence || "David Celis checked in at #{@check_in.place.name}") %>
 <% content_for(:og_type, "article") %>
-<% content_for(:og_url, post_url(@check_in.id)) %>
+<% content_for(:og_url, polymorphic_url(@check_in)) %>
 <% content_for(:head) do %>
   <meta property="og:site_name" content="david celis" data-rh="true">
   <link href="<%= polymorphic_url(@check_in) %>" rel="alternate" type="application/activity+json" data-rh="true">

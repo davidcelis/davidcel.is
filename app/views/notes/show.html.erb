@@ -25,7 +25,7 @@
 <% content_for(:og_description, strip_tags(@note.html).strip.presence || polymorphic_url(@note)) %>
 <% content_for(:og_type, "article") %>
 <% content_for(:og_title, "david celis") %>
-<% content_for(:og_url, post_url(@note.id)) %>
+<% content_for(:og_url, polymorphic_url(@note)) %>
 <% content_for(:head) do %>
   <meta property="og:site_name" content="david celis" data-rh="true">
   <link href="<%= polymorphic_url(@note) %>" rel="alternate" type="application/activity+json" data-rh="true">
