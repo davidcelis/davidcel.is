@@ -2,7 +2,7 @@
   <div class="lg:px-8">
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
-        <h1 class="text-2xl font-bold leading-7 text-slate-900">About Me</h1>
+        <h1 class="text-2xl font-bold leading-7 text-slate-900" id="about-me">About Me</h1>
       </div>
     </div>
   </div>
@@ -58,7 +58,7 @@
               </p>
 
               <p>
-                Wanna get in touch? I'm always happy to chat, so feel free to
+                Wanna get in touch? I’m always happy to chat, so feel free to
                 <a href="mailto:me@davidcel.is">✉️ say "hey"</a>. Prefer to read my posts in your feed reader? I’ve
                 got <%= link_to "RSS feeds", feeds_path%> for all of them!
               </p>
@@ -72,7 +72,37 @@
   <div class="lg:px-8">
     <div class="lg:max-w-4xl">
       <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
-        <h1 class="text-2xl font-bold leading-7 text-slate-900">Licensing</h1>
+        <h1 class="text-2xl font-bold leading-7 text-slate-900" id="webmentions">Webmentions</h1>
+      </div>
+    </div>
+  </div>
+
+  <article class="py-10 sm:py-12">
+    <div class="lg:px-8">
+      <div class="lg:max-w-4xl">
+        <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+          <div class="prose prose-slate mt-1 text-base leading-7 text-slate-700 lg:prose-lg prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900">
+            <p>
+              All of the comments, likes, and reposts on this site are powered by
+              <a href="https://indieweb.org/Webmention" target="_blank">Webmentions</a>! Most of them automatically
+              come from responses to my posts on Mastodon, Bluesky, and other social networks via
+              <a href="https://brid.gy/" target="_blank">brid.gy</a>; if you interact with one of my posts on
+              those networks, it shows up here too! But the beauty of Webmentions is that you can also respond to my
+              posts on your own website; as long as you send a Webmention, and your site is properly marked up using
+              <a href="http://microformats.org/wiki/microformats2" target="_blank">microformats</a>, it’ll show up
+              here as if you’d responded on a social network. If you’re interested in learning more about Webmentions,
+              or if you sent me a webmention that isn’t showing up on my site, feel free to email me!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="lg:px-8">
+    <div class="lg:max-w-4xl">
+      <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+        <h1 class="text-2xl font-bold leading-7 text-slate-900" id="licensing">Licensing</h1>
       </div>
     </div>
   </div>
@@ -87,9 +117,9 @@
               <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution
               4.0 International License</a>. This means you can share and adapt my work (even for commercial purposes)
               as long as you give me appropriate credit, indicate whether or not any changes were made, and provide a
-              link back to the original post and license. Of course, I'd appreciate a heads up if you're planning on
+              link back to the original post and license. Of course, I’d appreciate a heads up if you’re planning on
               adapting any of my work. I might even be excited to help out or write something with you! If you have
-              any questions about re-using my content, feel free to reach out to me at the same email address as above.
+              any questions about re-using my content, please send me an email so we can chat.
             </p>
           </div>
         </div>

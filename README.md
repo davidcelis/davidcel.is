@@ -6,8 +6,6 @@ For myself, there's an admin to manage my posts and photos, although I don't syn
 
 As mentioned before, I hope to continue actively maintaining this website and adding to it. For example, some things I'd love to implement are:
 
-- [ ] Show webmentions on posts
-- [ ] Allow commenting on posts via email (not sure about third-party comment systems, but I could use something like ActionMailbox to accept comments via email)
 - [ ] Drafts (especially for articles) so I can start writing something and finish later
 - [ ] Show my most recent check-in (or location in general) in the sidebar
 - [ ] More types of posts!

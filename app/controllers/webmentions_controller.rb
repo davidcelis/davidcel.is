@@ -6,7 +6,11 @@ class WebmentionsController < ApplicationController
 
     ProcessWebmentionJob.perform_async(webmention.id)
 
-    head :accepted
+    if params[:manual]
+      redirect_to params[:target], notice: "Thanks for letting me know! Your webmention will be processed shortly."
+    else
+      head :accepted
+    end
   end
 
   private

@@ -26,6 +26,26 @@
     <% end %>
   </div>
 <% else %>
+  <div class="e-content prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-4 pb-4 text-base leading-7 text-slate-700 lg:prose-lg border-y border-slate-200">
+    <p class="pt-4 text-sm">
+      Did you like this post, repost it, or respond to it? Let me know by sending a
+
+      <%= link_to "webmention", about_path(anchor: "webmentions"), target: "_blank" %>!
+    </p>
+
+    <%= form_tag webmention_path, class: "relative flex" do %>
+      <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center">
+        <span class="text-center ml-1 pl-1">🌐</span>
+      </div>
+
+      <%= text_field_tag :source, nil, class: "grow mr-4 pl-9 pr-7 border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block sm:text-sm", placeholder: "https://example.com/your-post" %>
+      <%= hidden_field_tag :target, polymorphic_url(post) %>
+      <%= hidden_field_tag :manual, true %>
+
+      <%= button_tag "Send Webmention", type: "submit", class: "inline-flex items-center gap-2 justify-center rounded-md py-2 px-3 text-sm outline-offset-2 transition active:transition-none bg-slate-100 font-medium hover:bg-pink-100 active:bg-slate-100 active:text-pink-900/60 link-primary group" %>
+    <% end%>
+  </div>
+
   <% if (likes = post.webmentions.select(&:like?).presence) %>
     <%= render partial: "posts/likes", locals: {likes: likes} %>
   <% end %>
