@@ -2,7 +2,7 @@ name: Linting
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_call:
 jobs:
   run-linters:
@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
