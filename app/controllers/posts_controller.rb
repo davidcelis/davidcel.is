@@ -20,7 +20,7 @@ class PostsController < ApplicationController
   def show
     @post = Post.includes(Post::DEFAULT_INCLUDES).find(params[:id])
 
-    instance_variable_set("@#{@post.type.underscore}", @post)
+    instance_variable_set(:"@#{@post.type.underscore}", @post)
 
     render "#{@post.type.tableize}/show", formats: [:html]
   end

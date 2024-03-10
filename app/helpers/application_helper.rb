@@ -9,9 +9,9 @@ module ApplicationHelper
     end
   end
 
-  def let_it_snow(&block)
+  def let_it_snow(&)
     if christmas?
-      content_tag("snow-fall", &block)
+      content_tag("snow-fall", &)
     else
       yield
     end

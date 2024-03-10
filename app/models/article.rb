@@ -21,7 +21,7 @@ class Article < Post
   end
 
   def og_description
-    @og_description ||= (Nokogiri::HTML::DocumentFragment.parse(excerpt).at_css("p")&.text || excerpt)
+    @og_description ||= Nokogiri::HTML::DocumentFragment.parse(excerpt).at_css("p")&.text || excerpt
   end
 
   def to_param
