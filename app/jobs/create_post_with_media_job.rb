@@ -57,7 +57,7 @@ class CreatePostWithMediaJob < ApplicationJob
     # as it was at the time of the check-in. If the place moves later, the
     # snapshot keeps the historical context of where I actually was.
     snapshot = Apple::MapKit::Snapshot.new(point: [place.latitude, place.longitude].join(","))
-    response = HTTParty.get(snapshot.url)
+    response = Faraday.get(snapshot.url)
 
     file_extension = Rack::Mime::MIME_TYPES.invert["image/png"]
     filename = "#{post.id}#{file_extension}"

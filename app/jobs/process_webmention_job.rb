@@ -3,7 +3,7 @@ class ProcessWebmentionJob < ApplicationJob
     webmention = Webmention.find(webmention_id)
 
     # Fetch and cache the source page
-    response = HTTParty.get(webmention.source)
+    response = Faraday.get(webmention.source)
     return webmention.failed! unless response.success?
 
     webmention.html = response.body
