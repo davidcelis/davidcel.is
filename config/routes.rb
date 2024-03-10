@@ -51,7 +51,6 @@ Rails.application.routes.draw do
   post :direct_uploads, to: "direct_uploads#create", as: :direct_uploads
 
   constraints(AdminConstraint.new) do
-    mount Avo::Engine, at: Avo.configuration.root_path
     mount Sidekiq::Web => "/admin/sidekiq"
   end
 

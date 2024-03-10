@@ -57,15 +57,6 @@
                         <span aria-hidden="true" class="select-none">🔗 </span>Links
                       <% end %>
                     </li>
-
-                    <% if authenticated? %>
-                      <li>
-                        <%= link_to avo_path, target: "_blank", class: "block py-2 transition link-primary font-bold" do %>
-                          <span aria-hidden="true" class="select-none">⚙️ </span>Admin
-                        <% end %>
-                      </li>
-                    <% end %>
-
                     <li>
                       <form id="search" class="mt-2 relative max-w-sm" data-controller="search" data-action="search#submit:prevent">
                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center">
@@ -98,9 +89,6 @@
               <li><%= link_to "Photos", photos_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
               <li><%= link_to "Check-Ins", check_ins_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
               <li><%= link_to "Links", links_path, class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
-              <% if authenticated? %>
-                <li><%= link_to "Admin", avo_path, target: "_blank", class: "relative block px-3 py-2 transition link-primary font-bold" %></li>
-              <% end %>
             </ul>
           </nav>
         </div>

@@ -25,9 +25,6 @@ gem "microformats", github: "microformats/microformats-ruby"
 # Use Pagy to paginate through collections
 gem "pagy", "~> 5.10"
 
-# Use Avo to generate an admin interface
-gem "avo"
-
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 
