@@ -11,6 +11,12 @@ class WebmentionsController < ApplicationController
     else
       head :accepted
     end
+  rescue ActiveRecord::RecordInvalid => e
+    if params[:manual]
+      redirect_to params[:target], alert: e.message
+    else
+      head :unprocessable_entity
+    end
   end
 
   private
