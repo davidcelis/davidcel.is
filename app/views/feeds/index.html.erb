@@ -24,8 +24,9 @@
               <p>
                 The <%= link_to "main feed", main_feed_path %> has my core posts:
                 <%= link_to "articles", articles_path %>, <%= link_to "notes", notes_path %>,
-                and <%= link_to "links", links_path %> that I share. You can also subscribe
-                to each kind of post individually:
+                and <%= link_to "links", links_path %> that I share. Check-ins will also
+                appear, but only when I had something to say or included a picture.You can
+                also subscribe to each kind of post individually:
               </p>
 
               <ul class="list-none">
@@ -59,9 +60,9 @@
                 <li>
                   <span class="select-none">📍</span>
 
-                  The <%= link_to "check-ins feed", check_ins_feed_path %> contains all
-                  of my <%= link_to "check-ins", check_ins_path %>. I check in a lot, and
-                  you probably won’t really care when I do. But if you do want to see where
+                  The <%= link_to "check-ins feed", check_ins_feed_path %> contains <em>all</em>
+                  of my <%= link_to "check-ins", check_ins_path %>. I sometimes check in a lot,
+                  and you probably won’t really care when I do. But if you do want to see where
                   I’m hanging out or what I’m up to, feel free!
                 </li>
 
@@ -70,8 +71,8 @@
 
                   The <%= link_to "photos feed", photos_feed_path %> has the
                   <%= link_to "photos", photos_path %> that I take and feature on my site.
-                  I share pics in different ways, so you’ll see a mix of notes, check-ins,
-                  and articles in this feed.
+                  I share pics in different ways, so you’ll see a mix of mostly notes and
+                  check-ins in this feed.
                 </li>
 
                 <li>

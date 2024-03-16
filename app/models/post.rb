@@ -54,7 +54,14 @@ class Post < ApplicationRecord
 
   default_scope { order(id: :desc) }
 
-  scope :main, -> { where(type: %w[Article Link Note]) }
+  scope :main, -> {
+    # Articles, Notes, and Links are the main types of posts that are shown in the main feed.
+    # We'll also include Check-ins, but only if they have text and/or media attachments.
+    left_outer_joins(:media_attachments)
+      .where(type: %w[Article Link Note CheckIn])
+      .where("posts.content != '' OR media_attachments.id IS NOT NULL")
+      .group(:id)
+  }
 
   # Allow searching Posts by content and the name of wherever they were posted.
   # I could allow more specificity for searching against the associated Place,
