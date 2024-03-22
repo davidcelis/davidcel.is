@@ -30,7 +30,7 @@ class SyndicateToMastodonJob < ApplicationJob
     when CheckIn
       text = post.content.presence
 
-      pin = text ? "📍 " : "📍 I checked in at "
+      pin = text ? "📍" : "📍I checked in at "
       pin << "#{post.place.name} / #{post.place.city_state_and_country(separator: " / ")}"
       candidate = [text, pin].compact.join("\n\n")
 

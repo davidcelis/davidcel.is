@@ -73,7 +73,7 @@ class SyndicateToBlueskyJob < ApplicationJob
     when CheckIn
       content = post.content.presence
 
-      pin = content ? "📍 " : "📍 I checked in at "
+      pin = content ? "📍" : "📍I checked in at "
       pin << "#{post.place.name} / #{post.place.city_state_and_country(separator: " / ")}"
       candidate = [content, pin].compact.join("\n\n")
 

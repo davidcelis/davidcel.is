@@ -6,7 +6,7 @@ module AtomFeedHelper
     when Link
       "🔗 #{post.title}"
     when CheckIn
-      "📍 #{post.place.name}"
+      "📍#{post.place.name}"
     end
 
     # Default to no title.
