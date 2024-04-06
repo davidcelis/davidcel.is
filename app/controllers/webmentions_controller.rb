@@ -13,9 +13,9 @@ class WebmentionsController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => e
     if params[:manual]
-      redirect_to params[:target], alert: e.message
+      redirect_to params[:target], alert: "Oops, it looks like you tried to enter something that wasn't a URL. Webmentions must be a valid URL."
     else
-      head :unprocessable_entity
+      render json: {error: e.message}, status: :unprocessable_entity
     end
   end
 
