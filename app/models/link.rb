@@ -10,9 +10,9 @@ class Link < Post
   has_one_attached :favicon
   has_one_attached :preview_image
 
-  # Allow searching Links by href, title, and content.
+  # Allow searching Links by title and content.
   pg_search_scope :search,
-    against: [:title, :href, :content],
+    against: [:title, :content],
     using: {tsearch: {prefix: true, dictionary: "english"}},
     order_within_rank: "posts.created_at DESC"
 
