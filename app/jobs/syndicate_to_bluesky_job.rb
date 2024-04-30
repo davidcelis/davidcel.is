@@ -59,7 +59,7 @@ class SyndicateToBlueskyJob < ApplicationJob
 
         embed["external"]["uri"] = polymorphic_url(post)
         embed["external"]["title"] = "🔗 #{post.title}"
-        embed["description"] = strip_tags(post.excerpt)
+        embed["external"]["description"] = strip_tags(post.excerpt).squish
       else
         embed["external"]["uri"] = post.link_data["url"]
         embed["external"]["title"] = post.link_data.dig("meta", "title")
