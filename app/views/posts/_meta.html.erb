@@ -3,7 +3,7 @@
 <% if index %>
   <div data-controller="local-time" class="mt-4 flex items-center gap-2 font-mono text-sm text-slate-500">
     <%= link_to polymorphic_path(post), class: "u-url flex items-center text-sm font-bold leading-6 link-primary" do %>
-      <span class="select-none md:absolute md:-ml-6 mr-2" title="<%= post.humanized_type %>" aria-hidden="true">
+      <span class="font-sans select-none md:absolute md:-ml-6 mr-2" title="<%= post.humanized_type %>" aria-hidden="true">
         <%= post_emoji(post) %>
       </span>
 
@@ -22,7 +22,7 @@
 
     <% if post.likes_count > 0 %>
       <span class="select-none" aria-hidden="true">/ </span>
-      <span title="Likes" aria-label="Likes">❤️ <%= post.likes_count %></span>
+      <span title="Likes" aria-label="Likes"><span class="font-sans">❤️</span> <%= post.likes_count %></span>
     <% end %>
   </div>
 <% else %>
