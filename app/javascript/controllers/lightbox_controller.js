@@ -1,4 +1,4 @@
-import Lightbox from 'stimulus-lightbox'
+import Lightbox from '@stimulus-components/lightbox'
 import lightGallery from 'lightgallery'
 import lgVideo from 'lg-video'
 
