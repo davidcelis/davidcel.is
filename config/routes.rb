@@ -52,6 +52,14 @@ Rails.application.routes.draw do
 
   constraints(AdminConstraint.new) do
     mount Sidekiq::Web => "/admin/sidekiq"
+
+    # Set up routes for me to authenticate with Threads to cross-post.
+    namespace :threads do
+      namespace :oauth do
+        get :initiate
+        get :callback
+      end
+    end
   end
 
   get :sign_in, to: "sessions#new"

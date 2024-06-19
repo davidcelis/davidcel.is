@@ -279,6 +279,38 @@ CREATE TABLE public.syndication_links (
 
 
 --
+-- Name: threads_credentials; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.threads_credentials (
+    id bigint NOT NULL,
+    access_token character varying NOT NULL,
+    expires_at timestamp without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: threads_credentials_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.threads_credentials_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: threads_credentials_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.threads_credentials_id_seq OWNED BY public.threads_credentials.id;
+
+
+--
 -- Name: webmentions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -315,6 +347,13 @@ ALTER TABLE ONLY public.active_storage_blobs ALTER COLUMN id SET DEFAULT nextval
 --
 
 ALTER TABLE ONLY public.active_storage_variant_records ALTER COLUMN id SET DEFAULT nextval('public.active_storage_variant_records_id_seq'::regclass);
+
+
+--
+-- Name: threads_credentials id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.threads_credentials ALTER COLUMN id SET DEFAULT nextval('public.threads_credentials_id_seq'::regclass);
 
 
 --
@@ -387,6 +426,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.syndication_links
     ADD CONSTRAINT syndication_links_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: threads_credentials threads_credentials_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.threads_credentials
+    ADD CONSTRAINT threads_credentials_pkey PRIMARY KEY (id);
 
 
 --
@@ -556,6 +603,7 @@ ALTER TABLE ONLY public.active_storage_attachments
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240619222332'),
 ('20240219210343'),
 ('20240219210215'),
 ('20231117172246'),

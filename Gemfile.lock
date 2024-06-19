@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/davidcelis/threads-api.git
+  revision: 0fb71f264f2eebdeb6262b5d1d31e5d0dbccc96a
+  specs:
+    threads-api (0.0.1.pre)
+      faraday (>= 2.0)
+
+GIT
   remote: https://github.com/microformats/microformats-ruby.git
   revision: eff3c4a903ac3b8123cf3ec257e2af5eba5504d9
   specs:
@@ -440,6 +447,7 @@ DEPENDENCIES
   standardrb
   stimulus-rails
   tailwindcss-rails
+  threads-api!
   turbo-rails
   vcr
   web-console
