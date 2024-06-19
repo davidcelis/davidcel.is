@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/davidcelis/threads-api.git
-  revision: aba9ffc712095b95da89bd1cff2dedb04dc336df
-  specs:
-    threads-api (0.0.1.pre)
-      faraday (>= 2.0)
-
-GIT
   remote: https://github.com/microformats/microformats-ruby.git
   revision: eff3c4a903ac3b8123cf3ec257e2af5eba5504d9
   specs:
@@ -379,6 +372,8 @@ GEM
     tailwindcss-rails (2.6.1-x86_64-linux)
       railties (>= 7.0.0)
     thor (1.3.1)
+    threads-api (0.1.0)
+      faraday (>= 2.0)
     tilt (2.3.0)
     timeout (0.4.1)
     turbo-rails (2.0.5)
@@ -447,7 +442,7 @@ DEPENDENCIES
   standardrb
   stimulus-rails
   tailwindcss-rails
-  threads-api!
+  threads-api
   turbo-rails
   vcr
   web-console

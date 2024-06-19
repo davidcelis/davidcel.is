@@ -55,7 +55,7 @@ gem "aws-sdk-s3"
 gem "jwt"
 
 # Use my API client for cross-posting to Threads
-gem "threads-api", github: "davidcelis/threads-api"
+gem "threads-api"
 
 # Use Faraday for external HTTP/API requests and clients
 gem "faraday"
