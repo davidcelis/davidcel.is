@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/davidcelis/threads-api.git
-  revision: 0fb71f264f2eebdeb6262b5d1d31e5d0dbccc96a
+  revision: aba9ffc712095b95da89bd1cff2dedb04dc336df
   specs:
     threads-api (0.0.1.pre)
       faraday (>= 2.0)

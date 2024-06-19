@@ -99,8 +99,9 @@ class Post < ApplicationRecord
   private
 
   def syndicate
-    SyndicateToMastodonJob.perform_async(id)
     SyndicateToBlueskyJob.perform_async(id)
+    SyndicateToMastodonJob.perform_async(id)
+    SyndicateToThreadsJob.perform_async(id)
   end
 
   def unsyndicate
