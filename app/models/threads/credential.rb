@@ -22,9 +22,8 @@ module Threads
       response = oauth2_client.refresh_access_token(access_token)
 
       update!(
-        token: response["access_token"],
-        refresh_token: response["refresh_token"],
-        expires_at: response["expires_in"].to_i.seconds.from_now
+        access_token: response.access_token,
+        expires_at: response.expires_in.to_i.seconds.from_now
       )
     end
   end

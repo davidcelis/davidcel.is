@@ -10,3 +10,5 @@ scheduler:
   schedule:
     PurgeUnattachedBlobsJob:
       every: ["1d", first_in: "0s"]
+    RefreshThreadsCredentialsJob:
+      every: ["1d", first_in: "0s"]
