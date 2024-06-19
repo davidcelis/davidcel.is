@@ -3,7 +3,8 @@ module SyndicationLinkHelper
   # but these are the only two platforms I care about showing right now.
   EMOJI = {
     "bluesky" => "🦋",
-    "mastodon" => "🦣"
+    "mastodon" => "🦣",
+    "threads" => "🧵"
   }.freeze
 
   def syndication_link_tag(link)
