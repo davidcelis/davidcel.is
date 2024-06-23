@@ -52,11 +52,6 @@ class Post < ApplicationRecord
   after_commit :syndicate, on: [:create, :update]
   before_destroy :unsyndicate, prepend: true
 
-  # This is a separate method because it's only for new posts. Not only does
-  # Threads not support editing posts via the API, they don't even support
-  # deleting posts.
-  after_commit :syndicate_to_threads, on: :create
-
   default_scope { order(id: :desc) }
 
   scope :main, -> {
@@ -106,10 +101,11 @@ class Post < ApplicationRecord
   def syndicate
     SyndicateToBlueskyJob.perform_async(id)
     SyndicateToMastodonJob.perform_async(id)
-  end
 
-  def syndicate_to_threads
-    SyndicateToThreadsJob.perform_async(id)
+    # Threads not only doesn't support updating posts, but it doesn't even
+    # support deleting them. So we'll only syndicate new posts to Threads.
+    # Deleting or updating a post will require manual intervention.
+    SyndicateToThreadsJob.perform_async(id) if previously_new_record?
   end
 
   def unsyndicate
