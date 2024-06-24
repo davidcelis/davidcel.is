@@ -49,7 +49,7 @@ class SyndicateToBlueskyJob < ApplicationJob
     when Link
       content = post.content
 
-      embed = {"$type" => "app.bsky.embed.external"}
+      embed = {"$type" => "app.bsky.embed.external", "external" => {}}
 
       if character_count(content) > 300
         content = "🔗 #{post.title}"
