@@ -48,11 +48,8 @@ class SyndicateToBlueskyJob < ApplicationJob
       content
     when Link
       content = post.content
-      blob = client.upload_blob(post.preview_image_attachment)["blob"]
-      embed = {
-        "$type" => "app.bsky.embed.external",
-        "external" => {"thumb" => blob}
-      }
+
+      embed = {"$type" => "app.bsky.embed.external"}
 
       if character_count(content) > 300
         content = "🔗 #{post.title}"
@@ -67,6 +64,12 @@ class SyndicateToBlueskyJob < ApplicationJob
         if (description = post.link_data.dig("meta", "description"))
           embed["external"]["description"] = description
         end
+      end
+
+      if post.preview_image.attached?
+        blob_result = client.upload_blob(post.preview_image_attachment)
+
+        embed["external"]["thumb"] = blob_result["blob"]
       end
 
       content
