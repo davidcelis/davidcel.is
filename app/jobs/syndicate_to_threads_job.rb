@@ -66,9 +66,9 @@ class SyndicateToThreadsJob < ApplicationJob
     if post.media_attachments.count > 1
       carousel_items = post.media_attachments.map do |media_attachment|
         if media_attachment.image?
-          client.create_carousel_item(type: "IMAGE", image_url: cdn_file_url((media_attachment.file))
+          client.create_carousel_item(type: "IMAGE", image_url: cdn_file_url(media_attachment.file))
         elsif media_attachment.video?
-          client.create_carousel_item(type: "VIDEO", video_url: cdn_file_url((media_attachment.file))
+          client.create_carousel_item(type: "VIDEO", video_url: cdn_file_url(media_attachment.file))
         else
           logger.warn("Unsupported media type: #{media_attachment.content_type}")
         end
