@@ -4,8 +4,10 @@ module WebmentionHelper
 
     original_url = like.h_entry.url
     author = like.h_entry.author
+    author_name = author.name if author.respond_to?(:name)
+    author_name ||= author.nickname if author.respond_to?(:nickname)
 
-    link_to(original_url, title: author.name, target: "_blank", aria: {label: "Liked by #{author.name}"}) do
+    link_to(original_url, title: author_name, target: "_blank", aria: {label: "Liked by #{author.name}"}) do
       avatar_tag(like.h_entry.author)
     end
   end
@@ -15,8 +17,10 @@ module WebmentionHelper
 
     original_url = repost.h_entry.url
     author = repost.h_entry.author
+    author_name = author.name if author.respond_to?(:name)
+    author_name ||= author.nickname if author.respond_to?(:nickname)
 
-    link_to(original_url, title: author.name, target: "_blank", aria: {label: "Reposted by #{author.name}"}) do
+    link_to(original_url, title: author_name, target: "_blank", aria: {label: "Reposted by #{author.name}"}) do
       avatar_tag(repost.h_entry.author)
     end
   end
