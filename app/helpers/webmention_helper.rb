@@ -27,7 +27,8 @@ module WebmentionHelper
 
   def avatar_tag(author)
     fallback_image = "https://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(author.url)}.png?d=identicon"
-    author_image = author.photo
+    author_image = author.photo if author.respond_to?(:photo)
+    author_image ||= fallback_image
 
     image_tag(author_image, class: "inline-block h-8 w-8 rounded-full ring-2 ring-white", onerror: "this.src='#{fallback_image}'")
   end
