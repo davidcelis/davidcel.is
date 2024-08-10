@@ -1,4 +1,6 @@
 class CheckIn < Post
+  DEFAULT_INCLUDES = [:place]
+
   belongs_to :place
 
   validates :title, absence: true

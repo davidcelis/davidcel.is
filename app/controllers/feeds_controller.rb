@@ -6,7 +6,13 @@ class FeedsController < ApplicationController
   end
 
   def main
-    _, @posts = pagy(Post.main.includes(Post::DEFAULT_INCLUDES))
+    _, @posts = pagy(Post.main.includes(Post::FEED_INCLUDES))
+
+    # For check-ins, we'll preload their places and snapshots
+    ActiveRecord::Associations::Preloader.new(
+      records: @posts.select(&:check_in?),
+      associations: CheckIn::DEFAULT_INCLUDES + [{snapshot_attachment: :blob}]
+    ).call
 
     @self_url = main_feed_url
     @alternate_url = root_url
@@ -15,7 +21,13 @@ class FeedsController < ApplicationController
   end
 
   def all
-    _, @posts = pagy(Post.includes(Post::DEFAULT_INCLUDES))
+    _, @posts = pagy(Post.includes(Post::FEED_INCLUDES))
+
+    # For check-ins, we'll preload their places and snapshots
+    ActiveRecord::Associations::Preloader.new(
+      records: @posts.select(&:check_in?),
+      associations: CheckIn::DEFAULT_INCLUDES + [{snapshot_attachment: :blob}]
+    ).call
 
     @subtitle = "Everything"
     @self_url = all_feed_url
@@ -25,7 +37,7 @@ class FeedsController < ApplicationController
   end
 
   def articles
-    _, @posts = pagy(Article.includes(Post::DEFAULT_INCLUDES))
+    _, @posts = pagy(Article.includes(Post::FEED_INCLUDES))
 
     @subtitle = "Articles"
     @self_url = articles_feed_url
@@ -35,7 +47,7 @@ class FeedsController < ApplicationController
   end
 
   def check_ins
-    _, @posts = pagy(CheckIn.includes(Post::DEFAULT_INCLUDES))
+    _, @posts = pagy(Post::FEED_INCLUDES + CheckIn::DEFAULT_INCLUDES + [{snapshot_attachment: :blob}])
 
     @subtitle = "Check-ins"
     @self_url = check_ins_feed_url
@@ -45,7 +57,7 @@ class FeedsController < ApplicationController
   end
 
   def links
-    _, @posts = pagy(Link.includes(Post::DEFAULT_INCLUDES + Link::DEFAULT_INCLUDES))
+    _, @posts = pagy(Link.includes(Post::FEED_INCLUDES))
 
     @subtitle = "Links"
     @self_url = links_feed_url
@@ -55,7 +67,7 @@ class FeedsController < ApplicationController
   end
 
   def notes
-    _, @posts = pagy(Note.includes(Post::DEFAULT_INCLUDES))
+    _, @posts = pagy(Note.includes(Post::FEED_INCLUDES))
 
     @subtitle = "Notes"
     @self_url = notes_feed_url
@@ -65,7 +77,7 @@ class FeedsController < ApplicationController
   end
 
   def photos
-    posts = Post.includes(Post::DEFAULT_INCLUDES)
+    posts = Post.includes(Post::FEED_INCLUDES)
       .joins(:media_attachments)
       .where(media_attachments: {featured: true})
 

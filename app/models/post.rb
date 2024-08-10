@@ -3,10 +3,18 @@ class Post < ApplicationRecord
   include SnowflakeID
 
   EXCERPT_SEPARATOR = "<!--more-->".freeze
+
+  FEED_INCLUDES = [
+    {
+      media_attachments: {
+        file_attachment: :blob,
+        preview_image_attachment: :blob
+      }
+    }
+  ]
+
   DEFAULT_INCLUDES = [
-    :place,
     :syndication_links,
-    :webmentions,
     {
       media_attachments: {
         file_attachment: :blob,
@@ -95,6 +103,14 @@ class Post < ApplicationRecord
   def coordinates
     super || (self.coordinates = ActiveRecord::Point.new)
   end
+
+  def article? = is_a?(Article)
+
+  def check_in? = is_a?(CheckIn)
+
+  def link? = is_a?(Link)
+
+  def note? = is_a?(Note)
 
   private
 

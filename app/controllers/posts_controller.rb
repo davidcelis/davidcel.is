@@ -8,9 +8,15 @@ class PostsController < ApplicationController
 
     ActiveRecord::Precounter.new(@posts).precount(:likes, :reposts, :replies)
 
-    # To show link previews, we'll preload their favicons and preview images.
+    # For check-ins, we'll preload their associated places.
     ActiveRecord::Associations::Preloader.new(
-      records: @posts.select { |p| p.is_a?(Link) },
+      records: @posts.select(&:check_in?),
+      associations: CheckIn::DEFAULT_INCLUDES
+    ).call
+
+    # For link previews, we'll preload their favicons and preview images.
+    ActiveRecord::Associations::Preloader.new(
+      records: @posts.select(&:link?),
       associations: Link::DEFAULT_INCLUDES
     ).call
 

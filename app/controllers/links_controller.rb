@@ -10,7 +10,7 @@ class LinksController < ApplicationController
   end
 
   def show
-    @link = Link.includes(Post::DEFAULT_INCLUDES + Link::DEFAULT_INCLUDES).find_by!(slug: params[:id])
+    @link = Link.includes(Post::DEFAULT_INCLUDES).find_by!(slug: params[:id])
 
     respond_to :html
   end
