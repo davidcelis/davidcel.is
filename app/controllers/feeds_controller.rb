@@ -47,7 +47,7 @@ class FeedsController < ApplicationController
   end
 
   def check_ins
-    _, @posts = pagy(Post::FEED_INCLUDES + CheckIn::DEFAULT_INCLUDES + [{snapshot_attachment: :blob}])
+    _, @posts = pagy(CheckIn.includes(Post::FEED_INCLUDES + CheckIn::DEFAULT_INCLUDES + [{snapshot_attachment: :blob}]))
 
     @subtitle = "Check-ins"
     @self_url = check_ins_feed_url
