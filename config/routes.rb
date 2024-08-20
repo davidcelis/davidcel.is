@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :links, only: [:index, :show]
   resources :notes, only: [:index, :show]
   resources :photos, only: [:index]
+  resources :hashtags, only: [:show]
 
   resources :feeds, only: [:index]
   get "/rss", to: "feeds#index"

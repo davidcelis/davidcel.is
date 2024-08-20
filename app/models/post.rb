@@ -36,7 +36,7 @@ class Post < ApplicationRecord
   self.markdown_extensions = [:strikethrough]
 
   URL_REGEX = URI::DEFAULT_PARSER.make_regexp(%w[http https])
-  HASHTAG_REGEX = /(?<=^|[^\/\w])(#\S+)/i
+  HASHTAG_REGEX = /(?<=^|[^\/\w])(#\w+)(?:\s|\z)/i
   MASTODON_MENTION_REGEX = /(?<=^|[^\/\w])@(?:([a-z0-9_]+)@((?:[\w.-]+\w+)?))/i
   BLUESKY_MENTION_REGEX = /(?<=^|[^\/\w])@(([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,})/i
 
@@ -54,6 +54,7 @@ class Post < ApplicationRecord
 
   before_create :generate_slug
   before_save :sanitize_content
+  before_save :parse_hashtags
   before_save :update_html, if: :content_changed?
   before_save :clear_coordinates, if: -> { latitude.blank? || longitude.blank? }
 
@@ -81,7 +82,16 @@ class Post < ApplicationRecord
     order_within_rank: "posts.created_at DESC"
 
   def update_html
-    self.html = Markdown::Renderer.new(options: markdown_rendering_options, extensions: markdown_extensions).render(commonmark_doc).strip
+    self.html = Markdown::Renderer.new(options: markdown_rendering_options, extensions: markdown_extensions)
+      .render(commonmark_doc)
+      .strip
+  end
+
+  def parse_hashtags
+    self.hashtags = content
+      .scan(Post::HASHTAG_REGEX)
+      .map { |(tag)| tag.delete_prefix("#").downcase }
+      .uniq
   end
 
   def latitude
@@ -206,6 +216,19 @@ class Post < ApplicationRecord
           node.insert_before(link_node)
 
           new_text = part.sub(BLUESKY_MENTION_REGEX, "")
+        elsif (match = part.match(HASHTAG_REGEX))
+          link_node = Markdown::Nodes::Link.from_hashtag(match[1])
+
+          index = part.index(HASHTAG_REGEX)
+          new_text += part[0...index]
+          part = part[index..]
+
+          new_text_node = CommonMarker::Node.new(:text).tap { |n| n.string_content = new_text }
+
+          node.insert_before(new_text_node)
+          node.insert_before(link_node)
+
+          new_text = part.sub(HASHTAG_REGEX, "")
         else
           new_text += part
         end

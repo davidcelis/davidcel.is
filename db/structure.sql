@@ -218,6 +218,8 @@ CREATE TABLE public.places (
     foursquare_id character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    check_ins_count integer DEFAULT 0 NOT NULL,
+    last_checked_in_at timestamp(6) without time zone,
     CONSTRAINT chk_rails_d4c44e2131 CHECK (((coordinates IS NOT NULL) OR (apple_maps_id IS NULL)))
 );
 
@@ -238,7 +240,8 @@ CREATE TABLE public.posts (
     place_id bigint,
     weather jsonb,
     coordinates point,
-    link_data jsonb
+    link_data jsonb,
+    hashtags character varying[] DEFAULT '{}'::character varying[] NOT NULL
 );
 
 
@@ -487,6 +490,13 @@ CREATE INDEX index_places_on_coordinates ON public.places USING gist (coordinate
 
 
 --
+-- Name: index_posts_on_hashtags; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_posts_on_hashtags ON public.posts USING gin (hashtags);
+
+
+--
 -- Name: index_posts_on_place_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -603,6 +613,8 @@ ALTER TABLE ONLY public.active_storage_attachments
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240820040304'),
+('20240802003938'),
 ('20240619222332'),
 ('20240219210343'),
 ('20240219210215'),
