@@ -49,7 +49,7 @@ module Markdown
 
       def self.from_hashtag(tag)
         new(:link).tap do |node|
-          node.url = Rails.application.routes.url_helpers.hashtag_path(tag.delete_prefix("#"))
+          node.url = Rails.application.routes.url_helpers.hashtag_url(tag.delete_prefix("#"))
           node.title = "View all posts tagged with #{tag}"
 
           node.append_child(CommonMarker::Node.new(:text).tap { |n| n.string_content = tag })
