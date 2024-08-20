@@ -120,7 +120,26 @@ module ATProto
         }
       end
 
-      # Then, we'll look for any @mentions of other Bluesky users. Unlike on
+      # Then, we'll look for any hashtags in the post's text, formatted as the
+      # usual #hashtag. We'll extract each hashtag and create facets for them.
+      text.scan(Post::HASHTAG_REGEX).each do |(tag)|
+        start_index = text.byteindex(tag)
+        end_index = start_index + tag.bytesize
+
+        facets << {
+          "$type" => "app.bsky.richtext.facet",
+          "features" => [{
+            "$type" => "app.bsky.richtext.facet#tag",
+            "tag" => tag.delete_prefix("#")
+          }],
+          "index" => {
+            "byteStart" => start_index,
+            "byteEnd" => end_index
+          }
+        }
+      end
+
+      # Finally, we'll look for any @mentions of other Bluesky users. Unlike on
       # Mastodon, these will be formatted as @somebody.bsky.social, or even
       # just @somebodys.domain. We're essentially looking for valid domain
       # names prepended by an @ symbol.
