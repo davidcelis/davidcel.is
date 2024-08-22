@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root to: "posts#index"
 
   get "/about", to: "pages#about"
+  get "/pdx-food", to: "pages#pdx_food"
 
   # For the generic /posts/:id route (i.e. to route to a post without using
   # its type, like Article or Note), we'll only support numeric IDs. Only
