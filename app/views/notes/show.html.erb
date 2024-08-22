@@ -43,12 +43,6 @@
   <% end %>
 <% end %>
 
-<% unless content_for?(:og_image) %>
-  <% content_for(:og_image) do %>
-    <!-- No images for this post! -->
-  <% end %>
-<% end %>
-
 <% content_for(:og_video) do %>
   <% @note.media_attachments.select(&:video_or_gif?).each do |video| %>
     <meta property="og:video" content="<%= cdn_file_url(video) %>">
@@ -67,7 +61,5 @@
   <% elsif (video = @note.media_attachments.find(&:video_or_gif?)) %>
     <meta property="twitter:image" content="<%= cdn_file_url(video.preview_image) %>">
     <meta property="twitter:image:alt" content="<%= video.description %>">
-  <% else %>
-    <!-- No images for this post! -->
   <% end %>
 <% end %>
