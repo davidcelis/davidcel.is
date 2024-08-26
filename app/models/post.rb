@@ -36,7 +36,7 @@ class Post < ApplicationRecord
   self.markdown_extensions = [:strikethrough]
 
   URL_REGEX = URI::DEFAULT_PARSER.make_regexp(%w[http https])
-  HASHTAG_REGEX = /(?<=^|[^\/\w])(#\w+)(?:\s|\z)/i
+  HASHTAG_REGEX = /(?<=^|[^\/\w])(#\w+)(?:\b)/i
   MASTODON_MENTION_REGEX = /(?<=^|[^\/\w])@(?:([a-z0-9_]+)@((?:[\w.-]+\w+)?))/i
   BLUESKY_MENTION_REGEX = /(?<=^|[^\/\w])@(([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,})/i
 
