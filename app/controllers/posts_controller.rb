@@ -49,18 +49,18 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
 
     # Use the WeatherKit API to get the weather for the post's location.
-    Sentry.configure_scope do |scope|
-      scope.set_context("params", params.to_unsafe_h)
+    begin
+      aqi = AQI.at(latitude: @post.latitude, longitude: @post.longitude)
+      @post.weather = {"airQualityIndex" => aqi}
 
-      if @post.latitude && @post.longitude
-        response = Apple::WeatherKit::CurrentWeather.at(latitude: @post.latitude, longitude: @post.longitude)
-        @post.weather = response["currentWeather"]
-
-        aqi = AQI.at(latitude: @post.latitude, longitude: @post.longitude)
-        @post.weather["airQualityIndex"] = aqi
-      else
-        Sentry.capture_message("No coordinates")
-      end
+      response = Apple::WeatherKit::CurrentWeather.at(latitude: @post.latitude, longitude: @post.longitude)
+      @post.weather.merge!(response["currentWeather"])
+    rescue Faraday::Error
+      # Occasionally, Apple's WeatherKit API just starts returning 401s for no
+      # reason. These have always been transient, but it typically takes a few
+      # hours before resolving itself. To avoid preventing myself from posting
+      # for long stretches of time, I just enqueue a job to bring the weather
+      # data in later, and the job can retry until it works.
     end
 
     # If we don't have a check-in, we'll still find or create a generic Place
@@ -68,6 +68,8 @@ class PostsController < ApplicationController
     @post.place = Place.find_or_create_by(place_params) if place_params.present?
 
     if @post.save
+      AddWeatherToPostJob.perform_async(@post.id) unless @post.has_weather_data?
+
       redirect_to polymorphic_path(@post)
     else
       render :index, alert: @post.errors.full_messages.to_sentence

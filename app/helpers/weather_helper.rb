@@ -166,7 +166,7 @@ module WeatherHelper
   }.freeze
 
   def weather_icon_url(post)
-    return unless post.weather.present?
+    return unless post.has_weather_data?
 
     condition = post.weather["conditionCode"]
     daylight = post.weather["daylight"]
@@ -177,7 +177,7 @@ module WeatherHelper
   end
 
   def weather_emoji(post)
-    return unless post.weather.present?
+    return unless post.has_weather_data?
 
     condition = post.weather["conditionCode"]
     daylight = post.weather["daylight"]
@@ -186,7 +186,7 @@ module WeatherHelper
   end
 
   def weather_conditions(post)
-    return unless post.weather.present?
+    return unless post.has_weather_data?
 
     FRIENDLY_CONDITIONS[post.weather["conditionCode"]]
   end

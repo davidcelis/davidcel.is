@@ -114,6 +114,15 @@ class Post < ApplicationRecord
     super || (self.coordinates = ActiveRecord::Point.new)
   end
 
+  # Just having the AQI populated doesn't mean we have our full weather data,
+  # as Apple's WeatherKit API occasionally experiences periods where it returns
+  # 401 responses for no reason. When that happens, we still pull the AQI and
+  # retry the weather data later. This allows us to wait until we have the full
+  # set before trying to show it on the post.
+  def has_weather_data?
+    weather.present? && weather.except("airQualityIndex").any?
+  end
+
   def article? = is_a?(Article)
 
   def check_in? = is_a?(CheckIn)

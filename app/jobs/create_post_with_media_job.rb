@@ -42,6 +42,8 @@ class CreatePostWithMediaJob < ApplicationJob
       end
 
       post.save!
+
+      AddWeatherToPostJob.perform_later(post.id) unless post.has_weather_data?
     end
   end
 
@@ -97,16 +99,17 @@ class CreatePostWithMediaJob < ApplicationJob
   end
 
   def fetch_weather(post)
-    latitude = post.place&.latitude || post.latitude
-    longitude = post.place&.longitude || post.longitude
-
-    return Sentry.capture_message("No coordinates") unless latitude.present? && longitude.present?
+    aqi = AQI.at(latitude: latitude, longitude: longitude)
+    post.weather = {"airQualityIndex" => aqi}
 
     response = Apple::WeatherKit::CurrentWeather.at(latitude: latitude, longitude: longitude)
-    post.weather = response["currentWeather"]
-
-    aqi = AQI.at(latitude: latitude, longitude: longitude)
-    post.weather["airQualityIndex"] = aqi
+    post.weather.merge!(response["currentWeather"])
+  rescue Faraday::Error
+    # Occasionally, Apple's WeatherKit API just starts returning 401s for no
+    # reason. These have always been transient, but it typically takes a few
+    # hours before resolving itself. To avoid preventing myself from posting
+    # for long stretches of time, I just enqueue a job to bring the weather
+    # data in later, and the job can retry until it works.
   end
 
   def cache_link_images(post)

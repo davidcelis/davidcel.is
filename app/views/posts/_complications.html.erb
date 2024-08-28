@@ -20,7 +20,7 @@
       <span>/ <%= post.place.city_state_and_country(separator: " / ") %></span>
     </span>
 
-    <% if post.weather.present? %>
+    <% if post.has_weather_data? %>
       <span class="font-mono text-slate-500 flex">
         <span class="font-sans select-none" aria-hidden="true"><%= weather_emoji(post) %>&nbsp;</span>
         <span><%= (post.weather["temperatureApparent"] * 1.8 + 32).round %>°F <%= weather_conditions(post) %></span>
