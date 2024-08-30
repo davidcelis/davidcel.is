@@ -99,10 +99,10 @@ class CreatePostWithMediaJob < ApplicationJob
   end
 
   def fetch_weather(post)
-    aqi = AQI.at(latitude: latitude, longitude: longitude)
+    aqi = AQI.at(latitude: post.latitude, longitude: post.longitude)
     post.weather = {"airQualityIndex" => aqi}
 
-    response = Apple::WeatherKit::CurrentWeather.at(latitude: latitude, longitude: longitude)
+    response = Apple::WeatherKit::CurrentWeather.at(latitude: post.latitude, longitude: post.longitude)
     post.weather.merge!(response["currentWeather"])
   rescue Faraday::Error
     # Occasionally, Apple's WeatherKit API just starts returning 401s for no
