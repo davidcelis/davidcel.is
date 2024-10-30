@@ -13,4 +13,4 @@ pin "@stimulus-components/lightbox", to: "https://cdn.jsdelivr.net/npm/@stimulus
 pin "@stimulus-components/notification", to: "https://cdn.jsdelivr.net/npm/@stimulus-components/notification@3.0.0/dist/stimulus-notification.mjs"
 pin "@popperjs/core", to: "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
 pin "tippy.js", to: "https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy.umd.min.js"
-pin "ink-mde", to: "https://esm.sh/ink-mde@0.33.0?bundle"
+pin "ink-mde", to: "https://esm.sh/ink-mde@0.34.0?bundle"
