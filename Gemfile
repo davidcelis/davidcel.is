@@ -80,9 +80,7 @@ gem "skylight"
 gem "bootsnap", require: false
 
 group :development, :test do
-  gem "pry-byebug"
-  gem "pry-rails"
-
+  gem "debug"
   gem "rspec-rails", "~> 6"
   gem "webmock"
   gem "vcr"
