@@ -12,7 +12,10 @@
 
             <div class="ml-4">
               <h4 class="text-sm font-bold text-slate-900">
-                <%= link_to reply.h_entry.author.name, reply.h_entry.author.url, target: "_blank", class: "hover:underline" %>
+                <% author_name = author.name if author.respond_to?(:name) %>
+                <% author_name ||= author.nickname if author.respond_to?(:nickname) %>
+
+                <%= link_to author_name, reply.h_entry.author.url, target: "_blank", class: "hover:underline" %>
               </h4>
 
               <div class="mt-1 flex items-center" data-controller="local-time" data-local-time-full-value>
