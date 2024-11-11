@@ -12,8 +12,8 @@
 
             <div class="ml-4">
               <h4 class="text-sm font-bold text-slate-900">
-                <% author_name = author.name if author.respond_to?(:name) %>
-                <% author_name ||= author.nickname if author.respond_to?(:nickname) %>
+                <% author_name = reply.h_entry.author.name if reply.h_entry.author.respond_to?(:name) %>
+                <% author_name ||= reply.h_entry.author.nickname if reply.h_entry.author.respond_to?(:nickname) %>
 
                 <%= link_to author_name, reply.h_entry.author.url, target: "_blank", class: "hover:underline" %>
               </h4>
