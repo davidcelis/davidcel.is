@@ -34,7 +34,7 @@ class ProcessWebmentionJob < ApplicationJob
       mentioned_urls = URI.extract(webmention.html, %w[http https])
       return webmention.failed! unless mentioned_urls.include?(webmention.target)
     end
-    
+
     # Depending on the webmention and where it came from, we might have a reply
     # with no content. If that happened, mark it as failed and bail.
     if webmention.type == "reply" && !h_entry.respond_to?(:content)
