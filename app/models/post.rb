@@ -136,11 +136,6 @@ class Post < ApplicationRecord
   def syndicate
     SyndicateToBlueskyJob.perform_async(id)
     SyndicateToMastodonJob.perform_async(id)
-
-    # Threads not only doesn't support updating posts, but it doesn't even
-    # support deleting them. So we'll only syndicate new posts to Threads.
-    # Deleting or updating a post will require manual intervention.
-    SyndicateToThreadsJob.perform_async(id) if previously_new_record?
   end
 
   def unsyndicate
