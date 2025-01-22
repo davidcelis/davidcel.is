@@ -54,9 +54,6 @@ gem "aws-sdk-s3"
 # Construct and sign JWTs for use with Apple MapKit JS
 gem "jwt"
 
-# Use my API client for cross-posting to Threads
-gem "threads-api"
-
 # Use Faraday for external HTTP/API requests and clients
 gem "faraday"
 gem "faraday-retry"

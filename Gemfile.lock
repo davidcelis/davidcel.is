@@ -350,8 +350,6 @@ GEM
     tailwindcss-ruby (3.4.14-arm64-darwin)
     tailwindcss-ruby (3.4.14-x86_64-linux)
     thor (1.3.2)
-    threads-api (0.2.0)
-      faraday (>= 2.0)
     tilt (2.4.0)
     timeout (0.4.1)
     turbo-rails (2.0.11)
@@ -419,7 +417,6 @@ DEPENDENCIES
   standardrb
   stimulus-rails
   tailwindcss-rails
-  threads-api
   turbo-rails
   vcr
   web-console
@@ -429,4 +426,4 @@ RUBY VERSION
    ruby 3.3.6p108
 
 BUNDLED WITH
-   2.6.1
+   2.6.3
