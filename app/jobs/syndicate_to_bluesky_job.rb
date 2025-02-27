@@ -99,7 +99,15 @@ class SyndicateToBlueskyJob < ApplicationJob
 
     blobs = images.map do |media_attachment|
       result = client.upload_blob(media_attachment.webp_variant_attachment)
-      {image: result["blob"], alt: media_attachment.description}
+
+      {
+        image: result["blob"],
+        alt: media_attachment.description,
+        aspectRatio: {
+          width: media_attachment.width,
+          height: media_attachment.height
+        }
+      }
     end
 
     if (link = post.syndication_links.find_by(platform: "bluesky"))
