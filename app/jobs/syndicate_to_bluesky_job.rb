@@ -2,6 +2,8 @@ class SyndicateToBlueskyJob < ApplicationJob
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::SanitizeHelper
 
+  BLUESKY_POST_URL_REGEX = %r{https://bsky.app/profile/(?<repo>[^/]+)/post/(?<rkey>[^/]+)}
+
   def perform(post_id)
     post = Post.find(post_id)
 
@@ -49,27 +51,35 @@ class SyndicateToBlueskyJob < ApplicationJob
     when Link
       content = post.content
 
-      embed = {"$type" => "app.bsky.embed.external", "external" => {}}
+      # If the link is to a Bluesky post, we'll embed the link as a quote post.
+      # Otherwise, we'll embed it as an external link.
+      if character_count(content) <= 300 && (match = BLUESKY_POST_URL_REGEX.match(post.link_data["url"]))
+        record = client.get_post(repo: match[:repo], collection: "app.bsky.feed.post", rkey: match[:rkey])
 
-      if character_count(content) > 300
-        content = "🔗 #{post.title}"
-
-        embed["external"]["uri"] = polymorphic_url(post)
-        embed["external"]["title"] = "🔗 #{post.title}"
-        embed["external"]["description"] = strip_tags(post.excerpt).squish
+        embed = {"$type" => "app.bsky.embed.record", "record" => {"uri" => record["uri"], "cid" => record["cid"]}}
       else
-        embed["external"]["uri"] = post.link_data["url"]
-        embed["external"]["title"] = post.link_data.dig("meta", "title")
+        embed = {"$type" => "app.bsky.embed.external", "external" => {}}
 
-        if (description = post.link_data.dig("meta", "description"))
-          embed["external"]["description"] = description
+        if character_count(content) > 300
+          content = "🔗 #{post.title}"
+
+          embed["external"]["uri"] = polymorphic_url(post)
+          embed["external"]["title"] = "🔗 #{post.title}"
+          embed["external"]["description"] = strip_tags(post.excerpt).squish
+        else
+          embed["external"]["uri"] = post.link_data["url"]
+          embed["external"]["title"] = post.link_data.dig("meta", "title")
+
+          if (description = post.link_data.dig("meta", "description"))
+            embed["external"]["description"] = description
+          end
         end
-      end
 
-      if post.preview_image.attached?
-        blob_result = client.upload_blob(post.preview_image_attachment)
+        if post.preview_image.attached?
+          blob_result = client.upload_blob(post.preview_image_attachment)
 
-        embed["external"]["thumb"] = blob_result["blob"]
+          embed["external"]["thumb"] = blob_result["blob"]
+        end
       end
 
       content

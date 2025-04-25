@@ -15,6 +15,16 @@ module ATProto
       @session = ATProto::Session.new(identifier: identifier, password: password)
     end
 
+    # Retrieve a post from Bluesky from a URL such as:
+    #
+    # https://bsky.app/profile/davidcel.is/post/3k4i2hxxjki2a
+    #
+    # We need to extract the handle and rkey from the URL, and then use the
+    # Bluesky API to retrieve the post.
+    def get_post(repo:, collection:, rkey:)
+      connection.get("#{BASE_PATH}.getRecord", {repo: repo, collection: collection, rkey: rkey}).body
+    end
+
     # Creates a post in the user's feed.
     #
     # @param text [String] The text of the post.
