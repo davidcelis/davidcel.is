@@ -35,14 +35,14 @@ gem "turbo-rails"
 gem "stimulus-rails"
 
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-gem "tailwindcss-rails"
+gem "tailwindcss-rails", "~> 3.3"
 
 # Use Redis adapter to run Action Cable in production
 gem "redis", "~> 4.0"
 
 # Use Sidekiq to perform asynchronous jobs
-gem "sidekiq", "~> 7.0"
-gem "sidekiq-scheduler", "~> 5.0"
+gem "sidekiq", "~> 8.0"
+gem "sidekiq-scheduler", "6.0.0.beta2"
 
 # Use ImageProcessing to handle ActiveStorage variants
 gem "image_processing", ">= 1.12"
