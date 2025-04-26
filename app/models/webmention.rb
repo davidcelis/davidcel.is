@@ -9,13 +9,13 @@ class Webmention < ApplicationRecord
   validates :target, presence: true, url: true
   validate :target_must_be_a_known_url
 
-  enum status: {
+  enum :status, {
     unprocessed: "unprocessed",
     verified: "verified",
     failed: "failed"
   }
 
-  enum type: {
+  enum :type, {
     like: "like",
     repost: "repost",
     reply: "reply",
