@@ -43,7 +43,7 @@ class VideoProcessor
       # a targeted audio bitrate of 128k.
       #
       # More info: https://trac.ffmpeg.org/wiki/Encode/H.264#twopass
-      system(ffmpeg, "-y", "-i", result.path, "-c:v", "libx264", "-b:v", "#{bitrate}k", "-pass", "1", "-an", "-f", "mp4", "/dev/null")
+      system(ffmpeg, "-y", "-i", result.path, "-c:v", "libx264", "-b:v", "#{bitrate}k", "-pass", "1", "-an", "-f", "mp4", File::NULL)
       system(ffmpeg, "-y", "-i", result.path, "-c:v", "libx264", "-b:v", "#{bitrate}k", "-pass", "2", "-c:a", "aac", "-b:a", "128k", new_result.path)
       new_result.rewind
 
