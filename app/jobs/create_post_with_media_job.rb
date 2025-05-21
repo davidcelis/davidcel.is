@@ -115,28 +115,44 @@ class CreatePostWithMediaJob < ApplicationJob
   def cache_link_images(post)
     if (favicon = post.link_data.dig("links", "icon", 0))
       extension = Rack::Mime::MIME_TYPES.invert[favicon["type"]]
+      favicon_io = begin
+        URI.parse(favicon["href"]).open
+      rescue OpenURI::HTTPError => e
+        Sentry.capture_exception(e)
+        nil
+      end
 
-      favicon_blob = ActiveStorage::Blob.create_and_upload!(
-        key: "blog/links/#{post.id}/favicon#{extension}",
-        io: URI.parse(favicon["href"]).open,
-        filename: "favicon#{extension}"
-      )
+      if favicon_io.present?
+        favicon_blob = ActiveStorage::Blob.create_and_upload!(
+          key: "blog/links/#{post.id}/favicon#{extension}",
+          io: favicon_io,
+          filename: "favicon#{extension}"
+        )
 
-      favicon_blob.analyze
-      post.favicon.attach(favicon_blob)
+        favicon_blob.analyze
+        post.favicon.attach(favicon_blob)
+      end
     end
 
     if (preview_image = post.link_data.dig("links", "thumbnail", 0))
       extension = Rack::Mime::MIME_TYPES.invert[preview_image["type"]]
+      preview_image_io = begin
+        URI.parse(preview_image["href"]).open
+      rescue OpenURI::HTTPError => e
+        Sentry.capture_exception(e)
+        nil
+      end
 
-      preview_image_blob = ActiveStorage::Blob.create_and_upload!(
-        key: "blog/links/#{post.id}/preview#{extension}",
-        io: URI.parse(preview_image["href"]).open,
-        filename: "preview#{extension}"
-      )
+      if preview_image_io.present?
+        preview_image_blob = ActiveStorage::Blob.create_and_upload!(
+          key: "blog/links/#{post.id}/preview#{extension}",
+          io: preview_image_io,
+          filename: "preview#{extension}"
+        )
 
-      preview_image_blob.analyze
-      post.preview_image.attach(preview_image_blob)
+        preview_image_blob.analyze
+        post.preview_image.attach(preview_image_blob)
+      end
     end
   end
 end
