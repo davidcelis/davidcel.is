@@ -120,6 +120,26 @@ class SyndicateToBlueskyJob < ApplicationJob
       }
     end
 
+    if (video = post.media_attachments.find(&:video?))
+      unless video.analyzed?
+        logger.info("Media attachments are still being analyzed; trying again in 5 seconds...")
+        SyndicateToBlueskyJob.perform_in(5.seconds, post_id)
+        return
+      end
+
+      result = client.upload_video(video)
+
+      embed = {
+        "$type" => "app.bsky.embed.video",
+        "video" => result,
+        "alt" => video.description,
+        "aspectRatio" => {
+          "width" => video.width,
+          "height" => video.height
+        }
+      }
+    end
+
     if (link = post.syndication_links.find_by(platform: "bluesky"))
       rkey = link.url.split("/").last
       client.update_post(rkey, text: text, created_at: post.created_at, facets: facets, images: blobs, embed: embed)

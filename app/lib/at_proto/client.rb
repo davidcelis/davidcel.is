@@ -6,8 +6,15 @@ module ATProto
   class Client
     BASE_PATH = "/xrpc/com.atproto.repo".freeze
     IDENTITY_PATH = "/xrpc/com.atproto.identity".freeze
+    SERVER_PATH = "/xrpc/com.atproto.server".freeze
+
     IMAGE_SIZE_LIMIT = 976.56.kilobytes
     IMAGE_PIXEL_LIMIT = 16_200_000
+
+    VIDEO_BASE_URL = "https://video.bsky.app"
+    VIDEO_PATH = "/xrpc/app.bsky.video".freeze
+    VIDEO_SIZE_LIMIT = 49 # Just shy of 50MB
+    VIDEO_PIXEL_LIMIT = 8_294_400 # 3840x2160px
 
     attr_reader :session
 
@@ -87,6 +94,47 @@ module ATProto
       end
 
       response.body
+    end
+
+    def upload_video(attachment)
+      upload_token = connection.get("#{SERVER_PATH}.getServiceAuth", {aud: "did:web:#{@session.pds_endpoint_uri.host}", lxm: "com.atproto.repo.uploadBlob", exp: 30.minutes.from_now.to_i}).body["token"]
+      status_token = connection.get("#{SERVER_PATH}.getServiceAuth", {aud: "did:web:#{@session.pds_endpoint_uri.host}", lxm: "app.bsky.video.getJobStatus", exp: 30.minutes.from_now.to_i}).body["token"]
+
+      response = nil
+
+      attachment.blob.open do |blob|
+        metadata = attachment.file.metadata.slice(:width, :height, :duration, :audio).symbolize_keys
+        tmpfile = VideoProcessor.process(blob, size_limit: VIDEO_SIZE_LIMIT, pixel_limit: VIDEO_PIXEL_LIMIT, **metadata)
+
+        begin
+          response = video_upload_connection.post("#{VIDEO_PATH}.uploadVideo") do |req|
+            req.params["did"] = @session.did
+            req.params["name"] = attachment.filename.to_s
+
+            req.body = tmpfile
+
+            req.headers["Authorization"] = "Bearer #{upload_token}"
+            req.headers["Content-Type"] = attachment.content_type
+            req.headers["Content-Length"] = tmpfile.size.to_s
+          end.body
+        rescue Faraday::ConflictError => e
+          # If we get a 409 CONFLICT, it means the video was already uploaded. Thankfully,
+          # Bluesky includes the necessary info in the error response.
+          response = e.response[:body]
+        end
+      end
+
+      job_id = response["jobId"]
+      job_state = nil
+
+      until job_state.in?(%w[JOB_STATE_COMPLETED JOB_STATE_FAILED])
+        sleep 1
+
+        response = video_upload_connection.get("#{VIDEO_PATH}.getJobStatus", {jobId: job_id}, "Authorization" => "Bearer #{status_token}")
+        job_state = response.body.dig("jobStatus", "state")
+      end
+
+      response.body.dig("jobStatus", "blob")
     end
 
     def sign_out!
@@ -217,6 +265,15 @@ module ATProto
       @blob_upload_connection ||= Faraday.new(ATProto::BASE_URL) do |f|
         f.request :retry
         f.request :authorization, "Bearer", @session.access_token
+
+        f.response :raise_error
+        f.response :json
+      end
+    end
+
+    def video_upload_connection
+      @video_upload_connection ||= Faraday.new(VIDEO_BASE_URL) do |f|
+        f.request :retry
 
         f.response :raise_error
         f.response :json

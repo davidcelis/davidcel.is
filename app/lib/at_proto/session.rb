@@ -2,7 +2,7 @@ module ATProto
   class Session
     BASE_PATH = "/xrpc/com.atproto.server".freeze
 
-    attr_reader :access_token, :refresh_token, :handle, :did, :email
+    attr_reader :access_token, :refresh_token, :handle, :did, :email, :pds_endpoint_uri
 
     def initialize(identifier:, password:)
       params = {identifier: identifier, password: password}
@@ -13,6 +13,10 @@ module ATProto
       @handle = response.body["handle"]
       @did = response.body["did"]
       @email = response.body["email"]
+
+      services = response.body.dig("didDoc", "service")
+      pds = services.find { |service| service["type"] == "AtprotoPersonalDataServer" }
+      @pds_endpoint_uri = URI.parse(pds["serviceEndpoint"])
     end
 
     def destroy!
