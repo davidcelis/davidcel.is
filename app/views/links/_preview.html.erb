@@ -7,7 +7,7 @@
     <% end %>
 
     <div class="flex flex-col p-3 space-y-1">
-      <p><%= link_to link.title, link.link_data["url"], class: "m-0 text-lg sm:text-xl leading-tight link-primary", target: "_blank", rel: "nofollow noopener noreferrer" %></p>
+      <p><%= link_to link.link_data.dig("meta", "title") || link.title, link.link_data["url"], class: "m-0 text-lg sm:text-xl leading-tight link-primary", target: "_blank", rel: "nofollow noopener noreferrer" %></p>
 
       <% if (description = link.link_data.dig("meta", "description")) %>
         <p class="text-sm"><%= description %></p>
