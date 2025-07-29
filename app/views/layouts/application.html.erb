@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>davidcel.is</title>
-    <meta name="description" content="Thoughts and musings of a Cowboy Coder.">
+    <meta name="description" content="Lukewarm takes from an amateur pizzaiolo and software engineer.">
 
     <%= auto_discovery_link_tag(:atom, main_feed_url, title: "davidcel.is") %>
     <%= auto_discovery_link_tag(:atom, articles_feed_url, title: "davidcel.is - Articles") %>
@@ -42,7 +42,7 @@
     <%= content_for(:head) %>
 
     <meta property="og:title" content="<%= content_for(:og_title) || "davidcel.is" %>">
-    <meta property="og:description" content="<%= content_for(:og_description) || "Lukewarm takes from a Cowboy Coder." %>">
+    <meta property="og:description" content="<%= content_for(:og_description) || "Lukewarm takes from an amateur pizzaiolo and software engineer." %>">
     <meta property="og:type" content="<%= content_for(:og_type) || "website" %>">
     <meta property="og:url" content="<%= content_for(:og_url) || request.original_url %>">
 
@@ -53,15 +53,11 @@
     <meta name="twitter:site" content="@davidcelis">
     <meta name="twitter:creator" content="@davidcelis">
     <meta name="twitter:title" content="<%= content_for(:og_title) || "davidcel.is" %>">
-    <meta name="twitter:description" content="<%= content_for(:og_description) || "Thoughts and musings of a Cowboy Coder." %>">
+    <meta name="twitter:description" content="<%= content_for(:og_description) || "Lukewarm takes from an amateur pizzaiolo and software engineer." %>">
     <%= content_for(:twitter_image) %>
 
     <% if Rails.env.production? && !authenticated? %>
       <script defer data-domain="davidcel.is" src="https://pls.davidcel.is/js/script.js"></script>
-    <% end %>
-
-    <% if christmas? %>
-      <script defer type="module" src="https://unpkg.com/@zachleat/snow-fall@1.0.1/snow-fall.js"></script>
     <% end %>
   </head>
 

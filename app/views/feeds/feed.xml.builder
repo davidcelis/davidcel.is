@@ -8,8 +8,8 @@ xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
     xml.uri root_url
   end
 
-  xml.icon profile_picture_url
-  xml.logo profile_picture_url
+  xml.icon asset_url("me.jpg")
+  xml.logo asset_url("me.jpg")
 
   xml.link rel: "alternate", type: "text/html", href: @alternate_url
   xml.link rel: "self", type: "application/atom+xml", href: @self_url
