@@ -58,7 +58,7 @@ module AtomFeedHelper
   def atom_link_content(link)
     content = atom_note_content(link)
 
-    content + content_tag(:p, link_to("🐴", polymorphic_url(link)))
+    content + content_tag(:p, link_to("🍕", polymorphic_url(link)))
   end
 
   def atom_media_tag(media_attachment)
