@@ -18,25 +18,7 @@
               <%= @article.html.html_safe %>
             </div>
 
-            <div data-controller="local-time" data-local-time-full-value class="mt-4 text-sm text-slate-500">
-              <span class="font-sans select-none" data-local-time-target="emoji"><%= clock_emoji(@article.created_at) %> </span>
-
-              <%= link_to polymorphic_path(@article), class: "u-url text-sm font-bold leading-6 link-primary" do %>
-                <%= timestamp(@article.created_at, full: true, classes: ["dt-published"]) %>
-              <% end %>
-            </div>
-
-            <% if authenticated? %>
-              <span class="font-mono text-sm text-slate-500">
-                <span class="font-sans select-none" aria-hidden="true">🔏 </span>
-                <%= link_to "Edit post", edit_post_path(@article.id), class: "link-primary font-bold" %>
-              </span>
-
-              <span class="font-mono text-sm text-slate-500">
-                <span class="font-sans select-none" aria-hidden="true">🚮 </span>
-                <%= link_to "Delete post", post_path(@article.id), class: "link-primary font-bold", data: { turbo_method: :delete, turbo_confirm: "You sure?" } %>
-              </span>
-            <% end %>
+            <%= render partial: "posts/complications", locals: { post: @article } %>
 
             <%= render partial: "posts/meta", locals: { post: @article } %>
           </div>
