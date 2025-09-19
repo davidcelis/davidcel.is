@@ -28,7 +28,7 @@ RSpec.describe SyndicateToMastodonJob, type: :job do
 
     it "shares the Article's title and URL to Mastodon" do
       expect_any_instance_of(Mastodon::Client).to receive(:create_status)
-        .with(content: "“Hello, world!”\n\nhttp://localhost:3000/articles/hello-world", media_ids: [], idempotency_key: article.id)
+        .with(content: "Nice day we’re having.\n\nhttp://localhost:3000/articles/hello-world", media_ids: [], idempotency_key: article.id)
         .and_call_original
 
       expect {

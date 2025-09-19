@@ -1,12 +1,13 @@
 class SyndicateToMastodonJob < ApplicationJob
   include Rails.application.routes.url_helpers
+  include ActionView::Helpers::SanitizeHelper
 
   def perform(post_id)
     post = Post.find(post_id)
 
     content = case post
     when Article
-      "“#{post.title}”\n\n#{article_url(post)}"
+      "#{strip_tags(post.excerpt)}\n\n#{article_url(post)}"
     when Note
       text = post.content
 

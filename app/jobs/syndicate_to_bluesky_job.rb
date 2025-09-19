@@ -16,11 +16,30 @@ class SyndicateToBlueskyJob < ApplicationJob
       link.destroy!
     end
 
-    # If the post is an Article, we'll just syndicate the title and URL.
+    # If the post is an Article, we'll syndicate the excerpt and URL.
     if post.is_a?(Article) && !post.syndication_links.where(platform: "bluesky").exists?
-      text, facets = client.extract_facets("“#{post.title}”\n\n#{article_url(post)}")
-      response = client.create_post(text: text, created_at: post.created_at, facets: facets)
-      return create_syndication_link(post, response)
+      text = (post.excerpt.presence || post.title).truncate(300)
+      embed = {
+        "$type" => "app.bsky.embed.external",
+        "external" => {
+          "uri" => article_url(post),
+          "title" => post.title,
+          "description" => strip_tags(post.excerpt).squish
+        }
+      }
+
+      if (image = post.media_attachments.find(&:image?))
+        unless image.webp_variant_attachment.analyzed?
+          logger.info("Media attachments are still being analyzed; trying again in 5 seconds...")
+          return SyndicateToBlueskyJob.perform_in(5.seconds, post_id)
+        end
+
+        blob_result = client.upload_blob(image.webp_variant_attachment)
+        embed["external"]["thumb"] = blob_result["blob"]
+      end
+
+      response = client.create_post(text: text, created_at: post.created_at, embed: embed)
+      create_syndication_link(post, response)
     end
 
     images = post.media_attachments.select(&:image?)
