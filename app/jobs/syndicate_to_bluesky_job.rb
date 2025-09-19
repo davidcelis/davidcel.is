@@ -18,13 +18,13 @@ class SyndicateToBlueskyJob < ApplicationJob
 
     # If the post is an Article, we'll syndicate the excerpt and URL.
     if post.is_a?(Article) && !post.syndication_links.where(platform: "bluesky").exists?
-      text = (post.excerpt.presence || post.title).truncate(300)
+      text = (post.og_description.presence || post.title).truncate(300)
       embed = {
         "$type" => "app.bsky.embed.external",
         "external" => {
           "uri" => article_url(post),
           "title" => post.title,
-          "description" => strip_tags(post.excerpt).squish
+          "description" => post.og_description
         }
       }
 
@@ -39,7 +39,7 @@ class SyndicateToBlueskyJob < ApplicationJob
       end
 
       response = client.create_post(text: text, created_at: post.created_at, embed: embed)
-      create_syndication_link(post, response)
+      return create_syndication_link(post, response)
     end
 
     images = post.media_attachments.select(&:image?)

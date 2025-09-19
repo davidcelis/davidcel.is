@@ -7,7 +7,7 @@ class SyndicateToMastodonJob < ApplicationJob
 
     content = case post
     when Article
-      "#{strip_tags(post.excerpt)}\n\n#{article_url(post)}"
+      "#{post.og_description}\n\n#{article_url(post)}"
     when Note
       text = post.content
 

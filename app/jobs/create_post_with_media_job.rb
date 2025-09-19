@@ -43,7 +43,7 @@ class CreatePostWithMediaJob < ApplicationJob
 
       post.save!
 
-      AddWeatherToPostJob.perform_later(post.id) unless post.has_weather_data?
+      AddWeatherToPostJob.perform_async(post.id) unless post.has_weather_data?
     end
   end
 
