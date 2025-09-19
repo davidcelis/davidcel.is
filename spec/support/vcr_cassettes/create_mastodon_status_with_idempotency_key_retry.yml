@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: https://botsin.space/api/v1/statuses
+    uri: https://mastodon.social/api/v1/statuses
     body:
       encoding: UTF-8
       string: '{"status":"This status was created with an Idempotency Key to avoid
@@ -58,13 +58,13 @@ http_interactions:
       - W/"e3d3b243a24e5305e6c2b37797a7c078"
       Content-Security-Policy:
       - 'base-uri ''none''; default-src ''none''; frame-ancestors ''none''; font-src
-        ''self'' https://botsin.space; img-src ''self'' https: data: blob: https://botsin.space;
-        style-src ''self'' https://botsin.space ''nonce-dGSWJqcSLhlBrtWFr8o8JQ==''; media-src
-        ''self'' https: data: https://botsin.space; frame-src ''self'' https:; manifest-src
-        ''self'' https://botsin.space; connect-src ''self'' data: blob: https://botsin.space
-        https://xoxo-media.sfo2.cdn.digitaloceanspaces.com wss://botsin.space; script-src
-        ''self'' https://botsin.space ''wasm-unsafe-eval''; child-src ''self'' blob:
-        https://botsin.space; worker-src ''self'' blob: https://botsin.space'
+        ''self'' https://mastodon.social; img-src ''self'' https: data: blob: https://mastodon.social;
+        style-src ''self'' https://mastodon.social ''nonce-dGSWJqcSLhlBrtWFr8o8JQ==''; media-src
+        ''self'' https: data: https://mastodon.social; frame-src ''self'' https:; manifest-src
+        ''self'' https://mastodon.social; connect-src ''self'' data: blob: https://mastodon.social
+        https://xoxo-media.sfo2.cdn.digitaloceanspaces.com wss://mastodon.social; script-src
+        ''self'' https://mastodon.social ''wasm-unsafe-eval''; child-src ''self'' blob:
+        https://mastodon.social; worker-src ''self'' blob: https://mastodon.social'
       X-Request-Id:
       - f0c09e83-4d60-45ce-9773-0ccd3280e2d7
       X-Runtime:
@@ -74,14 +74,14 @@ http_interactions:
       - max-age=63072000; includeSubDomains
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"109815755604411561","created_at":"2023-02-06T03:50:50.506Z","in_reply_to_id":null,"in_reply_to_account_id":null,"sensitive":false,"spoiler_text":"","visibility":"public","language":"en","uri":"https://botsin.space/users/ewdavidcelis/statuses/109815755604411561","url":"https://botsin.space/@ewdavidcelis/109815755604411561","replies_count":0,"reblogs_count":0,"favourites_count":0,"edited_at":null,"favourited":false,"reblogged":false,"muted":false,"bookmarked":false,"pinned":false,"content":"\u003cp\u003eThis
+      string: '{"id":"109815755604411561","created_at":"2023-02-06T03:50:50.506Z","in_reply_to_id":null,"in_reply_to_account_id":null,"sensitive":false,"spoiler_text":"","visibility":"public","language":"en","uri":"https://mastodon.social/users/ewdavidcelis/statuses/109815755604411561","url":"https://mastodon.social/@ewdavidcelis/109815755604411561","replies_count":0,"reblogs_count":0,"favourites_count":0,"edited_at":null,"favourited":false,"reblogged":false,"muted":false,"bookmarked":false,"pinned":false,"content":"\u003cp\u003eThis
         status was created with an Idempotency Key to avoid duplication.\u003c/p\u003e","filtered":[],"reblog":null,"application":{"name":"davidcel.is
         (development)","website":"http://localhost:3000/"},"account":{"id":"109814833622721142","username":"ewdavidcelis","acct":"ewdavidcelis","display_name":"Ew,
         David!","locked":false,"bot":true,"discoverable":false,"group":false,"created_at":"2023-02-05T00:00:00.000Z","note":"\u003cp\u003eThis
         is an automated account that I use to test my website\u0026#39;s cross-posting
-        capabilities.\u003c/p\u003e","url":"https://botsin.space/@ewdavidcelis","avatar":"https://xoxo-media.sfo2.cdn.digitaloceanspaces.com/accounts/avatars/109/814/833/622/721/142/original/81a91228da462222.jpg","avatar_static":"https://xoxo-media.sfo2.cdn.digitaloceanspaces.com/accounts/avatars/109/814/833/622/721/142/original/81a91228da462222.jpg","header":"https://xoxo-media.sfo2.cdn.digitaloceanspaces.com/accounts/headers/109/814/833/622/721/142/original/f6ca314ebd2bced1.jpeg","header_static":"https://xoxo-media.sfo2.cdn.digitaloceanspaces.com/accounts/headers/109/814/833/622/721/142/original/f6ca314ebd2bced1.jpeg","followers_count":0,"following_count":1,"statuses_count":2,"last_status_at":"2023-02-06","noindex":false,"emojis":[],"fields":[{"name":"The
-        Real Me","value":"\u003ca href=\"https://botsin.space/@davidcelis\" target=\"_blank\"
+        capabilities.\u003c/p\u003e","url":"https://mastodon.social/@ewdavidcelis","avatar":"https://xoxo-media.sfo2.cdn.digitaloceanspaces.com/accounts/avatars/109/814/833/622/721/142/original/81a91228da462222.jpg","avatar_static":"https://xoxo-media.sfo2.cdn.digitaloceanspaces.com/accounts/avatars/109/814/833/622/721/142/original/81a91228da462222.jpg","header":"https://xoxo-media.sfo2.cdn.digitaloceanspaces.com/accounts/headers/109/814/833/622/721/142/original/f6ca314ebd2bced1.jpeg","header_static":"https://xoxo-media.sfo2.cdn.digitaloceanspaces.com/accounts/headers/109/814/833/622/721/142/original/f6ca314ebd2bced1.jpeg","followers_count":0,"following_count":1,"statuses_count":2,"last_status_at":"2023-02-06","noindex":false,"emojis":[],"fields":[{"name":"The
+        Real Me","value":"\u003ca href=\"https://mastodon.social/@davidcelis\" target=\"_blank\"
         rel=\"nofollow noopener noreferrer me\"\u003e\u003cspan class=\"invisible\"\u003ehttps://\u003c/span\u003e\u003cspan
-        class=\"\"\u003ebotsin.space/@davidcelis\u003c/span\u003e\u003cspan class=\"invisible\"\u003e\u003c/span\u003e\u003c/a\u003e","verified_at":null}]},"media_attachments":[],"mentions":[],"tags":[],"emojis":[],"card":null,"poll":null}'
+        class=\"\"\u003emastodon.social/@davidcelis\u003c/span\u003e\u003cspan class=\"invisible\"\u003e\u003c/span\u003e\u003c/a\u003e","verified_at":null}]},"media_attachments":[],"mentions":[],"tags":[],"emojis":[],"card":null,"poll":null}'
   recorded_at: Mon, 06 Feb 2023 03:52:45 GMT
 recorded_with: VCR 6.1.0
