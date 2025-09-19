@@ -134,6 +134,10 @@ class Post < ApplicationRecord
   private
 
   def syndicate
+    # We don't need to syndicate Articles on update, since we only syndicate the
+    # excerpt (which I very likely won't change) and the URL.
+    return if article? && !previously_new_record?
+
     SyndicateToBlueskyJob.perform_async(id)
     SyndicateToMastodonJob.perform_async(id)
   end

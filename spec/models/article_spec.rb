@@ -34,7 +34,7 @@ RSpec.describe Article, type: :model do
       expect(SyndicateToBlueskyJob).to have_received(:perform_async).with(article.id).once
     end
 
-    it "enqueues a job to syndicate the post to Mastodon on update" do
+    it "doe snot enqueue a job to syndicate the post on update" do
       article.save!
 
       allow(SyndicateToMastodonJob).to receive(:perform_async)
@@ -42,8 +42,8 @@ RSpec.describe Article, type: :model do
 
       article.update!(content: "Goodbye, world!")
 
-      expect(SyndicateToMastodonJob).to have_received(:perform_async).with(article.id).once
-      expect(SyndicateToBlueskyJob).to have_received(:perform_async).with(article.id).once
+      expect(SyndicateToMastodonJob).not_to have_received(:perform_async).with(article.id)
+      expect(SyndicateToBlueskyJob).not_to have_received(:perform_async).with(article.id)
     end
   end
 
