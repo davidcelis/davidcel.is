@@ -52,8 +52,7 @@ class ProcessWebmentionJob < ApplicationJob
     return unless route[:action] == "show"
 
     model = route[:controller].classify.constantize
-    case model
-    when Article
+    if model == Article
       model.find_by(slug: route[:id])
     else
       model.find(route[:id])
