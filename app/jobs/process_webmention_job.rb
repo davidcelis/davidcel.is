@@ -52,7 +52,12 @@ class ProcessWebmentionJob < ApplicationJob
     return unless route[:action] == "show"
 
     model = route[:controller].classify.constantize
-    model.find(route[:id])
+    case model
+    when Article
+      model.find_by(slug: route[:id])
+    else
+      model.find(route[:id])
+    end
   rescue ActionController::RoutingError, ActiveRecord::RecordNotFound
     nil
   end
