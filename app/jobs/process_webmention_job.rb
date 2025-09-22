@@ -30,7 +30,7 @@ class ProcessWebmentionJob < ApplicationJob
     # Next, verify that the source page contains a link to the target. The
     # sole exception is if the webmention came from brid.gy, which fails to
     # include the target URL in its source under certain unknown conditions.
-    if URI.parse(webmention.source).host != "brid.gy"
+    unless webmention.from_bridgy?
       mentioned_urls = URI.extract(webmention.html, %w[http https])
       return webmention.failed! unless mentioned_urls.include?(webmention.target)
     end

@@ -5,12 +5,6 @@
     <%= link_to polymorphic_path(post), class: "u-url text-sm font-bold leading-6 link-primary" do %>
       <%= timestamp(post.created_at, full: true, classes: ["dt-published"]) %>
     <% end %>
-
-    <% post.syndication_links.each do |link| %>
-      <% if link_tag = syndication_link_tag(link) %>
-        <span>/ </span><%= link_tag %>
-      <% end %>
-    <% end %>
   </span>
 
   <% if post.place.present? %>
@@ -29,6 +23,12 @@
           <span class="flex flex-col justify-center items-center ml-2 select-none"><span class="h-2 w-2 rounded-full <%= aqi_bg_color(aqi) %>"></span></span>
           <span>)</span>
         <% end %>
+      </span>
+    <% end %>
+
+    <% post.syndication_links.sort_by(&:platform).each do |link| %>
+      <span class="font-mono text-slate-500">
+        <%= syndication_link_tag(link, webmentions: post.webmentions.select(&:from_bridgy)) %>
       </span>
     <% end %>
   <% end %>

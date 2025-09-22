@@ -22,6 +22,20 @@ class Webmention < ApplicationRecord
     mention: "mention"
   }
 
+  def from_bridgy?
+    URI.parse(source).host == "brid.gy"
+  end
+
+  def platform
+    return unless from_bridgy?
+
+    uri = URI.parse(source)
+    path_segments = uri.path.split("/")
+    path_segments[2]
+  rescue URI::InvalidURIError
+    nil
+  end
+
   def h_entry
     @h_entry ||= begin
       mf2 = Microformats::Collection.new(self.mf2)

@@ -46,15 +46,15 @@
     <% end%>
   </div>
 
-  <% if (likes = post.webmentions.select(&:like?).presence) %>
+  <% if (likes = post.webmentions.select(&:like?).reject(&:from_bridgy?).presence) %>
     <%= render partial: "posts/likes", locals: {likes: likes} %>
   <% end %>
 
-  <% if (reposts = post.webmentions.select(&:repost?).presence) %>
+  <% if (reposts = post.webmentions.select(&:repost?).reject(&:from_bridgy?).presence) %>
     <%= render partial: "posts/reposts", locals: {reposts: reposts} %>
   <% end %>
 
-  <% if (replies = post.webmentions.select(&:reply?).presence) %>
+  <% if (replies = post.webmentions.select(&:reply?).reject(&:from_bridgy?).presence) %>
     <%= render partial: "posts/replies", locals: {replies: replies.sort_by(&:published_at)} %>
   <% end %>
 <% end %>
