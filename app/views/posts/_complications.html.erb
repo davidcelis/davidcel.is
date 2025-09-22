@@ -28,7 +28,7 @@
 
     <% post.syndication_links.sort_by(&:platform).each do |link| %>
       <span class="font-mono text-slate-500">
-        <%= syndication_link_tag(link, webmentions: post.webmentions.select(&:from_bridgy)) %>
+        <%= syndication_link_tag(link, webmentions: post.webmentions.select(&:from_bridgy?)) %>
       </span>
     <% end %>
   <% end %>
