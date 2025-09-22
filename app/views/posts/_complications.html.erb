@@ -27,7 +27,7 @@
     <% end %>
 
     <% post.syndication_links.sort_by(&:platform).each do |link| %>
-      <%= webmentions = post.webmentions.select { |webmention| webmention.platform == link.platform } %>
+      <% webmentions = post.webmentions.select { |webmention| webmention.platform == link.platform } %>
 
       <span class="font-mono text-slate-500">
         <%= syndication_link_tag(link, webmentions: webmentions) %>
