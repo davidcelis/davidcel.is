@@ -1,5 +1,6 @@
 class Resume::Job
   include ActiveModel::API
+
   attr_accessor :name, :position, :url, :startDate, :endDate, :summary
   alias_attribute :start_date, :startDate
   alias_attribute :end_date, :endDate
@@ -10,6 +11,7 @@ class Resume::Job
   end
 
   extend Enumerable
+
   class << self
     delegate :each, to: :all
   end
