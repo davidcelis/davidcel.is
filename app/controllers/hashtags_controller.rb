@@ -3,6 +3,7 @@ class HashtagsController < ApplicationController
     posts = Post
       .includes(Post::DEFAULT_INCLUDES)
       .where("hashtags @> ARRAY[?]::varchar[]", params[:id].downcase)
+      .where.not(type: "CheckIn")
     posts = posts.unscope(:order).search(params[:q]) if params[:q].present?
     @pagy, @posts = pagy(posts)
 

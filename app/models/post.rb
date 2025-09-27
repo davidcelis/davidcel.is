@@ -67,7 +67,7 @@ class Post < ApplicationRecord
     # Articles, Notes, and Links are the main types of posts that are shown in the main feed.
     # We'll also include Check-ins, but only if they have text and/or media attachments.
     left_outer_joins(:media_attachments)
-      .where(type: %w[Article Link Note CheckIn])
+      .where(type: %w[Article Link Note])
       .where("posts.content != '' OR media_attachments.id IS NOT NULL")
       .group(:id)
   }
