@@ -16,9 +16,11 @@ module Apple
         }
 
         unsigned_path ||= "/api/v1/snapshot?#{params.to_query}"
-        signature ||= JWT::Base64.url_encode(JWT::JWA::Ecdsa.sign("ES256", unsigned_path, Apple::PRIVATE_KEY))
+        signer = JWT::JWA::Ecdsa.new("ES256", "SHA256")
+        signature = signer.sign(data: unsigned_path, signing_key: Apple::PRIVATE_KEY)
+        encoded_signature = JWT::Base64.url_encode(signature)
 
-        @url = "#{BASE_URL}#{unsigned_path}&signature=#{signature}"
+        @url = "#{BASE_URL}#{unsigned_path}&signature=#{encoded_signature}"
       end
     end
   end
