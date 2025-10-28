@@ -88,7 +88,7 @@ module ATProto
       response = nil
 
       attachment.blob.open do |blob|
-        tmpfile = ImageProcessor.process(blob, size_limit: IMAGE_SIZE_LIMIT, pixel_limit: IMAGE_PIXEL_LIMIT)
+        tmpfile = ImageProcessor.process(blob, size_limit: IMAGE_SIZE_LIMIT, pixel_limit: IMAGE_PIXEL_LIMIT, quality_interval: 5)
 
         response = blob_upload_connection.post("#{BASE_PATH}.uploadBlob", tmpfile, "Content-Type" => attachment.content_type, "Content-Length" => tmpfile.size.to_s)
       end

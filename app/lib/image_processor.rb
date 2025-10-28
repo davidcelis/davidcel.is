@@ -1,5 +1,5 @@
 class ImageProcessor
-  def self.process(blob, size_limit: nil, pixel_limit: nil)
+  def self.process(blob, size_limit: nil, pixel_limit: nil, quality_interval: 1)
     return blob unless size_limit.present? || pixel_limit.present?
 
     # First, resize the image if it exceeds the given pixel limit; we'll
@@ -22,11 +22,7 @@ class ImageProcessor
     result = blob
 
     while File.size(result.path) > size_limit
-      # It might seem silly to start at 99% and work our way down by single
-      # digits, but often even the first pass at 99% will result in a much
-      # smaller size. This lets us post high quality images with, hopefully,
-      # only a few passes of compression.
-      quality -= 1
+      quality -= quality_interval
 
       result = ImageProcessing::Vips
         .source(blob.path)

@@ -127,7 +127,7 @@ class SyndicateToBlueskyJob < ApplicationJob
     text, facets = client.extract_facets(text)
 
     blobs = images.map do |media_attachment|
-      result = client.upload_blob(media_attachment.webp_variant_attachment)
+      result = client.upload_blob(media_attachment.file_attachment)
 
       {
         image: result["blob"],
