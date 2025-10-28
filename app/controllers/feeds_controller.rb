@@ -21,7 +21,7 @@ class FeedsController < ApplicationController
   end
 
   def all
-    _, @posts = pagy(Post.where.not(type: "CheckIn").includes(Post::FEED_INCLUDES))
+    _, @posts = pagy(Post.includes(Post::FEED_INCLUDES))
 
     # For check-ins, we'll preload their places and snapshots
     ActiveRecord::Associations::Preloader.new(
@@ -80,7 +80,6 @@ class FeedsController < ApplicationController
     posts = Post.includes(Post::FEED_INCLUDES)
       .joins(:media_attachments)
       .where(media_attachments: {featured: true})
-      .where.not(type: "CheckIn")
 
     _, @posts = pagy(posts)
 

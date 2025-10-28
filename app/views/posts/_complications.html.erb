@@ -7,24 +7,32 @@
     <% end %>
   </span>
 
-  <% if post.has_weather_data? %>
-    <span class="font-mono text-slate-500 flex">
-      <span class="font-sans select-none" aria-hidden="true"><%= weather_emoji(post) %>&nbsp;</span>
-      <span><%= (post.weather["temperatureApparent"] * 1.8 + 32).round %>°F <%= weather_conditions(post) %></span>
-      <% if (aqi = post.weather["airQualityIndex"]) %>
-        <span>&nbsp;(AQI <%= aqi %></span>
-        <span class="flex flex-col justify-center items-center ml-2 select-none"><span class="h-2 w-2 rounded-full <%= aqi_bg_color(aqi) %>"></span></span>
-        <span>)</span>
-      <% end %>
-    </span>
-  <% end %>
-
-  <% post.syndication_links.sort_by(&:platform).each do |link| %>
-    <% webmentions = post.webmentions.select { |webmention| webmention.platform == link.platform } %>
-
+  <% if post.place.present? %>
     <span class="font-mono text-slate-500">
-      <%= syndication_link_tag(link, webmentions: webmentions) %>
+      <span class="font-sans select-none" aria-hidden="true">📍 </span>
+      <%= link_to "#{post.place.name}", post.place.apple_maps_url, class: "link-primary font-bold" %>
+      <span>/ <%= post.place.city_state_and_country(separator: " / ") %></span>
     </span>
+
+    <% if post.has_weather_data? %>
+      <span class="font-mono text-slate-500 flex">
+        <span class="font-sans select-none" aria-hidden="true"><%= weather_emoji(post) %>&nbsp;</span>
+        <span><%= (post.weather["temperatureApparent"] * 1.8 + 32).round %>°F <%= weather_conditions(post) %></span>
+        <% if (aqi = post.weather["airQualityIndex"]) %>
+          <span>&nbsp;(AQI <%= aqi %></span>
+          <span class="flex flex-col justify-center items-center ml-2 select-none"><span class="h-2 w-2 rounded-full <%= aqi_bg_color(aqi) %>"></span></span>
+          <span>)</span>
+        <% end %>
+      </span>
+    <% end %>
+
+    <% post.syndication_links.sort_by(&:platform).each do |link| %>
+      <% webmentions = post.webmentions.select { |webmention| webmention.platform == link.platform } %>
+
+      <span class="font-mono text-slate-500">
+        <%= syndication_link_tag(link, webmentions: webmentions) %>
+      </span>
+    <% end %>
   <% end %>
 
   <% if authenticated? %>
