@@ -45,8 +45,7 @@ class SyndicateToBlueskyJob < ApplicationJob
     images = post.media_attachments.select(&:image?)
     unless images.all? { |image| image.webp_variant_attachment.analyzed? }
       logger.info("Media attachments are still being analyzed; trying again in 5 seconds...")
-      SyndicateToBlueskyJob.perform_in(5.seconds, post_id)
-      return
+      return SyndicateToBlueskyJob.perform_in(5.seconds, post_id)
     end
 
     embed = nil
