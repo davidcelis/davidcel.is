@@ -104,12 +104,12 @@ class CreatePostWithMediaJob < ApplicationJob
 
     response = Apple::WeatherKit::CurrentWeather.at(latitude: post.latitude, longitude: post.longitude)
     post.weather.merge!(response["currentWeather"])
-  rescue Faraday::Error
-    # Occasionally, Apple's WeatherKit API just starts returning 401s for no
-    # reason. These have always been transient, but it typically takes a few
-    # hours before resolving itself. To avoid preventing myself from posting
-    # for long stretches of time, I just enqueue a job to bring the weather
-    # data in later, and the job can retry until it works.
+  rescue Faraday::Error => e
+    # Occasionally, we just fail to hit Apple's WeatherKit API. To avoid
+    # preventing myself from posting for long stretches of time, I just
+    # enqueue a job to bring the weather data in later, and the job can
+    # retry until it works.
+    Sentry.capture_exception(e)
   end
 
   def cache_link_images(post)
