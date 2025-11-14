@@ -228,6 +228,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.10-x86_64-linux-musl)
       racc (~> 1.4)
+    openssl (3.3.2)
     pagy (5.10.1)
       activesupport
     parallel (1.27.0)
@@ -462,6 +463,7 @@ DEPENDENCIES
   jwt
   lograge
   microformats!
+  openssl
   pagy (~> 5.10)
   pg (~> 1.1)
   pg_search (~> 2.3)

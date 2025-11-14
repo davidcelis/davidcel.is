@@ -58,6 +58,7 @@ gem "jwt"
 gem "faraday"
 gem "faraday-retry"
 gem "faraday-multipart"
+gem "openssl"
 
 # Use Sentry for error reporting
 gem "sentry-ruby"
