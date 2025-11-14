@@ -27,7 +27,10 @@ class Place < ApplicationRecord
   end
 
   def city_state_and_country(separator: ", ")
-    parts = [city, state_code || state]
+    parts = []
+
+    parts << city unless name == city
+    parts << (state_code || state)
     parts << (country_code || country) unless country_code == "US" || country == "United States"
 
     parts.compact.join(separator)

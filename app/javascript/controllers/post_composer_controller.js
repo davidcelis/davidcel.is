@@ -81,7 +81,7 @@ export default class extends Controller {
   static urlRegex = /(?:^|[^\/\S])https?:\/\/[\S]+\.[\S]{2,}/gi;
   static urlPlaceholder = 'xxxxxxxxxxxxxxxxxxxxxxx';
 
-  connect () {
+  connect() {
     // Load MapKit JS
     if (this.initialMapKitTokenValue && !window.mapkit) {
       window.initMapKit = () => {
@@ -208,7 +208,7 @@ export default class extends Controller {
           // but we'll populate pretty much everything we can just in case. However,
           // we won't populate the street address (we specifically don't want that
           // level of granularity), and Apple Maps IDs/URLs (we won't have any).
-          this.placeNameTarget.value = place.subLocality || '';
+          this.placeNameTarget.value = place.subLocality || place.locality || '';
           this.placeCityTarget.value = place.locality || '';
           this.placeStateTarget.value = place.administrativeArea || '';
           this.placeStateCodeTarget.value = place.administrativeAreaCode || '';
@@ -217,9 +217,9 @@ export default class extends Controller {
           this.placeCountryCodeTarget.value = place.countryCode || '';
 
           // Finally, make all of this visible in the debug pane.
-          this.debugPlaceNameTarget.innerHTML = place.subLocality || '';
-          this.debugPlaceCityTarget.innerHTML = place.locality || '';
-          this.debugPlacePostalCodeTarget.innerHTML = place.postCode || '';
+          this.debugPlaceNameTarget.innerHTML = this.placeNameTarget.value;
+          this.debugPlaceCityTarget.innerHTML = this.placeCityTarget.value;
+          this.debugPlacePostalCodeTarget.innerHTML = this.placePostalCodeTarget.value;
 
           this.debugPlaceStateTarget.innerHTML = '';
           if (place.administrativeArea) {
