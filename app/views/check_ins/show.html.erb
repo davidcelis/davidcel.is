@@ -30,58 +30,10 @@
                     <%= tag(:source, srcset: cdn_file_url(@check_in.snapshot)) %>
                     <%= image_tag cdn_file_url(@check_in.snapshot), class: "rounded-lg", alt: "A map showing the location of #{@check_in.place.name}." %>
                   <% end %>
-
-                  <% if (icon_url = weather_icon_url(@check_in)) %>
-                    <div class="absolute bottom-2 right-2">
-                      <div class="flex flex-col space-y-1 py-1 px-2 bg-white bg-opacity-[.90] select-none rounded-[.25rem]">
-                        <div class="flex flex-shrink-0 space-x-2">
-                          <%= image_tag icon_url, class: "object-scale-down h-8 w-8" %>
-
-                          <span class="flex flex-col justify-center items-center">
-                            <%= (@check_in.weather["temperatureApparent"] * 1.8 + 32).round %>°F
-                          </span>
-                        </div>
-
-                        <div class="flex justify-center items-center">
-                          <% if (aqi = @check_in.weather["airQualityIndex"]) %>
-                            <span class="text-xs">
-                              AQI <%= aqi %>
-                            </span>
-                            <%# Make a colored dot based on the AQI %>
-                            <span class="h-2 w-2 rounded-full <%= aqi_bg_color(aqi) %> ml-1"></span>
-                          <% end %>
-                        </div>
-                      </div>
-                    </div>
-                  <% end %>
                 <% end %>
               </div>
 
-              <div data-controller="local-time" data-local-time-full-value class="pt-4 font-mono text-sm text-slate-500">
-                <span class=" \select-none" data-local-time-target="emoji"><%= clock_emoji(@check_in.created_at) %> </span>
-
-                <%= link_to polymorphic_path(@check_in), class: "u-url text-sm font-bold leading-6 link-primary" do %>
-                  <%= timestamp(@check_in.created_at, full: true, classes: ["dt-published"]) %>
-                <% end %>
-
-                <% @check_in.syndication_links.each do |link| %>
-                  <% if link_tag = syndication_link_tag(link) %>
-                    <span>/ </span><%= link_tag %>
-                  <% end %>
-                <% end %>
-              </div>
-
-              <% if authenticated? %>
-                <span class="font-mono text-sm text-slate-500">
-                  <span class="font-sans select-none" aria-hidden="true">🔏 </span>
-                  <%= link_to "Edit post", edit_post_path(@check_in.id), class: "link-primary font-bold" %>
-                </span>
-
-                <span class="font-mono text-sm text-slate-500">
-                  <span class="font-sans select-none" aria-hidden="true">🚮 </span>
-                  <%= link_to "Delete post", post_path(@check_in.id), class: "link-primary font-bold", data: { turbo_method: :delete, turbo_confirm: "You sure?" } %>
-                </span>
-              <% end %>
+              <%= render partial: "posts/complications", locals: { post: @check_in } %>
 
               <%= render partial: "posts/meta", locals: { post: @check_in } %>
             </div>
