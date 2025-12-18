@@ -7,7 +7,10 @@ class SyndicateToMastodonJob < ApplicationJob
 
     content = case post
     when Article
-      "#{post.og_description}\n\n#{article_url(post)}"
+      url = article_url(post)
+      excerpt = post.og_description.truncate(500 - 25, omission: "…")
+
+      "#{excerpt}\n\n#{url}"
     when Note
       text = post.content
 
