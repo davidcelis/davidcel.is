@@ -80,7 +80,7 @@ module ATProto
     #   "blob": {
     #     "$type": "blob",
     #     "ref": {"$link": "bafkreihbmvgth3atknoy36na76htzbzsc7vlzocu2ynijcleikvvotm7cy"},
-    #     "mimeType": "image/png",
+    #     "mimeType": "image/jpeg",
     #     "size": 343459
     #   }
     # }
@@ -88,9 +88,9 @@ module ATProto
       response = nil
 
       attachment.blob.open do |blob|
-        tmpfile = ImageProcessor.process(blob, size_limit: IMAGE_SIZE_LIMIT, pixel_limit: IMAGE_PIXEL_LIMIT, quality_interval: 5)
+        tmpfile = ImageProcessor.process(blob, size_limit: IMAGE_SIZE_LIMIT, pixel_limit: IMAGE_PIXEL_LIMIT, quality_interval: 5, convert_to: "jpeg")
 
-        response = blob_upload_connection.post("#{BASE_PATH}.uploadBlob", tmpfile, "Content-Type" => attachment.content_type, "Content-Length" => tmpfile.size.to_s)
+        response = blob_upload_connection.post("#{BASE_PATH}.uploadBlob", tmpfile, "Content-Type" => "image/jpeg", "Content-Length" => tmpfile.size.to_s)
       end
 
       response.body
