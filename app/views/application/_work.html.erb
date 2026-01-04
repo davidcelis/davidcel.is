@@ -1,5 +1,5 @@
 <ol class="mt-6 space-y-4">
-  <% Resume::Job.first(4).each do |job| %>
+  <% Resume::Job.first(5).each do |job| %>
     <li class="flex gap-4">
       <div class="select-none relative flex h-10 w-10 flex-none items-center justify-center rounded-full shadow-md shadow-slate-800/5 ring-1 ring-slate-900/5">
         <%= image_tag job.image, width: 28, height: 28, class: "h-7 w-7", loading: "lazy", style: "color: transparent;", decoding: "async", data: {nimg: 1} %>
