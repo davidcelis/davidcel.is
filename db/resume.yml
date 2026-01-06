@@ -44,7 +44,7 @@ work:
   - name: Freshworks
     position: Senior Staff Software Engineer
     url: https://www.freshworks.com/
-    startDate: 2025-01-02
+    startDate: 2026-01-02
     summary: |
       At Freshworks, I continue my work making FireHydrant the best incident
       management platform on the market.
@@ -52,6 +52,7 @@ work:
     position: Principal Software Engineer
     url: https://firehydrant.com/
     startDate: 2021-07-12
+    endDate: 2026-01-01
     summary: |
       For most of my time at FireHydrant, I was lead engineer for their Incident
       Management team, responsible for incidents and all parts of their lifecycle:
