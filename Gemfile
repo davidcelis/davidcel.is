@@ -1,7 +1,7 @@
 source "https://gem.coop"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.4.7"
+ruby "4.0.0"
 
 gem "rails", "~> 8.0"
 
@@ -17,7 +17,7 @@ gem "activerecord-precounter", "~> 0.4"
 gem "puma", "~> 6.0"
 
 # Use CommonMark to render posts as HTML [https://github.com/gjtorikian/commonmarker]
-gem "commonmarker", "~> 0.23"
+gem "commonmarker", github: "davidcelis/commonmarker", branch: "ruby-4"
 
 # Parse webmentions with microformats
 gem "microformats", github: "microformats/microformats-ruby"
