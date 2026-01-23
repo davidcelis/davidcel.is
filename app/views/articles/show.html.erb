@@ -28,6 +28,7 @@
   </div>
 </article>
 
+<%= content_for(:title, "#{@article.title} by @davidcelis") %>
 <%= content_for(:og_title, @article.title) %>
 <%= content_for(:og_description, strip_tags(@article.og_description).strip) %>
 <%= content_for(:og_type, "article") %>

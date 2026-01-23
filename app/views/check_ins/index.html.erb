@@ -1,0 +1,7 @@
+<% content_for(:og_title, "Check-ins by @davidcelis") %>
+<% content_for(:og_description, "The places visited by an amateur pizzaiolo and software engineer.") %>
+
+<%= render partial: "posts/list", locals: {
+  header: "Check-Ins",
+  search_placeholder: "Search my check-ins!"
+} %>

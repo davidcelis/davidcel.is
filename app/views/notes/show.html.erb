@@ -22,9 +22,10 @@
   </div>
 </article>
 
-<% content_for(:og_description, strip_tags(@note.html).strip.presence || polymorphic_url(@note)) %>
+<% content_for(:title, "@davidcelis: #{strip_tags(@note.html).strip.presence}") %>
+<% content_for(:og_title, "A note from @davidcelis") %>
+<% content_for(:og_description, strip_tags(@note.html).strip.presence || "A note from @davidcelis") %>
 <% content_for(:og_type, "article") %>
-<% content_for(:og_title, "david celis") %>
 <% content_for(:og_url, polymorphic_url(@note)) %>
 <% content_for(:head) do %>
   <meta property="og:site_name" content="david celis" data-rh="true">

@@ -30,6 +30,7 @@
   </div>
 </article>
 
+<%= content_for(:title, "🔗 #{@link.title} (shared by @davidcelis)") %>
 <%= content_for(:og_title, "🔗 #{@link.title}") %>
 <%= content_for(:og_description, strip_tags(@link.excerpt).strip) %>
 <%= content_for(:og_type, "article") %>

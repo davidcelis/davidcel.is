@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>davidcel.is</title>
-    <meta name="description" content="Lukewarm takes from an amateur pizzaiolo and software engineer.">
+    <title><%= content_for(:title) || content_for(:og_title) || "@davidcelis" %></title>
+
+    <meta name="description" content="<%= content_for(:og_description) || "Lukewarm takes from an amateur pizzaiolo and software engineer." %>">
 
     <%= auto_discovery_link_tag(:atom, main_feed_url, title: "davidcel.is") %>
     <%= auto_discovery_link_tag(:atom, articles_feed_url, title: "davidcel.is - Articles") %>

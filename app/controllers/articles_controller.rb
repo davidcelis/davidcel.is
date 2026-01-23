@@ -6,7 +6,7 @@ class ArticlesController < ApplicationController
 
     ActiveRecord::Precounter.new(@posts).precount(:likes, :reposts, :replies)
 
-    render "posts/index", formats: [:html]
+    respond_to :html
   end
 
   def show

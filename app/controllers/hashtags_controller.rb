@@ -20,6 +20,6 @@ class HashtagsController < ApplicationController
       associations: Link::DEFAULT_INCLUDES
     ).call
 
-    render "posts/index", formats: [:html]
+    respond_to :html
   end
 end

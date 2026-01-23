@@ -1,0 +1,63 @@
+<div class="h-feed py-12 sm:py-8">
+  <div class="lg:px-8">
+    <div class="lg:max-w-4xl">
+      <div class="flex justify-between mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+        <h1 class="p-name text-2xl font-bold leading-7 text-slate-900 lg:pt-2">
+          <%= link_to header, request.path, class: "u-url" %>
+        </h1>
+
+        <% search_url = posts_url unless params[:controller].in?(["posts", "articles", "check_ins", "links", "notes", "hashtags"]) %>
+
+        <form id="search" class="hidden lg:block relative w-48" data-controller="search" data-search-url-value="<%= search_url %>" data-action="search#submit:prevent">
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center">
+            <span class="text-center h-6 w-6 ml-1 pl-1">🔎</span>
+          </div>
+
+          <input type="text" data-action="input->search#toggleClear" data-search-target="query" value="<%= params[:q] %>" class="w-full pl-8 pr-7 border border-slate-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 block sm:text-sm" placeholder="<%= search_placeholder %>" aria-label="Search" />
+
+          <div class="absolute inset-y-0 right-0 flex items-center">
+            <button type="button" data-search-target="clear" data-action="search#clear" class="h-6 w-6 mr-1<%= " hidden" unless params[:q] %>" aria-label="Clear search" title="Clear search">
+              ❌
+            </button>
+          </div>
+
+          <input type="submit" class="hidden" />
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
+    <% if authenticated? && params[:controller] == "posts" && @pagy.page == 1 %>
+      <%= render "posts/form" %>
+    <% end %>
+
+    <section class="divide-y divide-slate-100">
+      <%= render @posts %>
+
+      <% if @posts.empty? %>
+        <div class="py-10 sm:py-12">
+          <div class="lg:px-8">
+            <div class="lg:max-w-4xl">
+              <div class="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4 lg:px-0">
+                <div class="flex flex-col items-start">
+                  <section class="prose prose-slate prose-a:text-pink-500 hover:prose-a:text-pink-700 active:prose-a:text-pink-900 mt-1 text-base leading-7 text-slate-700 lg:prose-lg">
+                    <span class="select-none md:absolute md:-ml-6 mr-2" title="Search" aria-hidden="true">
+                      🔎
+                    </span>
+
+                    <span>No results found.</span>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @pagy.pages > 1 %>
+        <%= render "pagination" %>
+      <% end %>
+    </section>
+  </div>
+</div>
