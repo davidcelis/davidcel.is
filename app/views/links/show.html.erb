@@ -18,6 +18,8 @@
               <%= @link.html.html_safe %>
             </div>
 
+            <%= media_gallery_tag(@link.media_attachments) %>
+
             <%= render partial: "links/preview", locals: { link: @link } %>
 
             <%= render partial: "posts/complications", locals: { post: @link } %>
