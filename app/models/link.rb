@@ -43,6 +43,6 @@ class Link < Post
   end
 
   def uri
-    @uri ||= URI.parse(link_data["url"])
+    @uri ||= URLValidator.parse(link_data["url"])
   end
 end

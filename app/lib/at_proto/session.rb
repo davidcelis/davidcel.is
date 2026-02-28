@@ -16,7 +16,7 @@ module ATProto
 
       services = response.body.dig("didDoc", "service")
       pds = services.find { |service| service["type"] == "AtprotoPersonalDataServer" }
-      @pds_endpoint_uri = URI.parse(pds["serviceEndpoint"])
+      @pds_endpoint_uri = URLValidator.parse(pds["serviceEndpoint"])
     end
 
     def destroy!

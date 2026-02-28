@@ -23,13 +23,13 @@ class Webmention < ApplicationRecord
   }
 
   def from_bridgy?
-    URI.parse(source).host == "brid.gy"
+    URLValidator.parse(source).host == "brid.gy"
   end
 
   def platform
     return unless from_bridgy?
 
-    uri = URI.parse(source)
+    uri = URLValidator.parse(source)
     path_segments = uri.path.split("/")
     path_segments[2]
   rescue URI::InvalidURIError
@@ -53,7 +53,7 @@ class Webmention < ApplicationRecord
     return if target.blank?
 
     # Ensure the target URL is our base URL
-    if URI.parse(target).host == Rails.application.routes.default_url_options[:host]
+    if URLValidator.parse(target).host == Rails.application.routes.default_url_options[:host]
       Rails.application.routes.recognize_path(target)
     else
       errors.add(:target, "must be a known URL on this website")

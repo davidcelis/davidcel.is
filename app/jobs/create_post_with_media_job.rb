@@ -115,8 +115,9 @@ class CreatePostWithMediaJob < ApplicationJob
   def cache_link_images(post)
     if (favicon = post.link_data.dig("links", "icon", 0))
       extension = Rack::Mime::MIME_TYPES.invert[favicon["type"]]
+
       favicon_io = begin
-        URI.parse(favicon["href"]).open
+        URLValidator.parse(favicon["href"]).open
       rescue OpenURI::HTTPError => e
         Sentry.capture_exception(e)
         nil
@@ -137,7 +138,7 @@ class CreatePostWithMediaJob < ApplicationJob
     if (preview_image = post.link_data.dig("links", "thumbnail", 0))
       extension = Rack::Mime::MIME_TYPES.invert[preview_image["type"]]
       preview_image_io = begin
-        URI.parse(preview_image["href"]).open
+        URLValidator.parse(preview_image["href"]).open
       rescue OpenURI::HTTPError => e
         Sentry.capture_exception(e)
         nil
