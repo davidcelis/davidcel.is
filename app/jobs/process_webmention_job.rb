@@ -6,8 +6,11 @@ class ProcessWebmentionJob < ApplicationJob
     webmention.post = find_post(webmention.target)
 
     # Fetch and cache the source page
-    response = Faraday.get(webmention.source)
-    return webmention.failed! unless response.success?
+    response = begin
+      Faraday.get(webmention.source)
+    rescue Faraday::Error
+    end
+    return webmention.failed! unless response&.success?
 
     # Save the webmention's HTML and extract its microformats2
     webmention.html = response.body

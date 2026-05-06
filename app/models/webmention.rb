@@ -58,7 +58,7 @@ class Webmention < ApplicationRecord
     else
       errors.add(:target, "must be a known URL on this website")
     end
-  rescue ActionController::RoutingError
+  rescue ActionController::RoutingError, URI::InvalidURIError
     errors.add(:target, "must be a known URL on this website")
   end
 end
