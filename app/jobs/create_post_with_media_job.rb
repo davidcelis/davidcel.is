@@ -114,16 +114,11 @@ class CreatePostWithMediaJob < ApplicationJob
 
   def cache_link_images(post)
     if (favicon = post.link_data.dig("links", "icon", 0))
-      extension = Rack::Mime::MIME_TYPES.invert[favicon["type"]]
+      response = Faraday.get(favicon["href"])
 
-      favicon_io = begin
-        URLValidator.parse(favicon["href"]).open
-      rescue OpenURI::HTTPError => e
-        Sentry.capture_exception(e)
-        nil
-      end
-
-      if favicon_io.present?
+      if response.success?
+        extension = Rack::Mime::MIME_TYPES.invert[response.headers["Content-Type"]]
+        favicon_io = StringIO.new(response.body)
         favicon_blob = ActiveStorage::Blob.create_and_upload!(
           key: "blog/links/#{post.id}/favicon#{extension}",
           io: favicon_io,
@@ -132,27 +127,26 @@ class CreatePostWithMediaJob < ApplicationJob
 
         favicon_blob.analyze
         post.favicon.attach(favicon_blob)
+      else
+        Sentry.capture_message("Failed to fetch link favicon", level: :warning, extra: {url: favicon["href"], status: response.status})
       end
     end
 
     if (preview_image = post.link_data.dig("links", "thumbnail", 0))
-      extension = Rack::Mime::MIME_TYPES.invert[preview_image["type"]]
-      preview_image_io = begin
-        URLValidator.parse(preview_image["href"]).open
-      rescue OpenURI::HTTPError => e
-        Sentry.capture_exception(e)
-        nil
-      end
+      response = Faraday.get(preview_image["href"])
 
-      if preview_image_io.present?
+      if response.success?
+        extension = Rack::Mime::MIME_TYPES.invert[response.headers["Content-Type"]]
         preview_image_blob = ActiveStorage::Blob.create_and_upload!(
           key: "blog/links/#{post.id}/preview#{extension}",
-          io: preview_image_io,
+          io: StringIO.new(response.body),
           filename: "preview#{extension}"
         )
 
         preview_image_blob.analyze
         post.preview_image.attach(preview_image_blob)
+      else
+        Sentry.capture_message("Failed to fetch link preview image", level: :warning, extra: {url: preview_image["href"], status: response.status})
       end
     end
   end
