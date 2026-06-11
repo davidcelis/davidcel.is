@@ -118,10 +118,9 @@ class CreatePostWithMediaJob < ApplicationJob
 
       if response.success?
         extension = Rack::Mime::MIME_TYPES.invert[response.headers["Content-Type"]]
-        favicon_io = StringIO.new(response.body)
         favicon_blob = ActiveStorage::Blob.create_and_upload!(
           key: "blog/links/#{post.id}/favicon#{extension}",
-          io: favicon_io,
+          io: StringIO.new(response.body),
           filename: "favicon#{extension}"
         )
 
