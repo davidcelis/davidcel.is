@@ -263,7 +263,7 @@ GEM
       activesupport (>= 7.0.0)
       rack
     public_suffix (7.0.5)
-    puma (6.6.1)
+    puma (7.2.1)
       nio4r (~> 2.0)
     raabro (1.5.0)
     racc (1.8.1)
@@ -477,7 +477,7 @@ DEPENDENCIES
   pg_search (~> 2.3)
   plausible_api
   propshaft
-  puma (~> 6.0)
+  puma (~> 7.0)
   rails (~> 8.1)
   redis (~> 4.0)
   rspec-rails (~> 6)

@@ -14,7 +14,7 @@ gem "pg_search", "~> 2.3"
 gem "activerecord-precounter", "~> 0.4"
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 6.0"
+gem "puma", "~> 7.0"
 
 # Use CommonMark to render posts as HTML [https://github.com/gjtorikian/commonmarker]
 gem "commonmarker", github: "davidcelis/commonmarker", branch: "ruby-4"
