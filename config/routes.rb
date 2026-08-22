@@ -7,6 +7,11 @@ Rails.application.routes.draw do
   get "/about", to: "pages#about"
   get "/pdx-food", to: "pages#pdx_food"
 
+  # Occasionally articles are renamed _and_ given a new slug; redirect them
+  # before the `resources :articles` route is declared so they don't get
+  # caught by the general `articles#show` route.
+  get "/articles/rails-needs-new-governance", to: redirect("/articles/the-dhh-problem")
+
   # For the generic /posts/:id route (i.e. to route to a post without using
   # its type, like Article or Note), we'll only support numeric IDs. Only
   # polymorphic routes will support something like fetching posts by slugs.
@@ -80,6 +85,4 @@ Rails.application.routes.draw do
   get "/posts/deploying-discourse-with-capistrano", to: redirect("/articles/deploying-discourse-with-capistrano")
   get "/posts/distance-constraints-with-postgresql-and-postgis", to: redirect("/articles/distance-constraints-with-postgresql-and-postgis")
   get "/posts/publish-your-site-to-s3", to: redirect("/articles/easily-publish-your-site-to-s3-and-cloudfront")
-
-  get "/articles/rails-needs-new-governance", to: redirect("/articles/the-dhh-problem")
 end
