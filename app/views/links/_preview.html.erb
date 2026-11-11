@@ -10,7 +10,7 @@
       <p><%= link_to link.link_data.dig("meta", "title") || link.title, link.link_data["url"], class: "m-0 text-lg sm:text-xl leading-tight link-primary", target: "_blank", rel: "nofollow noopener noreferrer" %></p>
 
       <% if (description = link.link_data.dig("meta", "description")) %>
-        <p class="text-sm"><%= description %></p>
+        <p class="text-sm"><%= description.truncate(500) %></p>
       <% end %>
 
       <p class="flex">
