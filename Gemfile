@@ -42,7 +42,7 @@ gem "redis", "~> 4.0"
 
 # Use Sidekiq to perform asynchronous jobs
 gem "sidekiq", "~> 8.0"
-gem "sidekiq-scheduler", "6.0.0.beta2"
+gem "sidekiq-scheduler", "~> 6.0"
 
 # Use ImageProcessing to handle ActiveStorage variants
 gem "image_processing", ">= 1.12"
