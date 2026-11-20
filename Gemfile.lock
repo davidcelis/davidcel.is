@@ -96,8 +96,8 @@ GEM
       public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
     aws-eventstream (1.4.1)
-    aws-partitions (1.1305.0)
-    aws-sdk-core (3.268.0)
+    aws-partitions (1.1309.0)
+    aws-sdk-core (3.271.0)
       aws-eventstream (~> 1, >= 1.4.1)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
@@ -106,11 +106,11 @@ GEM
       jmespath (~> 1, >= 1.6.1)
       logger
       rexml (~> 3.4, >= 3.4.2)
-    aws-sdk-kms (1.143.0)
-      aws-sdk-core (~> 3, >= 3.268.0)
+    aws-sdk-kms (1.145.0)
+      aws-sdk-core (~> 3, >= 3.270.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.242.0)
-      aws-sdk-core (~> 3, >= 3.268.0)
+    aws-sdk-s3 (1.245.0)
+      aws-sdk-core (~> 3, >= 3.269.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.12.1)
@@ -118,11 +118,11 @@ GEM
     base64 (0.3.0)
     bigdecimal (4.1.3)
     bindex (0.8.1)
-    bootsnap (1.26.1)
+    bootsnap (1.26.2)
       msgpack (~> 1.5)
     builder (3.3.0)
     concurrent-ruby (1.3.8)
-    connection_pool (3.0.2)
+    connection_pool (3.0.3)
     crack (1.0.1)
       bigdecimal
       rexml
@@ -184,7 +184,7 @@ GEM
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     logger (1.7.0)
-    lograge (0.15.1)
+    lograge (0.16.0)
       actionpack (>= 4)
       activesupport (>= 4)
       logger
@@ -243,7 +243,7 @@ GEM
     pagy (5.10.1)
       activesupport
     parallel (2.3.0)
-    parser (3.3.13.0)
+    parser (3.3.14.0)
       ast (~> 2.4.1)
       racc
     pg (1.7.0)
@@ -274,7 +274,7 @@ GEM
       activesupport (>= 7.0.0)
       rack
     public_suffix (7.0.5)
-    puma (7.2.1)
+    puma (7.2.3)
       nio4r (~> 2.0)
     raabro (1.5.0)
     racc (1.8.1)
@@ -330,7 +330,7 @@ GEM
     redis (4.8.1)
     redis-client (0.31.0)
       connection_pool
-    regexp_parser (2.13.1)
+    regexp_parser (2.13.4)
     reline (0.7.0)
       io-console (~> 0.5)
     request_store (1.7.0)
@@ -364,9 +364,11 @@ GEM
       rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.51.0)
+    rubocop-ast (1.53.0)
+      ast (~> 2.4)
       parser (>= 3.3.7.2)
       prism (>= 1.7)
+      racc
     rubocop-performance (1.26.1)
       lint_roller (~> 1.1)
       rubocop (>= 1.75.0, < 2.0)
@@ -378,15 +380,15 @@ GEM
     rufus-scheduler (3.9.2)
       fugit (~> 1.1, >= 1.11.1)
     securerandom (0.4.1)
-    sentry-rails (7.2.0)
+    sentry-rails (7.3.0)
       railties (>= 5.2.0)
-      sentry-ruby (~> 7.2.0)
-    sentry-ruby (7.2.0)
+      sentry-ruby (~> 7.3.0)
+    sentry-ruby (7.3.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
-    sentry-sidekiq (7.2.0)
-      sentry-ruby (~> 7.2.0)
+    sentry-sidekiq (7.3.0)
+      sentry-ruby (~> 7.3.0)
       sidekiq (>= 5.0)
     sidekiq (8.1.7)
       connection_pool (>= 3.0.0)
@@ -397,7 +399,7 @@ GEM
     sidekiq-scheduler (6.0.2)
       rufus-scheduler (~> 3.2)
       sidekiq (>= 7.3, < 9)
-    skylight (7.1.1)
+    skylight (7.2.0)
       activesupport (>= 7.2.0)
     standard (1.57.0)
       language_server-protocol (~> 3.17.0.2)
@@ -442,14 +444,14 @@ GEM
       actionview (>= 8.0.0)
       bindex (>= 0.4.0)
       railties (>= 8.0.0)
-    webmock (3.34.0)
+    webmock (3.36.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    websocket-driver (0.8.2)
+    websocket-driver (0.9.0)
       base64
-      websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.5)
+      websocket-extensions (>= 0.2.0)
+    websocket-extensions (0.2.0)
     zeitwerk (2.8.3)
 
 PLATFORMS
@@ -508,7 +510,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-  ruby 4.0.6
+  ruby 4.0.10
 
 BUNDLED WITH
-  4.0.17
+  4.1.0

@@ -1,7 +1,7 @@
 source "https://gem.coop"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "4.0.6"
+ruby "4.0.10"
 
 gem "rails", "~> 8.1"
 
